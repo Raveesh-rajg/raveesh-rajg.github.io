@@ -11,32 +11,37 @@ import { GH, LI, EMAIL, expertise, capabilities, pipeline, process } from '@/lib
 export function About() {
   return (
     <Section id="about">
-      <SectionHeading kicker="About" title={<>Clinical training. Engineering discipline.<br />Analytics that hold up.</>} />
+      <SectionHeading kicker="About" title={<>Turning messy data into<br />trustworthy decisions.</>} />
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
         <GlassPanel>
           <div className="space-y-4 text-[15.5px] leading-relaxed text-muted">
             <p>
-              I&apos;m a data analyst at <strong className="text-body">NYC Health + Hospitals</strong>, where I build
-              the reporting layer for one of the largest public health systems in the US — Tableau, Power BI, and
-              Excel dashboards over Epic and Snowflake data, with the validation checks that took reporting accuracy
-              from 88% to 94% and the automation that cut recurring prep time by 75%.
+              I&apos;m a data and analytics professional who transforms complex, messy source data into trusted
+              dashboards, governed metrics, and decision-ready insights. My work spans the full analytics
+              lifecycle, from SQL, data modeling, and pipeline development to business intelligence, statistical
+              analysis, and stakeholder communication.
             </p>
             <p>
-              Before analytics I trained as a clinician (BDS), then earned an M.S. in Healthcare Informatics at
-              UW–Milwaukee (Chancellor&apos;s Award) and spent a year as a research analyst building a 93.5%-accurate
-              respiratory-disease classifier on 2,500+ clinical audio recordings.
-            </p>
-            <p>
-              The through-line in everything I publish: <strong className="text-body">claims should be executable</strong>.
-              My projects plant known defects and effects in data so that &quot;the pipeline catches fraud&quot; becomes a
-              CI assertion — precision@50 against ground truth — instead of a sentence in a README.
+              One principle guides every project: <strong className="text-body">analytical claims should be
+              reproducible, transparent, and tested</strong>. Instead of simply presenting a number, I document the
+              logic, validate the underlying data, and build quality checks that allow others to inspect and
+              reproduce the result. Explore the repositories to see the methodology, code, and evidence behind the
+              insights.
             </p>
           </div>
         </GlassPanel>
         <GlassPanel className="flex flex-col items-center justify-center gap-4 text-center">
-          <div className="flex h-28 w-28 items-center justify-center rounded-full border border-line bg-white/5 font-display text-3xl font-bold text-teal"
-            role="img" aria-label="Monogram placeholder for profile photo">RG</div>
-          <p className="text-xs text-dim">[Replace with profile photo — see README]</p>
+          <img
+            src="./profile.jpg"
+            alt="Raveesh Raj Grandhi"
+            width={176}
+            height={220}
+            className="h-[220px] w-[176px] rounded-2xl border border-line object-cover object-top"
+            onError={(e) => {
+              e.currentTarget.src =
+                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 176 220'%3E%3Crect width='176' height='220' rx='16' fill='%230b0e17' stroke='%23ffffff14'/%3E%3Ctext x='88' y='120' text-anchor='middle' font-family='monospace' font-size='56' fill='%235eead4'%3ERG%3C/text%3E%3C/svg%3E"
+            }}
+          />
           <div className="flex gap-3">
             <a className="focus-ring text-muted hover:text-teal" href={GH} target="_blank" rel="noopener" aria-label="GitHub"><Github size={18} /></a>
             <a className="focus-ring text-muted hover:text-teal" href={`mailto:${EMAIL}`} aria-label="Email"><Mail size={18} /></a>

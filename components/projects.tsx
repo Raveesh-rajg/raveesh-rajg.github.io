@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import { Section, SectionHeading, AnimatedButton, stagger, rise } from './ui'
-import { GH, EMAIL, featured, indexRows, type Featured } from '@/lib/content'
+import { GH, EMAIL, FORM_ENDPOINT, featured, indexRows, type Featured } from '@/lib/content'
 
 const chipColor: Record<Featured['accent'], string> = {
   teal: 'border-teal/30 text-teal',
@@ -90,10 +90,9 @@ export function Contact() {
       setState('error'); setErr('Add your name, a valid email, and a message.'); return
     }
     setState('sending'); setErr('')
-    const endpoint = process.env.NEXT_PUBLIC_FORM_ENDPOINT
     try {
-      if (endpoint) {
-        const res = await fetch(endpoint, {
+      if (FORM_ENDPOINT) {
+        const res = await fetch(FORM_ENDPOINT, {
           method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({ name, email, message }),
         })

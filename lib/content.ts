@@ -4,7 +4,14 @@
 export const GH = 'https://github.com/Raveesh-rajg'
 export const LI = 'https://www.linkedin.com/in/raveeshrajg/'
 export const EMAIL = 'raveeshraj26@gmail.com'
-export const SITE_URL = 'https://raveesh-rajg.github.io' // canonical placeholder — update after deploy
+export const SITE_URL = 'https://raveesh-rajg.github.io'
+
+// Contact form backend. A static site has no server, so the form must POST to
+// a third-party service. Create a FREE form at https://formspree.io (2 min),
+// paste its endpoint here (looks like https://formspree.io/f/abcdwxyz), rebuild,
+// and messages land in your inbox. Until this is set, the form uses a mailto
+// fallback (opens the visitor's mail app). See README > Contact form.
+export const FORM_ENDPOINT = 'https://formspree.io/f/mlgqdlnd'
 
 export interface Featured {
   slug: string; chip: string; accent: 'teal' | 'violet' | 'fuchsia' | 'gold'
