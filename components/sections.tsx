@@ -73,7 +73,7 @@ export function ExpertiseGrid() {
 
       <div className="mt-16">
         <SectionHeading kicker="Capabilities" title={<>Every capability, with its <span className="grad-text">proof.</span></>}
-          sub="Twelve things an analytics screen looks for. Each names the tested, public project that demonstrates it." />
+          sub="Eight things an analytics screen looks for. Each names the tested, public project that demonstrates it." />
         <motion.div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
           initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} variants={stagger}>
           {capabilities.map(([b, note]) => (
@@ -99,7 +99,7 @@ export function AnalyticsPhilosophy() {
     <Section id="philosophy">
       <SectionHeading kicker="Philosophy"
         title={<>Every metric should be <span className="grad-text">reproducible, explainable, and tested.</span></>}
-        sub="The same six-stage discipline runs through all twenty projects — and through my hospital reporting work." />
+        sub="Analysis that doesn't change a decision is decoration. The same six-stage discipline runs through all twenty projects — and through my hospital reporting work." />
       <motion.ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-3"
         initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} variants={stagger}>
         {pipeline.map((p, i) => (

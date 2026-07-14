@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { SITE_URL, GH, EMAIL } from '@/lib/content'
 import './globals.css'
+import { CursorGlow } from '@/components/cursor'
 
 /* Fonts load via <link> at runtime (build environment can't reach Google
    Fonts). On a networked machine, next/font/google self-hosting is the
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="aurora" aria-hidden />
         <div className="bg-grid" aria-hidden />
         <div className="bg-noise" aria-hidden />
+        <CursorGlow />
         {children}
       </body>
     </html>

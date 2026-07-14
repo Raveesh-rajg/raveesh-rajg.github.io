@@ -18,7 +18,12 @@ const chipColor: Record<Featured['accent'], string> = {
 function ProjectCard({ f }: { f: Featured }) {
   return (
     <motion.article variants={rise} whileHover={{ y: -5 }}
-      className={`glass flex flex-col p-7 transition-colors hover:border-teal/30 ${f.accent === 'gold' ? 'border-gold/30' : ''}`}>
+      onMouseMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect()
+        e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`)
+        e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`)
+      }}
+      className={`card-spot glass relative flex flex-col p-7 transition-colors hover:border-teal/30 ${f.accent === 'gold' ? 'border-gold/30' : ''}`}>
       <span className={`mb-4 w-fit rounded-full border px-3 py-1 font-mono text-[11px] uppercase tracking-[.14em] ${chipColor[f.accent]}`}>
         {f.chip}
       </span>
@@ -63,7 +68,7 @@ export function FeaturedProjects() {
               className="focus-ring grid grid-cols-[1fr_100px] items-center gap-4 border-b border-line bg-white/[.03] px-6 py-4 last:border-b-0 hover:bg-white/[.06] md:grid-cols-[170px_240px_1fr_95px]">
               <span className="font-mono text-[10px] uppercase tracking-[.14em] text-violet max-md:hidden">{p.cat}</span>
               <span className="font-display text-[14.5px] font-semibold">{p.title}</span>
-              <span className="font-mono text-[11.5px] text-muted max-md:hidden">{p.m}</span>
+              <span className="truncate font-mono text-[11.5px] text-muted max-md:hidden">{p.m}</span>
               <span className="whitespace-nowrap text-right font-mono text-[10.5px] text-dim">{p.tests} ↗</span>
             </motion.a>
           ))}

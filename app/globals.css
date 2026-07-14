@@ -66,3 +66,20 @@ body {
 @keyframes scroll { to { transform: translateX(-50%); } }
 
 .focus-ring:focus-visible { outline: 2px solid #5eead4; outline-offset: 3px; border-radius: 6px; }
+
+/* ambient cursor spotlight (desktop) */
+.cursor-glow {
+  position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none;
+  width: 520px; height: 520px; margin: -260px 0 0 -260px; border-radius: 50%;
+  opacity: 0; transition: opacity .6s ease; will-change: transform;
+  background: radial-gradient(circle, rgba(94,234,212,.07), rgba(94,234,212,.03) 35%, transparent 68%);
+}
+@media (hover: none), (prefers-reduced-motion: reduce) { .cursor-glow { display: none; } }
+
+/* cursor-tracking spotlight on featured project cards */
+.card-spot::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  opacity: 0; transition: opacity .35s ease;
+  background: radial-gradient(440px circle at var(--mx, 50%) var(--my, 0%), rgba(94,234,212,.10), transparent 60%);
+}
+.card-spot:hover::before { opacity: 1; }

@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, useInView, animate } from 'framer-motion'
 import { AnimatedButton } from './ui'
+import { HeroNetwork } from './network'
 import { GH, LI, queries } from '@/lib/content'
 
 function Stat({ n, suffix, label }: { n: number; suffix?: string; label: string }) {
@@ -62,8 +63,9 @@ function LiveQuery() {
 
 export function Hero() {
   return (
-    <header className="flex min-h-svh items-center pt-40 pb-20" id="top">
-      <div className="mx-auto w-full max-w-6xl px-6">
+    <header className="relative flex min-h-svh items-center overflow-hidden pt-40 pb-20" id="top">
+      <HeroNetwork />
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6">
         <motion.p initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="mb-7 inline-flex items-center gap-2 rounded-full border border-line bg-white/5 px-4 py-1.5 text-[13px] text-muted">
           <i className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal shadow-[0_0_10px_#5eead4]" />
