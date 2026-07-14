@@ -32,7 +32,7 @@ export function Nav() {
       aria-label="Main">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
         <a href="#" className="focus-ring font-display text-[17px] font-bold">
-          raveesh<span className="text-teal">.</span>grandhi
+          Raveesh Raj <span className="text-teal">Grandhi</span>
         </a>
         <div className="hidden items-center gap-7 md:flex">
           {LINKS.map(([h, label]) => (
@@ -44,7 +44,8 @@ export function Nav() {
           <a href={GH} target="_blank" rel="noopener" aria-label="GitHub profile"
             className="focus-ring text-muted hover:text-body"><Github size={18} /></a>
           <a href="/resume.pdf" download
-            className="focus-ring rounded-full bg-gradient-to-br from-teal to-sky-400 px-5 py-2 text-sm font-semibold text-[#04252b]">
+            style={{ background: 'linear-gradient(135deg,#5eead4,#38bdf8)', color: '#04252b' }}
+            className="focus-ring rounded-full px-5 py-2 text-sm font-semibold">
             Resume
           </a>
         </div>

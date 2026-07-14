@@ -64,7 +64,8 @@ export default function CasePage({ params }: { params: { slug: string } }) {
 
           <div className="mt-9 flex flex-wrap gap-3.5">
             <a href={`${GH}/${cs.slug}`} target="_blank" rel="noopener"
-              className="focus-ring rounded-full bg-gradient-to-br from-teal to-sky-400 px-6 py-2.5 text-sm font-semibold text-[#04252b]">
+              style={{ background: 'linear-gradient(135deg,#5eead4,#38bdf8)', color: '#04252b' }}
+              className="focus-ring rounded-full px-6 py-2.5 text-sm font-semibold">
               Read the code & tests ↗
             </a>
             <Link href="/" className="focus-ring rounded-full border border-line bg-white/5 px-6 py-2.5 text-sm font-semibold">All projects</Link>

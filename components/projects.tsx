@@ -139,7 +139,8 @@ export function Contact() {
           </label>
           <div className="mt-1 flex flex-wrap items-center justify-between gap-4">
             <button type="submit" disabled={state === 'sending'}
-              className="focus-ring rounded-full bg-gradient-to-br from-teal to-sky-400 px-7 py-2.5 text-sm font-semibold text-[#04252b] disabled:opacity-60">
+              style={{ background: 'linear-gradient(135deg,#5eead4,#38bdf8)', color: '#04252b' }}
+              className="focus-ring rounded-full px-7 py-2.5 text-sm font-semibold disabled:opacity-60">
               {state === 'sending' ? 'Sending…' : 'Send message'}
             </button>
             <a href={`mailto:${EMAIL}`} className="focus-ring text-sm text-muted hover:text-teal">{EMAIL}</a>

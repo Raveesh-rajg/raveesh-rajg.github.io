@@ -52,10 +52,9 @@ export function AnimatedButton({ href, children, primary = false, download = fal
     <motion.a href={href} download={download || undefined}
       target={ext ? '_blank' : undefined} rel={ext ? 'noopener' : undefined}
       whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}
+      style={primary ? { background: 'linear-gradient(135deg,#5eead4,#38bdf8)', color: '#04252b', boxShadow: '0 0 24px rgba(94,234,212,.28)' } : undefined}
       className={`focus-ring inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold ${
-        primary
-          ? 'bg-gradient-to-br from-teal to-sky-400 text-[#04252b] shadow-[0_0_24px_rgba(94,234,212,.25)]'
-          : 'border border-line bg-white/5 text-body'
+        primary ? '' : 'border border-line bg-white/5 text-body'
       }`}>
       {children}
     </motion.a>
