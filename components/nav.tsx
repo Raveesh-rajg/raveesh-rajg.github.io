@@ -8,7 +8,7 @@ import { GH } from '@/lib/content'
 
 const LINKS = [
   ['#about', 'About'], ['#expertise', 'Expertise'], ['#projects', 'Projects'],
-  ['#process', 'Process'], ['#contact', 'Contact'],
+  ['#philosophy', 'Approach'], ['#contact', 'Contact'],
 ] as const
 
 export function Nav() {

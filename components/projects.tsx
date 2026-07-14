@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import { Section, SectionHeading, AnimatedButton, stagger, rise } from './ui'
-import { GH, EMAIL, FORM_ENDPOINT, featured, indexRows, type Featured } from '@/lib/content'
+import { GH, EMAIL, FORM_ENDPOINT, featured, type Featured } from '@/lib/content'
 
 const chipColor: Record<Featured['accent'], string> = {
   teal: 'border-teal/30 text-teal',
@@ -58,21 +58,16 @@ export function FeaturedProjects() {
         {featured.map(f => <ProjectCard key={f.slug} f={f} />)}
       </motion.div>
 
-      <div className="mt-16">
-        <SectionHeading kicker="The full index" title="Fourteen more, one line each."
-          sub="The featured six go deep; the bench stays scannable — every line carries its headline number, every link is a tested repo." />
-        <motion.div className="overflow-hidden rounded-glass border border-line"
-          initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} variants={stagger}>
-          {indexRows.map(p => (
-            <motion.a key={p.repo} variants={rise} href={`${GH}/${p.repo}`} target="_blank" rel="noopener"
-              className="focus-ring grid grid-cols-[1fr_100px] items-center gap-4 border-b border-line bg-white/[.03] px-6 py-4 last:border-b-0 hover:bg-white/[.06] md:grid-cols-[170px_240px_1fr_95px]">
-              <span className="font-mono text-[10px] uppercase tracking-[.14em] text-violet max-md:hidden">{p.cat}</span>
-              <span className="font-display text-[14.5px] font-semibold">{p.title}</span>
-              <span className="truncate font-mono text-[11.5px] text-muted max-md:hidden">{p.m}</span>
-              <span className="whitespace-nowrap text-right font-mono text-[10.5px] text-dim">{p.tests} ↗</span>
-            </motion.a>
-          ))}
-        </motion.div>
+      <div className="mt-14 flex flex-col items-center gap-4 text-center">
+        <p className="max-w-xl text-muted">
+          Fourteen more tested projects span insurance risk, real-time streaming, forecasting,
+          BI &amp; visualization, and marketing science.
+        </p>
+        <a href={GH} target="_blank" rel="noopener"
+          style={{ background: 'linear-gradient(135deg,#5eead4,#38bdf8)', color: '#04252b' }}
+          className="focus-ring rounded-full px-6 py-2.5 text-sm font-semibold">
+          Explore all 20 repositories on GitHub →
+        </a>
       </div>
     </Section>
   )
