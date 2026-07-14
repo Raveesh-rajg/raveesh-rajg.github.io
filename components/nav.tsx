@@ -45,7 +45,7 @@ export function Nav() {
             className="focus-ring text-muted hover:text-body"><Github size={18} /></a>
           <a href="/resume.pdf" download
             className="focus-ring rounded-full bg-gradient-to-br from-teal to-sky-400 px-5 py-2 text-sm font-semibold text-[#04252b]">
-            Résumé
+            Resume
           </a>
         </div>
         <button className="focus-ring md:hidden" aria-label={open ? 'Close menu' : 'Open menu'}
@@ -61,7 +61,7 @@ export function Nav() {
               <a key={h} href={h} onClick={() => setOpen(false)}
                 className="focus-ring block py-3 text-[15px] text-muted">{label}</a>
             ))}
-            <a href="/resume.pdf" download className="focus-ring block py-3 text-[15px] text-teal">Download résumé</a>
+            <a href="/resume.pdf" download className="focus-ring block py-3 text-[15px] text-teal">Download resume</a>
           </motion.div>
         )}
       </AnimatePresence>
