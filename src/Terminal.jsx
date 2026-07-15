@@ -60,10 +60,13 @@ export function CommandPalette() {
 
   const items = useMemo(() => [
     ...projects.map(p => ({ label: p.title, hint: p.cat, url: `${GH}/${p.repo}` })),
+    { label: 'About', hint: 'section', url: '#about' },
+    { label: 'Expertise — the stack', hint: 'section', url: '#expertise' },
     { label: 'Featured work', hint: 'section', url: '#work' },
     { label: 'The screening checklist', hint: 'section', url: '#checklist' },
     { label: 'Experience & education', hint: 'section', url: '#experience' },
     { label: 'Contact', hint: 'section', url: '#contact' },
+    { label: 'Download resume', hint: 'pdf', url: './resume.pdf' },
   ], [])
 
   const hits = useMemo(() => {

@@ -270,34 +270,44 @@ h1{font-family:var(--font-display);font-size:clamp(42px,7vw,84px);font-weight:70
   animation:spin-border 7s linear infinite}
 @keyframes spin-border{to{--ang:360deg}}
 
-/* ---------------- full index ---------------- */
-.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px}
-.filter{font-family:var(--font-mono);font-size:12.5px;padding:8px 18px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
-.filter:hover{color:var(--text);border-color:var(--dim)}
-.filter.active{background:linear-gradient(135deg,var(--accent),#38bdf8);color:#04252b;border-color:transparent;font-weight:600;box-shadow:0 0 18px rgba(94,234,212,.3)}
-.index-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
-  background:rgba(10,15,30,.4);backdrop-filter:blur(10px)}
-.prow{display:grid;grid-template-columns:170px 250px 1fr 95px;gap:18px;align-items:center;
-  padding:15px 22px;text-decoration:none;
-  border-bottom:1px solid var(--line);transition:background .2s,box-shadow .2s}
-.prow:last-child{border-bottom:none}
-.prow:hover{background:rgba(148,180,255,.06);box-shadow:inset 3px 0 0 var(--pc,var(--accent))}
-.prow-cat{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--pc,var(--accent-2))}
-.prow-title{font-family:var(--font-display);font-size:14.5px;font-weight:600;color:var(--text)}
-.prow-m{font-family:var(--font-mono);font-size:11.5px;color:var(--muted)}
-.prow-tests{font-family:var(--font-mono);font-size:10.5px;color:var(--dim);text-align:right;white-space:nowrap}
-@media(max-width:900px){.prow{grid-template-columns:1fr 110px}.prow-cat,.prow-m{display:none}}
+/* ---------------- "explore all 20" CTA ---------------- */
+.more-proj{margin-top:56px;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+.more-proj p{color:var(--muted);max-width:560px}
 
-/* ---------------- pillars ---------------- */
-.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-@media(max-width:860px){.pillars{grid-template-columns:1fr}}
-.pillar{border:1px solid var(--line);border-radius:var(--radius);padding:30px;background:var(--surface);
+/* ---------------- philosophy pipeline ---------------- */
+.stages{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;position:relative}
+.stages::before{content:"";position:absolute;top:-30px;left:4%;right:4%;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,rgba(94,234,212,.3),rgba(167,139,250,.3),transparent)}
+@media(max-width:920px){.stages{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.stages{grid-template-columns:1fr}}
+.stage{border:1px solid var(--line);border-radius:var(--radius);padding:26px;background:var(--surface-2);
   backdrop-filter:blur(10px);position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
-.pillar::before{content:"";position:absolute;top:0;left:0;height:2px;width:100%;background:var(--grad-x);opacity:.5}
-.pillar:hover{border-color:rgba(94,234,212,.3);transform:translateY(-4px)}
-.pillar .num{font-family:var(--font-mono);font-size:12.5px;color:var(--accent);margin-bottom:16px}
-.pillar h3{font-family:var(--font-display);font-size:19px;margin-bottom:10px}
-.pillar p{color:var(--muted);font-size:14.5px}
+.stage::before{content:"";position:absolute;top:0;left:0;height:2px;width:100%;background:var(--grad-x);opacity:.45}
+.stage:hover{border-color:rgba(94,234,212,.3);transform:translateY(-4px)}
+.stage .n{font-family:var(--font-mono);font-size:12px;color:var(--accent)}
+.stage h3{font-family:var(--font-display);font-size:18.5px;font-weight:600;margin:9px 0 8px}
+.stage p{color:var(--muted);font-size:13.8px}
+.stage .flow{position:absolute;right:16px;top:24px;color:var(--dim);opacity:.7}
+@media(max-width:920px){.stage .flow{display:none}}
+
+/* ---------------- contact form ---------------- */
+.cform{max-width:600px;margin:0 auto;display:grid;gap:14px;text-align:left}
+.cform-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.cform-row{grid-template-columns:1fr}}
+.cform label{display:grid;gap:7px;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim)}
+.cform input,.cform textarea{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.045);
+  padding:13px 16px;font:15px var(--font-body);color:var(--text);transition:border-color .25s,box-shadow .25s;resize:vertical}
+.cform input::placeholder,.cform textarea::placeholder{color:var(--dim)}
+.cform input:focus,.cform textarea:focus{outline:none;border-color:rgba(94,234,212,.55);box-shadow:0 0 0 3px rgba(94,234,212,.12)}
+.cform-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:6px}
+.cform-foot a{font-family:var(--font-mono);font-size:13px;color:var(--muted);text-decoration:none;transition:color .25s}
+.cform-foot a:hover{color:var(--accent)}
+.cform button[disabled]{opacity:.6;cursor:wait}
+.cform-status{min-height:20px;font-size:13.5px;color:var(--accent);text-align:left}
+.cform-status.err{color:#fda4af}
+.cform-status a{color:inherit;text-decoration:underline}
+.contact-box .cform p.cform-status{margin:0;max-width:none}
 
 /* ---------------- experience ---------------- */
 .xp{border-left:1px solid var(--line);padding-left:36px;position:relative;max-width:760px}
@@ -318,6 +328,8 @@ h1{font-family:var(--font-display);font-size:clamp(42px,7vw,84px);font-weight:70
 footer{border-top:1px solid var(--line);padding:34px 0;color:var(--dim);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:70px}
 footer a{color:var(--muted);text-decoration:none}
 footer a:hover{color:var(--accent)}
+.foot-sig{width:100%;text-align:right;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;color:rgba(95,108,143,.65)}
+@media(min-width:900px){.foot-sig{width:auto}}
 
 /* ---------------- progress ---------------- */
 .progress{position:fixed;top:0;left:0;right:0;height:2.5px;z-index:60;transform-origin:0 50%;

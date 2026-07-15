@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react'
 import {
-  motion, AnimatePresence, useScroll, useSpring, useTransform,
+  motion, useScroll, useSpring, useTransform,
   useMotionValue, useInView, animate,
 } from 'framer-motion'
-import { featured, projects, checklist, GH, LI, EMAIL } from './data.js'
+import { featured, checklist, GH, LI, EMAIL } from './data.js'
 import { LiveQuery, CommandPalette, StatusBar } from './Terminal.jsx'
 import { CasePage } from './Case.jsx'
 import { cases } from './cases.jsx'
@@ -94,15 +94,54 @@ function Check({ b, i, idx }) {
   )
 }
 
-const FILTERS = [
-  ['all', 'All 20'], ['health', 'Healthcare'], ['data-eng', 'Data Engineering'],
-  ['stats', 'Statistics & Causal'], ['ai', 'AI / LLM'], ['bi', 'BI & Visualization'],
-  ['biz', 'Finance · Risk · Marketing'],
-]
-const PC = { gold: 'var(--gold)', v: 'var(--accent-2)', p: 'var(--accent-3)' }
+/* ---------- contact form → Formspree ---------- */
+const FORM_ENDPOINT = 'https://formspree.io/f/mlgqdlnd'
+function ContactForm() {
+  const [status, setStatus] = useState('idle') // idle | sending | sent | error
+  const onSubmit = async e => {
+    e.preventDefault()
+    const form = e.currentTarget
+    setStatus('sending')
+    try {
+      const res = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      })
+      if (res.ok) { setStatus('sent'); form.reset() }
+      else setStatus('error')
+    } catch { setStatus('error') }
+  }
+  return (
+    <form className="cform" onSubmit={onSubmit} aria-describedby="form-status">
+      <div className="cform-row">
+        <label>Name
+          <input name="name" required autoComplete="name" placeholder="Ada Lovelace" />
+        </label>
+        <label>Email
+          <input type="email" name="email" required autoComplete="email" placeholder="ada@company.com" />
+        </label>
+      </div>
+      <label>Message
+        <textarea name="message" required rows="5"
+          placeholder="We have three years of messy claims data and no trusted metrics…" />
+      </label>
+      <div className="cform-foot">
+        <motion.button type="submit" className="btn btn-primary" disabled={status === 'sending'}
+          whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>
+          {status === 'sending' ? 'Sending…' : 'Send message'}
+        </motion.button>
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+      </div>
+      <p id="form-status" role="status" aria-live="polite" className={`cform-status${status === 'error' ? ' err' : ''}`}>
+        {status === 'sent' && "Message sent — thanks! I'll get back to you within a day."}
+        {status === 'error' && <>Something went wrong — please email me directly at <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</>}
+      </p>
+    </form>
+  )
+}
 
 export default function App() {
-  const [filter, setFilter] = useState('all')
   const [route, setRoute] = useState(() => window.location.hash)
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('')
@@ -125,7 +164,7 @@ export default function App() {
     const obs = new IntersectionObserver(es => {
       es.forEach(en => { if (en.isIntersecting) setActive(en.target.id) })
     }, { rootMargin: '-45% 0px -50% 0px' })
-    ;['about', 'checklist', 'work', 'projects', 'experience', 'contact']
+    ;['about', 'expertise', 'checklist', 'work', 'experience', 'contact']
       .forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el) })
     return () => obs.disconnect()
   }, [caseSlug])
@@ -153,13 +192,12 @@ export default function App() {
     </>)
   }
 
-  const shown = projects.filter(p => filter === 'all' || p.c === filter)
-  const words = ['Analytics', 'that', 'survive']
-  const words2 = ['contact', 'with']
+  const words = ['I', 'turn', 'complex', 'data']
+  const words2 = ['into', 'decisions']
 
   const NAV = [
-    ['about', 'About'], ['checklist', 'Checklist'], ['work', 'Featured'],
-    ['projects', 'Projects'], ['experience', 'Experience'], ['contact', 'Contact'],
+    ['about', 'About'], ['expertise', 'Expertise'], ['checklist', 'Checklist'],
+    ['work', 'Projects'], ['experience', 'Experience'], ['contact', 'Contact'],
   ]
   return (
     <>
@@ -198,7 +236,7 @@ export default function App() {
       <header className="hero" ref={heroRef}>
         <motion.div className="wrap" style={{ y: heroY, opacity: heroOpacity }}>
           <motion.div className="hero-badge" initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-            <span className="dot" />Data Analyst @ NYC Health + Hospitals · Open to BI / Analytics Engineering roles
+            <span className="dot" />Business Analyst · Analytics Engineer · Data Storyteller — NYC
           </motion.div>
           <h1>
             {words.map((w, i) => (
@@ -214,25 +252,26 @@ export default function App() {
             ))}
             <motion.span className="hw grad" initial={{ opacity: 0, y: '0.55em' }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ type: 'spring', stiffness: 110, damping: 14, delay: 0.62 }}>real data.</motion.span>
+              transition={{ type: 'spring', stiffness: 110, damping: 14, delay: 0.62 }}>people can trust.</motion.span>
           </h1>
           <motion.p className="lede" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75 }}>
-            I'm <strong>Raveesh Raj Grandhi</strong> — a data analyst who builds analytics platforms the way
-            engineers build software: <strong>tested, documented, reproducible</strong>. Twenty projects across
-            experimentation, causal inference, LLM systems, and modern data stacks — every metric on this page traces
-            to a seeded, verifiable run.
+            I build reproducible analytics systems — from SQL models and data pipelines to dashboards,
+            experimentation frameworks, and AI observability. Twenty public projects,{' '}
+            <strong>190+ automated tests</strong>, and every metric on this page traces to a seeded,
+            verifiable run.
           </motion.p>
           <motion.div className="hero-ctas" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
-            <Magnetic><motion.a className="btn btn-primary" href="#checklist" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>See the checklist ↓</motion.a></Magnetic>
+            <Magnetic><motion.a className="btn btn-primary" href="#work" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>Explore my work ↓</motion.a></Magnetic>
+            <motion.a className="btn btn-ghost" href="./resume.pdf" download whileHover={{ y: -3 }}>Download resume ↓</motion.a>
             <motion.a className="btn btn-ghost" href={GH} target="_blank" rel="noopener" whileHover={{ y: -3 }}>GitHub ↗</motion.a>
             <motion.a className="btn btn-ghost" href={LI} target="_blank" rel="noopener" whileHover={{ y: -3 }}>LinkedIn ↗</motion.a>
           </motion.div>
           <div className="hero-cols">
             <motion.div className="stats" initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.05 }}>
-              <Stat n={20} label="production-grade projects" />
-              <Stat n={190} suffix="+" label="automated tests passing" />
+              <Stat n={20} label="tested projects" />
+              <Stat n={190} suffix="+" label="automated tests" />
               <Stat n={8} label="industry domains" />
-              <Stat n={15} suffix="+" label="tools in production use" />
+              <Stat n={15} suffix="+" label="tools in production" />
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 26 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2 }}>
               <LiveQuery />
@@ -245,7 +284,7 @@ export default function App() {
         <div className="marquee">
           {[0, 1].map(k => (
             <div className="mq" key={k}>
-              {['SQL','Python','dbt','Snowflake','BigQuery','PySpark · Delta Lake','Tableau','Power BI · DAX','LookML','DuckDB','Claude API','Gemini','A/B Testing','Causal Inference','GitHub Actions CI','Streamlit'].map(s => <span key={s}>{s}</span>)}
+              {['Reproducible analytics','Tested data models','Decision-ready dashboards','Experimentation','Causal inference','AI analytics','Healthcare depth','SQL at depth'].map(s => <span key={s}>{s}</span>)}
             </div>
           ))}
         </div>
@@ -297,6 +336,28 @@ export default function App() {
         </motion.div>
       </Section>
 
+      {/* EXPERTISE */}
+      <Section id="expertise" kicker="Expertise"
+        title="The stack, in production across 20 repos."
+        sub="No proficiency percentages — every tool below is used in a public, tested project you can open."
+        style={{ paddingTop: 30 }}>
+        <motion.div className="skill-cols" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} variants={stagger}>
+          {[
+            ['BI & visualization', ['Power BI · DAX', 'Tableau', 'LookML', 'Looker Studio', 'Excel · Power Query', 'Evidence.dev', 'Streamlit']],
+            ['SQL, modeling & warehousing', ['SQL', 'dbt Core', 'Snowflake', 'BigQuery', 'DuckDB', 'PostgreSQL', 'Kimball modeling']],
+            ['Python & statistics', ['pandas', 'scipy', 'statsmodels', 'scikit-learn', 'A/B testing', 'causal inference', 'forecasting']],
+            ['Data engineering & cloud', ['PySpark', 'Delta Lake', 'Databricks', 'Pub/Sub', 'Cloud Run', 'GitHub Actions CI']],
+            ['AI & LLM systems', ['Claude API', 'Gemini', 'LangChain', 'RAG', 'eval harnesses', 'OpenTelemetry GenAI']],
+            ['Engineering practice', ['pytest', 'Git · GitHub', 'seeded reproducibility', 'decision records', 'data-quality gates']],
+          ].map(([h, tools]) => (
+            <motion.div className="skill-group" key={h} variants={rise}>
+              <h4>{h}</h4>
+              <div className="tags">{tools.map(t => <span key={t}>{t}</span>)}</div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </Section>
+
       {/* CHECKLIST */}
       <Section id="checklist" kicker="Capabilities"
         title={<>Every capability,<br />with its <span className="grad">proof.</span></>}
@@ -308,7 +369,7 @@ export default function App() {
 
       {/* FEATURED */}
       <Section id="work" kicker="Featured work" title="Six projects that carry the portfolio."
-        sub="Each one attacks a problem most portfolios avoid — hostile public data, statistical traps, AI systems that need governing."
+        sub="Each attacks a problem most portfolios avoid — hostile public data, statistical traps, AI systems that need governing — and every claim is pinned by an automated test."
         style={{ paddingTop: 30 }}>
         <motion.div className="feat-grid" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} variants={stagger}>
           {featured.map(f => (
@@ -327,45 +388,34 @@ export default function App() {
             </TiltCard>
           ))}
         </motion.div>
+        <motion.div className="more-proj" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }} transition={{ type: 'spring', stiffness: 90, damping: 16 }}>
+          <p>Fourteen more tested projects span insurance risk, real-time streaming, forecasting,
+          BI &amp; visualization, and marketing science.</p>
+          <Magnetic><motion.a className="btn btn-primary" href={GH} target="_blank" rel="noopener"
+            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>Explore all 20 repositories on GitHub →</motion.a></Magnetic>
+        </motion.div>
       </Section>
 
-      {/* ALL PROJECTS with animated layout filter */}
-      <Section id="projects" kicker="The full index" title="Fourteen more, one line each."
-        sub="The featured six above go deep; the rest of the bench stays scannable — every line carries its headline number, every link is a tested repo."
+      {/* PHILOSOPHY */}
+      <Section id="approach" kicker="Philosophy"
+        title={<>Every metric should be <span className="grad">reproducible, explainable, and tested.</span></>}
+        sub="Analysis that doesn't change a decision is decoration. The same six-stage discipline runs through all twenty projects — and through my hospital reporting work."
         style={{ paddingTop: 40 }}>
-        <div className="filter-row">
-          {FILTERS.map(([f, label]) => (
-            <motion.button key={f} className={`filter${filter === f ? ' active' : ''}`}
-              onClick={() => setFilter(f)} whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.95 }}>{label}</motion.button>
+        <motion.ol className="stages" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} variants={stagger}>
+          {[['01', 'Raw data', 'Land it untouched, with audit columns — bronze is the record of what the source actually sent.'],
+            ['02', 'Validation', 'Planted-defect testing, quarantine with reasons, reconciliation that must sum exactly. Nothing silently dropped.'],
+            ['03', 'Modeling', 'Dimensional schemas and tested transformations — definitions live in one place, under version control and CI.'],
+            ['04', 'Analysis', "The right method for the question: experiment when you can, quasi-experiment when you can't, and honest baselines always."],
+            ['05', 'Visualization', 'Dashboards read pre-aggregated, governed marts — so "revenue" means the same thing on every chart.'],
+            ['06', 'Decision', 'Every readout ends at an action, with its assumptions and confidence stated — not a chart dump.'],
+          ].map(([n, h, p], i) => (
+            <motion.li className="stage" key={n} variants={rise}>
+              <span className="n">{n}</span><h3>{h}</h3><p>{p}</p>
+              {i < 5 && <svg className="flow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>}
+            </motion.li>
           ))}
-        </div>
-        <motion.div className="index-list" layout>
-          <AnimatePresence mode="popLayout">
-            {shown.filter(p => !featured.some(f => f.repo === p.repo)).map(p => (
-              <motion.a key={p.repo} layout className="prow" href={`${GH}/${p.repo}`} target="_blank" rel="noopener"
-                style={{ '--pc': PC[p.pc] || 'var(--accent)' }}
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                transition={{ type: 'spring', stiffness: 260, damping: 26 }}>
-                <span className="prow-cat">{p.cat}</span>
-                <span className="prow-title">{p.title}</span>
-                <span className="prow-m">{p.m}</span>
-                <span className="prow-tests">{p.tests} ↗</span>
-              </motion.a>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-      </Section>
-
-      {/* APPROACH */}
-      <Section id="approach" kicker="How I work" title="Three rules behind every project." style={{ paddingTop: 40 }}>
-        <motion.div className="pillars" style={{ marginTop: 48 }} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} variants={stagger}>
-          {[['01 / TESTED', 'Claims are executable', 'Synthetic data gets defects and effects planted at known rates, so "the pipeline catches fraud" becomes precision@50 = 100% against ground truth — an assertion in CI, not a sentence in a README.'],
-            ['02 / HONEST', 'The failure is the finding', 'ETS beats seasonal-naive by only 0.3 points — reported. Trending series correlate at every lag until you difference them — documented where I hit it.'],
-            ['03 / DECIDED', 'Built for the decision', 'Cost per successful answer, not per call. Same-store sales, not blended growth. The denominator is the analysis — every project ends at the action it supports.'],
-          ].map(([num, h, p]) => (
-            <motion.div className="pillar" key={num} variants={rise}><div className="num">{num}</div><h3>{h}</h3><p>{p}</p></motion.div>
-          ))}
-        </motion.div>
+        </motion.ol>
       </Section>
 
       {/* EXPERIENCE */}
@@ -390,19 +440,21 @@ export default function App() {
       <section id="contact" style={{ paddingTop: 30 }}>
         <div className="wrap">
           <motion.div className="contact-box" initial={{ opacity: 0, y: 34 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }} transition={{ type: 'spring', stiffness: 80, damping: 16 }}>
+            viewport={{ once: true, amount: 0.2 }} transition={{ type: 'spring', stiffness: 80, damping: 16 }}>
             <div className="kicker" style={{ justifyContent: 'center' }}>Let's talk</div>
-            <h2>Looking for an analyst who<br />ships like an <span className="grad">engineer?</span></h2>
+            <h2>Have a complex data problem?<br />Let's make it <span className="grad">decision-ready.</span></h2>
             <p>Open to Business Intelligence, Analytics Engineering, and Data Analyst roles. Every project on this site is public, tested, and ready to be discussed in depth.</p>
-            <div className="contact-links">
-              <Magnetic><motion.a className="btn btn-primary" href={`mailto:${EMAIL}`} whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.96 }}>{EMAIL}</motion.a></Magnetic>
+            <ContactForm />
+            <div className="contact-links" style={{ marginTop: 30 }}>
+              <motion.a className="btn btn-ghost" href="./resume.pdf" download whileHover={{ y: -3 }}>Download resume ↓</motion.a>
               <motion.a className="btn btn-ghost" href={GH} target="_blank" rel="noopener" whileHover={{ y: -3 }}>GitHub</motion.a>
               <motion.a className="btn btn-ghost" href={LI} target="_blank" rel="noopener" whileHover={{ y: -3 }}>LinkedIn</motion.a>
             </div>
           </motion.div>
           <footer>
-            <div>© 2026 Raveesh Raj Grandhi · React + Framer Motion, built by hand</div>
-            <div><a href="#checklist">Checklist</a> · <a href="#projects">Projects</a> · <a href="#contact">Contact</a></div>
+            <div><b style={{ fontFamily: 'var(--font-display)', color: 'var(--muted)', fontWeight: 600 }}>Raveesh Raj Grandhi</b> — Data &amp; Analytics Professional · © 2026</div>
+            <div><a href={GH} target="_blank" rel="noopener">GitHub</a> · <a href={LI} target="_blank" rel="noopener">LinkedIn</a> · <a href={`mailto:${EMAIL}`}>Email</a> · <a href="#">Back to top ↑</a></div>
+            <div className="foot-sig">designed &amp; engineered with precision</div>
           </footer>
         </div>
       </section>
