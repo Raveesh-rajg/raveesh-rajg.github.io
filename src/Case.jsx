@@ -56,7 +56,7 @@ export function Line({ points, labels, unit = '', color = 'var(--accent)', refLi
 }
 
 /* ---------- the case-study page ---------- */
-export function CasePage({ cs, onBack }) {
+export function CasePage({ cs, next, onBack }) {
   return (
     <motion.main className="case" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', stiffness: 90, damping: 18 }}>
@@ -93,6 +93,11 @@ export function CasePage({ cs, onBack }) {
         <div className="case-cta">
           <a className="btn btn-primary" href={`${GH}/${cs.repo}`} target="_blank" rel="noopener">Read the code & tests ↗</a>
           <button className="btn btn-ghost" onClick={onBack}>All projects</button>
+          {next && (
+            <a className="btn btn-ghost" href={`#/case/${next.slug}`}>
+              Next case: {next.title.split('—')[0].trim()} →
+            </a>
+          )}
         </div>
       </div>
     </motion.main>

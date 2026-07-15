@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redirecting — Raveesh Raj Grandhi</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://raveesh-rajg.github.io/">
+<meta http-equiv="refresh" content="0; url=/">
+<script>
+// Old site had /projects/<slug>/ case pages; the new site serves them at
+// /#/case/<slug>. Map known slugs across, everything else goes home.
+(function () {
+  var m = location.pathname.match(/^\/projects\/([a-z0-9-]+)\/?$/)
+  location.replace(m ? '/#/case/' + m[1] : '/')
+})()
+</script>
+<style>body{background:#04060d;color:#9aa7c7;font:15px system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}</style>
+</head>
+<body><p>Redirecting to <a href="/" style="color:#5eead4">raveesh-rajg.github.io</a>…</p></body>
+</html>

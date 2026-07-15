@@ -122,6 +122,9 @@ function ContactForm() {
   }
   return (
     <form className="cform" onSubmit={onSubmit} aria-describedby="form-status">
+      {/* honeypot — Formspree silently drops submissions where bots fill this */}
+      <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true"
+        style={{ position: 'absolute', left: '-9999px', width: 1, height: 1 }} />
       <fieldset disabled={sending} className="cform-fields">
         <div className="cform-row">
           <label>Name
@@ -173,6 +176,14 @@ export default function App() {
   }, [])
   const caseSlug = route.startsWith('#/case/') ? route.slice(7) : null
 
+  // per-page titles: case studies get their own, home restores the default
+  useEffect(() => {
+    const cs = caseSlug && cases[caseSlug]
+    document.title = cs
+      ? `${cs.title} — Raveesh Raj Grandhi`
+      : 'Raveesh Raj Grandhi — Data & Analytics Professional'
+  }, [caseSlug])
+
   // pill nav: scrolled state + active-section highlight
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -198,13 +209,16 @@ export default function App() {
   // Route branch AFTER every hook call — early returns before hooks
   // violate the rules of hooks (React #300; caught by smoke.mjs).
   if (caseSlug && cases[caseSlug]) {
+    const slugs = Object.keys(cases)
+    const nextSlug = slugs[(slugs.indexOf(caseSlug) + 1) % slugs.length]
     return (<>
       <ParticleField />
       <div className="mesh" /><div className="aurora" /><div className="grid-lines" />
       <div className="bg-noise" />
       <Cursor />
       <StatusBar />
-      <CasePage cs={cases[caseSlug]} onBack={() => { window.location.hash = '' }} />
+      <CasePage cs={cases[caseSlug]} next={{ slug: nextSlug, title: cases[nextSlug].title }}
+        onBack={() => { window.location.hash = '' }} />
     </>)
   }
 
@@ -340,12 +354,12 @@ export default function App() {
             </div>
           </motion.div>
           <motion.div className="glassbox b-mini" variants={rise}>
-            <h4>Currently</h4>
+            <h3>Currently</h3>
             <div className="big">Data Analyst @ NYC Health + Hospitals</div>
             <p>Woodhull Medical Center, New York City — open to Business Intelligence, Analytics Engineering, and Data Analyst roles.</p>
           </motion.div>
           <motion.div className="glassbox b-mini" variants={rise}>
-            <h4>Education &amp; credentials</h4>
+            <h3>Education &amp; credentials</h3>
             <div className="big">M.S. Healthcare Informatics</div>
             <p>University of Wisconsin–Milwaukee · Chancellor's Award · Google Advanced Data Analytics certified.</p>
           </motion.div>
@@ -415,7 +429,7 @@ export default function App() {
             ['Engineering practice', ['pytest', 'Git · GitHub', 'seeded reproducibility', 'decision records', 'data-quality gates']],
           ].map(([h, tools]) => (
             <motion.div className="skill-group" key={h} variants={rise}>
-              <h4>{h}</h4>
+              <h3>{h}</h3>
               <div className="tags">{tools.map(t => <span key={t}>{t}</span>)}</div>
             </motion.div>
           ))}
