@@ -212,7 +212,7 @@ export default function App() {
 
       <nav className={scrolled ? 'scrolled' : ''}>
         <div className="nav-inner">
-          <a className="logo" href="#">raveesh<span>.grandhi</span></a>
+          <a className="logo" href="#">Raveesh Raj <span>Grandhi</span></a>
           <div className="nav-links">
             {NAV.map(([id, label]) => (
               <a key={id} href={`#${id}`} className={active === id ? 'on' : ''}>{label}</a>

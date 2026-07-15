@@ -131,7 +131,7 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-6.5px) rotate(-45
 .m-menu.open{opacity:1;visibility:visible}
 .m-menu a{font-family:var(--font-display);font-size:25px;font-weight:600;padding:10px 24px;color:var(--muted);text-decoration:none}
 .m-menu a:hover{color:var(--text)}
-@media(max-width:820px){
+@media(max-width:860px){
   .nav-links{display:none}
   .burger{display:block}
 }
