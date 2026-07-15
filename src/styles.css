@@ -302,7 +302,12 @@ h1{font-family:var(--font-display);font-size:clamp(42px,7vw,84px);font-weight:70
 .cform-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:6px}
 .cform-foot a{font-family:var(--font-mono);font-size:13px;color:var(--muted);text-decoration:none;transition:color .25s}
 .cform-foot a:hover{color:var(--accent)}
-.cform button[disabled]{opacity:.6;cursor:wait}
+.cform button[disabled]{opacity:.75;cursor:wait}
+.cform-fields{border:0;padding:0;margin:0;display:grid;gap:14px;min-width:0}
+.cform-fields[disabled]{opacity:.55;transition:opacity .2s}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(4,37,43,.3);
+  border-top-color:#04252b;border-radius:50%;animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
 .cform-status{min-height:20px;font-size:13.5px;color:var(--accent);text-align:left}
 .cform-status.err{color:#fda4af}
 .cform-status a{color:inherit;text-decoration:underline}

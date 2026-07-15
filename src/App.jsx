@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import {
-  motion, useScroll, useSpring, useTransform,
+  motion, useScroll, useSpring,
   useMotionValue, useInView, animate,
 } from 'framer-motion'
 import { featured, checklist, GH, LI, EMAIL } from './data.js'
@@ -100,42 +100,52 @@ function Check({ b, i, idx }) {
 const FORM_ENDPOINT = 'https://formspree.io/f/mlgqdlnd'
 function ContactForm() {
   const [status, setStatus] = useState('idle') // idle | sending | sent | error
+  const sending = status === 'sending'
   const onSubmit = async e => {
     e.preventDefault()
+    if (sending) return
     const form = e.currentTarget
     setStatus('sending')
+    const abort = new AbortController()
+    const timeout = setTimeout(() => abort.abort(), 12000)
     try {
       const res = await fetch(FORM_ENDPOINT, {
         method: 'POST',
         body: new FormData(form),
         headers: { Accept: 'application/json' },
+        signal: abort.signal,
       })
       if (res.ok) { setStatus('sent'); form.reset() }
       else setStatus('error')
     } catch { setStatus('error') }
+    finally { clearTimeout(timeout) }
   }
   return (
     <form className="cform" onSubmit={onSubmit} aria-describedby="form-status">
-      <div className="cform-row">
-        <label>Name
-          <input name="name" required autoComplete="name" placeholder="Ada Lovelace" />
+      <fieldset disabled={sending} className="cform-fields">
+        <div className="cform-row">
+          <label>Name
+            <input name="name" required autoComplete="name" placeholder="Ada Lovelace" />
+          </label>
+          <label>Email
+            <input type="email" name="email" required autoComplete="email" placeholder="ada@company.com" />
+          </label>
+        </div>
+        <label>Message
+          <textarea name="message" required rows="5"
+            placeholder="We have three years of messy claims data and no trusted metrics…" />
         </label>
-        <label>Email
-          <input type="email" name="email" required autoComplete="email" placeholder="ada@company.com" />
-        </label>
-      </div>
-      <label>Message
-        <textarea name="message" required rows="5"
-          placeholder="We have three years of messy claims data and no trusted metrics…" />
-      </label>
+      </fieldset>
       <div className="cform-foot">
-        <motion.button type="submit" className="btn btn-primary" disabled={status === 'sending'}
+        <motion.button type="submit" className="btn btn-primary" disabled={sending}
           whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>
-          {status === 'sending' ? 'Sending…' : 'Send message'}
+          {sending && <span className="spin" aria-hidden="true" />}
+          {sending ? 'Sending…' : 'Send message'}
         </motion.button>
         <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
       </div>
       <p id="form-status" role="status" aria-live="polite" className={`cform-status${status === 'error' ? ' err' : ''}`}>
+        {status === 'sending' && 'Sending your message…'}
         {status === 'sent' && "Message sent — thanks! I'll get back to you within a day."}
         {status === 'error' && <>Something went wrong — please email me directly at <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</>}
       </p>
@@ -148,8 +158,16 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('')
   const [menu, setMenu] = useState(false)
+  const prevRoute = useRef(route)
   useEffect(() => {
-    const onHash = () => { setRoute(window.location.hash); window.scrollTo(0, 0) }
+    const onHash = () => {
+      const h = window.location.hash
+      // jump to top only when entering/leaving a case page — plain #section
+      // anchors must keep their native scroll
+      if (h.startsWith('#/case/') || prevRoute.current.startsWith('#/case/')) window.scrollTo(0, 0)
+      prevRoute.current = h
+      setRoute(h)
+    }
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
@@ -176,10 +194,6 @@ export default function App() {
   }, [menu])
   const { scrollYProgress } = useScroll()
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 26 })
-  const heroRef = useRef(null)
-  const { scrollYProgress: heroScroll } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
-  const heroY = useTransform(heroScroll, [0, 1], [0, 120])
-  const heroOpacity = useTransform(heroScroll, [0, 0.85], [1, 0.15])
 
   // Route branch AFTER every hook call — early returns before hooks
   // violate the rules of hooks (React #300; caught by smoke.mjs).
@@ -235,8 +249,8 @@ export default function App() {
       </div>
 
       {/* HERO */}
-      <header className="hero" ref={heroRef}>
-        <motion.div className="wrap" style={{ y: heroY, opacity: heroOpacity }}>
+      <header className="hero">
+        <div className="wrap">
           <motion.div className="hero-badge" initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
             <span className="dot" />Data Analyst @ NYC Health + Hospitals · Open to BI &amp; Analytics Engineering roles
           </motion.div>
@@ -279,7 +293,7 @@ export default function App() {
               <LiveQuery />
             </motion.div>
           </div>
-        </motion.div>
+        </div>
       </header>
 
       <div className="strip">
