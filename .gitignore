@@ -1,8 +1,4 @@
 node_modules/
-.next/
-out/
-.env*.local
-
-# raw photo originals (processed version is public/profile.jpg)
-public/IMG_7308.jpg.jpeg
-public/resume.pdf.txt
+dist-preview/
+.DS_Store
+*.log
