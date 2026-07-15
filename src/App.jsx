@@ -185,7 +185,7 @@ export default function App() {
     return (<>
       <ParticleField />
       <div className="mesh" /><div className="aurora" /><div className="grid-lines" />
-      <div className="bg-noise" /><div className="scanline" />
+      <div className="bg-noise" />
       <Cursor />
       <StatusBar />
       <CasePage cs={cases[caseSlug]} onBack={() => { window.location.hash = '' }} />
@@ -196,15 +196,15 @@ export default function App() {
   const words2 = ['into', 'decisions']
 
   const NAV = [
-    ['about', 'About'], ['expertise', 'Expertise'], ['checklist', 'Checklist'],
-    ['work', 'Projects'], ['experience', 'Experience'], ['contact', 'Contact'],
+    ['about', 'About'], ['experience', 'Experience'], ['work', 'Projects'],
+    ['expertise', 'Expertise'], ['checklist', 'Checklist'], ['contact', 'Contact'],
   ]
   return (
     <>
       <Boot />
       <ParticleField />
       <div className="mesh" /><div className="aurora" /><div className="grid-lines" />
-      <div className="bg-noise" /><div className="scanline" />
+      <div className="bg-noise" />
       <Cursor />
       <motion.div className="progress" style={{ scaleX: progress }} />
       <StatusBar />
@@ -236,7 +236,7 @@ export default function App() {
       <header className="hero" ref={heroRef}>
         <motion.div className="wrap" style={{ y: heroY, opacity: heroOpacity }}>
           <motion.div className="hero-badge" initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-            <span className="dot" />Business Analyst · Analytics Engineer · Data Storyteller — NYC
+            <span className="dot" />Data Analyst @ NYC Health + Hospitals · Open to BI &amp; Analytics Engineering roles
           </motion.div>
           <h1>
             {words.map((w, i) => (
@@ -255,10 +255,10 @@ export default function App() {
               transition={{ type: 'spring', stiffness: 110, damping: 14, delay: 0.62 }}>people can trust.</motion.span>
           </h1>
           <motion.p className="lede" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75 }}>
-            I build reproducible analytics systems — from SQL models and data pipelines to dashboards,
-            experimentation frameworks, and AI observability. Twenty public projects,{' '}
-            <strong>190+ automated tests</strong>, and every metric on this page traces to a seeded,
-            verifiable run.
+            I'm <strong>Raveesh Raj Grandhi</strong> — I build reproducible analytics systems, from SQL
+            models and data pipelines to dashboards, experimentation frameworks, and AI observability.
+            Twenty public projects, <strong>190+ automated tests</strong>, and every metric on this page
+            traces to a seeded, verifiable run.
           </motion.p>
           <motion.div className="hero-ctas" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
             <Magnetic><motion.a className="btn btn-primary" href="#work" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>Explore my work ↓</motion.a></Magnetic>
@@ -329,10 +329,58 @@ export default function App() {
             <p>Woodhull Medical Center, New York City — open to Business Intelligence, Analytics Engineering, and Data Analyst roles.</p>
           </motion.div>
           <motion.div className="glassbox b-mini" variants={rise}>
-            <h4>Operating principle</h4>
-            <div className="big">No unverifiable claims</div>
-            <p>Every number on this site is pinned by an automated test in a public repository. If it can't be reproduced, it isn't reported.</p>
+            <h4>Education &amp; credentials</h4>
+            <div className="big">M.S. Healthcare Informatics</div>
+            <p>University of Wisconsin–Milwaukee · Chancellor's Award · Google Advanced Data Analytics certified.</p>
           </motion.div>
+        </motion.div>
+      </Section>
+
+      {/* EXPERIENCE */}
+      <Section id="experience" kicker="Background" title="Experience & education."
+        sub="Clinical training → healthcare informatics → analytics in one of the largest public health systems in the U.S." style={{ paddingTop: 40 }}>
+        <motion.div className="xp" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }} variants={stagger}>
+          {[['OCT 2025 — PRESENT · NEW YORK, NY', 'Data Analyst', 'NYC Health + Hospitals · Woodhull Medical Center',
+            '20+ Tableau, Power BI, and Excel dashboards for leadership reporting across Epic, Snowflake, and internal systems. Cut recurring report prep 75% through automation, raised reporting accuracy from 88% to 94%, and supported Epic go-live — training ~50 clinical and administrative staff.'],
+            ['JUL 2024 — MAY 2025 · MILWAUKEE, WI', 'Graduate Research Analyst', 'Northwestern Mutual Data Science Institute',
+            'Built an AI respiratory-disease classification model achieving 93.5% accuracy on 2,500+ clinical audio recordings — end-to-end Python pipeline with cross-validation, ROC analysis, and hypothesis testing. Best Poster Award, 2024.'],
+            ['EDUCATION', 'M.S. Healthcare Informatics', "University of Wisconsin–Milwaukee · Chancellor's Graduate Student Award",
+            'Preceded by a Bachelor of Dental Surgery — the clinical foundation behind the healthcare analytics work. Google Advanced Data Analytics certified.'],
+          ].map(([when, h, org, p]) => (
+            <motion.div className="xp-item" key={h} variants={rise}>
+              <div className="when">{when}</div><h3>{h}</h3><div className="org">{org}</div><p>{p}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </Section>
+
+      {/* FEATURED */}
+      <Section id="work" kicker="Featured work" title="Six projects that carry the portfolio."
+        sub="Each attacks a problem most portfolios avoid — hostile public data, statistical traps, AI systems that need governing — and every claim is pinned by an automated test."
+        style={{ paddingTop: 30 }}>
+        <motion.div className="feat-grid" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} variants={stagger}>
+          {featured.map(f => (
+            <TiltCard key={f.repo} flag={f.flag}>
+              <span className={`chip ${f.cls}`}>{f.chip}</span>
+              <h3>{f.title}</h3>
+              <p>{f.body}</p>
+              <div className="metric">{f.metric}</div>
+              <div className="tags">{f.tags.map(t => <span key={t}>{t}</span>)}</div>
+              <div className="card-links">
+                <a className="card-link" href={`#/case/${f.repo}`}>Case study →</a>
+                <a className="card-link dim" href={`${GH}/${f.repo}`} target="_blank" rel="noopener">
+                  Code <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M7 17L17 7M7 7h10v10" /></svg>
+                </a>
+              </div>
+            </TiltCard>
+          ))}
+        </motion.div>
+        <motion.div className="more-proj" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }} transition={{ type: 'spring', stiffness: 90, damping: 16 }}>
+          <p>Fourteen more tested projects span insurance risk, real-time streaming, forecasting,
+          BI &amp; visualization, and marketing science.</p>
+          <Magnetic><motion.a className="btn btn-primary" href={GH} target="_blank" rel="noopener"
+            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>Explore all 20 repositories on GitHub →</motion.a></Magnetic>
         </motion.div>
       </Section>
 
@@ -367,36 +415,6 @@ export default function App() {
         </motion.div>
       </Section>
 
-      {/* FEATURED */}
-      <Section id="work" kicker="Featured work" title="Six projects that carry the portfolio."
-        sub="Each attacks a problem most portfolios avoid — hostile public data, statistical traps, AI systems that need governing — and every claim is pinned by an automated test."
-        style={{ paddingTop: 30 }}>
-        <motion.div className="feat-grid" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} variants={stagger}>
-          {featured.map(f => (
-            <TiltCard key={f.repo} flag={f.flag}>
-              <span className={`chip ${f.cls}`}>{f.chip}</span>
-              <h3>{f.title}</h3>
-              <p>{f.body}</p>
-              <div className="metric">{f.metric}</div>
-              <div className="tags">{f.tags.map(t => <span key={t}>{t}</span>)}</div>
-              <div className="card-links">
-                <a className="card-link" href={`#/case/${f.repo}`}>Case study →</a>
-                <a className="card-link dim" href={`${GH}/${f.repo}`} target="_blank" rel="noopener">
-                  Code <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M7 17L17 7M7 7h10v10" /></svg>
-                </a>
-              </div>
-            </TiltCard>
-          ))}
-        </motion.div>
-        <motion.div className="more-proj" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }} transition={{ type: 'spring', stiffness: 90, damping: 16 }}>
-          <p>Fourteen more tested projects span insurance risk, real-time streaming, forecasting,
-          BI &amp; visualization, and marketing science.</p>
-          <Magnetic><motion.a className="btn btn-primary" href={GH} target="_blank" rel="noopener"
-            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>Explore all 20 repositories on GitHub →</motion.a></Magnetic>
-        </motion.div>
-      </Section>
-
       {/* PHILOSOPHY */}
       <Section id="approach" kicker="Philosophy"
         title={<>Every metric should be <span className="grad">reproducible, explainable, and tested.</span></>}
@@ -416,24 +434,6 @@ export default function App() {
             </motion.li>
           ))}
         </motion.ol>
-      </Section>
-
-      {/* EXPERIENCE */}
-      <Section id="experience" kicker="Background" title="Experience & education."
-        sub="Clinical training → healthcare informatics → analytics in one of the largest public health systems in the U.S." style={{ paddingTop: 40 }}>
-        <motion.div className="xp" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }} variants={stagger}>
-          {[['OCT 2025 — PRESENT · NEW YORK, NY', 'Data Analyst', 'NYC Health + Hospitals · Woodhull Medical Center',
-            '20+ Tableau, Power BI, and Excel dashboards for leadership reporting across Epic, Snowflake, and internal systems. Cut recurring report prep 75% through automation, raised reporting accuracy from 88% to 94%, and supported Epic go-live — training ~50 clinical and administrative staff.'],
-            ['JUL 2024 — MAY 2025 · MILWAUKEE, WI', 'Graduate Research Analyst', 'Northwestern Mutual Data Science Institute',
-            'Built an AI respiratory-disease classification model achieving 93.5% accuracy on 2,500+ clinical audio recordings — end-to-end Python pipeline with cross-validation, ROC analysis, and hypothesis testing. Best Poster Award, 2024.'],
-            ['EDUCATION', 'M.S. Healthcare Informatics', "University of Wisconsin–Milwaukee · Chancellor's Graduate Student Award",
-            'Preceded by a Bachelor of Dental Surgery — the clinical foundation behind the healthcare analytics work. Google Advanced Data Analytics certified.'],
-          ].map(([when, h, org, p]) => (
-            <motion.div className="xp-item" key={h} variants={rise}>
-              <div className="when">{when}</div><h3>{h}</h3><div className="org">{org}</div><p>{p}</p>
-            </motion.div>
-          ))}
-        </motion.div>
       </Section>
 
       {/* CONTACT */}

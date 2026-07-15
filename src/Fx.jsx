@@ -18,7 +18,9 @@ export function ParticleField() {
     const cv = ref.current
     const ctx = cv.getContext('2d')
     if (!ctx) return
-    const DPR = Math.min(devicePixelRatio || 1, 2)
+    // DPR capped at 1.5 and a smaller particle count: the O(N²) link pass
+    // is the main per-frame cost, and it must never starve the cursor rAF.
+    const DPR = Math.min(devicePixelRatio || 1, 1.5)
     let W = 0, H = 0, N = 0, pts = [], mx = -9999, my = -9999, t = 0
     let rafId = null, running = !document.hidden
 
@@ -27,7 +29,7 @@ export function ParticleField() {
       cv.width = W * DPR; cv.height = H * DPR
       cv.style.width = W + 'px'; cv.style.height = H + 'px'
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0)
-      N = W < 760 ? 55 : 130
+      N = W < 760 ? 36 : 72
       pts = Array.from({ length: N }, () => ({
         x: Math.random() * W, y: Math.random() * H, z: 0.3 + Math.random() * 0.7,
         vx: (Math.random() - 0.5) * 0.24, vy: (Math.random() - 0.5) * 0.24,
@@ -96,11 +98,14 @@ export function Cursor() {
   useEffect(() => {
     if (reduced() || !finePointer()) return
     let cx = -100, cy = -100, rx = -100, ry = -100, rafId = null
-    const onMove = e => { cx = e.clientX; cy = e.clientY }
+    const onMove = e => {
+      cx = e.clientX; cy = e.clientY
+      // move the dot on the input event itself so it never trails the OS pointer
+      if (dotRef.current) dotRef.current.style.transform = `translate3d(${cx - 3}px,${cy - 3}px,0)`
+    }
     const loop = () => {
-      rx += (cx - rx) * 0.16; ry += (cy - ry) * 0.16
-      if (dotRef.current) dotRef.current.style.transform = `translate(${cx - 3}px,${cy - 3}px)`
-      if (ringRef.current) ringRef.current.style.transform = `translate(${rx - 17}px,${ry - 17}px)`
+      rx += (cx - rx) * 0.38; ry += (cy - ry) * 0.38
+      if (ringRef.current) ringRef.current.style.transform = `translate3d(${rx - 17}px,${ry - 17}px,0)`
       rafId = requestAnimationFrame(loop)
     }
     const over = e => {
