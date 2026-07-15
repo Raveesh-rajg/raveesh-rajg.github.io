@@ -56,6 +56,7 @@ function Stat({ n, suffix, label }) {
 }
 
 /* ---------- 3D tilt card ---------- */
+const COARSE = typeof window !== 'undefined' && matchMedia('(pointer: coarse)').matches
 function TiltCard({ children, flag }) {
   const rx = useMotionValue(0), ry = useMotionValue(0)
   const srx = useSpring(rx, { stiffness: 200, damping: 18 })
@@ -68,6 +69,7 @@ function TiltCard({ children, flag }) {
       style={{ rotateX: srx, rotateY: sry, transformPerspective: 900, '--mx': glowX, '--my': glowY }}
       whileHover={{ y: -5 }}
       onMouseMove={e => {
+        if (COARSE) return
         const r = e.currentTarget.getBoundingClientRect()
         ry.set(((e.clientX - r.left) / r.width - 0.5) * 6)
         rx.set(((e.clientY - r.top) / r.height - 0.5) * -6)

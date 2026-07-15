@@ -88,6 +88,10 @@ h2{font-family:var(--font-display);font-size:clamp(30px,4.4vw,46px);font-weight:
   background:rgba(4,6,10,.92);border-bottom:1px solid var(--line);text-transform:uppercase}
 .statusbar b{color:var(--accent);font-weight:500}
 .sb-right{display:flex;align-items:center;gap:8px}
+@media(max-width:700px){
+  .statusbar{justify-content:center}
+  .sb-right{display:none}
+}
 nav{position:fixed;top:38px;left:50%;transform:translateX(-50%);z-index:50;
   width:min(1140px,calc(100% - 28px));
   border:1px solid var(--line);border-radius:999px;
@@ -133,7 +137,10 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-6.5px) rotate(-45
 /* ---------------- hero ---------------- */
 .hero{min-height:100svh;display:flex;align-items:center;padding:180px 0 80px;position:relative}
 .hero-badge{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:999px;padding:7px 16px;font-size:12.5px;font-family:var(--font-mono);color:var(--muted);margin-bottom:28px}
-.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pulse 2.2s infinite}
+.hero-badge .dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pulse 2.2s infinite}
+@media(max-width:600px){
+  .hero-badge{border-radius:16px;font-size:11px;line-height:1.6;padding:8px 14px}
+}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 h1{font-family:var(--font-display);font-size:clamp(42px,7vw,84px);font-weight:700;letter-spacing:-.035em;line-height:1.04;margin-bottom:26px}
 .hw{display:inline-block}
@@ -288,6 +295,10 @@ h1{font-family:var(--font-display);font-size:clamp(42px,7vw,84px);font-weight:70
   padding:13px 16px;font:15px var(--font-body);color:var(--text);transition:border-color .25s,box-shadow .25s;resize:vertical}
 .cform input::placeholder,.cform textarea::placeholder{color:var(--dim)}
 .cform input:focus,.cform textarea:focus{outline:none;border-color:rgba(94,234,212,.55);box-shadow:0 0 0 3px rgba(94,234,212,.12)}
+/* 16px inputs on touch widths — anything smaller makes iOS Safari zoom the page on focus */
+@media(max-width:760px){
+  .cform input,.cform textarea,.palette .palette-input input{font-size:16px}
+}
 .cform-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:6px}
 .cform-foot a{font-family:var(--font-mono);font-size:13px;color:var(--muted);text-decoration:none;transition:color .25s}
 .cform-foot a:hover{color:var(--accent)}
