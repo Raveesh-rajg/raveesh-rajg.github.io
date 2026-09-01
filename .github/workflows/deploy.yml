@@ -28,7 +28,7 @@ jobs:
             'six page blocks': (html.match(/<section\b/g) || []).length === 6,
             'three inline charts': (html.match(/<svg\b[^>]*role="img"/g) || []).length === 3,
             'twenty project rows': (html.match(/<tr><td>\d{2}<\/td>/g) || []).length === 20,
-            'one Google Fonts request': (html.match(/fonts\.googleapis\.com/g) || []).length === 1,
+            'one Google Fonts request': (html.match(/fonts\.googleapis\.com\/css2/g) || []).length === 1,
             'skip link': html.includes('href="#content">Skip to content'),
             'reduced motion': html.includes('prefers-reduced-motion: reduce'),
             'no em dash': !html.includes('—'),
