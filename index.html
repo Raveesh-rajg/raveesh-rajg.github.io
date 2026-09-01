@@ -166,7 +166,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 44px;
+      min-width: 46px;
       min-height: 44px;
       padding-inline: 10px;
       color: var(--muted);
@@ -205,8 +205,6 @@
       min-height: calc(100svh - var(--header-height));
       padding-block: clamp(80px, 10vh, 128px);
     }
-
-    .hero-inner { width: 100%; }
 
     .hero h1 {
       max-width: 1080px;
@@ -286,6 +284,8 @@
     .hero-links a {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
+      min-width: 44px;
       min-height: 44px;
       color: var(--accent);
       transition: color 180ms ease;
@@ -397,7 +397,7 @@
 
     .chart figcaption { margin-top: 16px; color: var(--muted); font-family: var(--mono); font-size: 10px; line-height: 1.5; }
     .more-work { margin: 32px 0 0; color: var(--muted); font-family: var(--mono); font-size: 11px; line-height: 1.7; }
-    .more-work a { color: var(--accent); }
+    .more-work a { display: inline-flex; align-items: center; min-height: 44px; color: var(--accent); }
     .index-head { align-items: end; margin-bottom: 56px; }
     .index-head p { max-width: 520px; margin-bottom: 0; color: var(--muted); font-size: 15px; }
     .table-wrap { width: 100%; }
