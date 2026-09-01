@@ -10,6 +10,7 @@ This is an original light editorial system, not a template-based developer portf
 - a spatial evidence field connecting source, model, verification, and decision layers
 - a recruiter-readable index of 20 public systems
 - measured results linked directly to reproducible repositories
+- an accessible recruiter contact brief with progressive-enhancement Formspree delivery
 - native scrolling, responsive layouts, keyboard focus, and reduced-motion support
 - a compact opening sequence that runs once per browser session
 
@@ -28,7 +29,7 @@ Production verification:
 npm test
 ```
 
-The test command builds the Vite bundle and renders it in jsdom to verify the identity, selected exhibits, archive count, accessible image text, and core navigation.
+The test command builds the Vite bundle and renders it in jsdom to verify the identity, selected exhibits, archive count, accessible image text, semantic main landmark, core navigation, and Formspree contact configuration. It never submits a message during automated tests.
 
 ## Architecture
 

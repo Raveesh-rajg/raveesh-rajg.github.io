@@ -41,6 +41,11 @@ const assertions = {
   'twenty archive rows rendered': root?.querySelectorAll('.archive-row').length === 20,
   'profile image has alt text': root?.querySelector('.profile-portrait img')?.getAttribute('alt') === 'Raveesh Raj Grandhi',
   'skip link exists': Boolean(root?.querySelector('.skip-link')),
+  'all primary sections are in main': root?.querySelectorAll('main > section').length === 7,
+  'primary recruiter CTA opens contact': root?.querySelector('.nav-contact')?.getAttribute('href') === '#contact',
+  'Formspree endpoint is configured': root?.querySelector('.contact-form-shell form')?.getAttribute('action') === 'https://formspree.io/f/mlgqdlnd',
+  'contact form posts securely': root?.querySelector('.contact-form-shell form')?.getAttribute('method')?.toLowerCase() === 'post',
+  'contact fields have visible labels': root?.querySelectorAll('.contact-form-shell label').length === 5,
 }
 
 console.log('crashed:', crashed ? String(crashed).slice(0, 300) : 'no')

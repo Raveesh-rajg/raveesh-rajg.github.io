@@ -74,14 +74,13 @@ function Navigation() {
         <a href="#practice">Practice</a>
         <a href="#profile">Profile</a>
       </nav>
-      <a className="nav-contact" href={links.linkedin} target="_blank" rel="noreferrer">Open a conversation <Arrow /></a>
+      <a className="nav-contact" href="#contact">Discuss a role <Arrow /></a>
     </header>
   )
 }
 
 function Hero() {
   return (
-    <main id="top">
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-rail" aria-hidden="true">
           <span>RAVEESH RAJ GRANDHI</span>
@@ -111,7 +110,6 @@ function Hero() {
           <a href="#exhibits"><span>Enter the evidence</span><Arrow /></a>
         </div>
       </section>
-    </main>
   )
 }
 
@@ -303,19 +301,130 @@ function Profile() {
 }
 
 function Contact() {
+  const [formState, setFormState] = useState({ status: 'idle', message: '' })
+
+  const handleSubmit = async event => {
+    event.preventDefault()
+    const form = event.currentTarget
+    setFormState({ status: 'sending', message: 'Sending your brief securely…' })
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      })
+
+      if (response.ok) {
+        form.reset()
+        setFormState({
+          status: 'success',
+          message: 'Brief received. Raveesh will reply using the email you provided.',
+        })
+        return
+      }
+
+      let payload = null
+      try { payload = await response.json() } catch { /* Formspree may return a non-JSON error */ }
+      const message = payload?.errors?.map(error => error.message).filter(Boolean).join(' ')
+      setFormState({
+        status: 'error',
+        message: message || 'The brief could not be sent. Please retry or use LinkedIn below.',
+      })
+    } catch {
+      setFormState({
+        status: 'error',
+        message: 'The network interrupted the submission. Please retry or use LinkedIn below.',
+      })
+    }
+  }
+
   return (
     <section className="contact" id="contact" aria-labelledby="contact-title">
       <div className="contact-index">END / BEGIN</div>
-      <p>THE NEXT QUESTION / YOURS</p>
-      <h2 id="contact-title">If the question is hard enough to deserve evidence, send it.</h2>
-      <a className="contact-email" href={links.linkedin} target="_blank" rel="noreferrer">
-        <span>Start a conversation on LinkedIn</span><Arrow diagonal />
-      </a>
-      <div className="contact-foot">
-        <span>Healthcare analytics</span>
-        <span>Business intelligence</span>
-        <span>Analytics engineering</span>
-        <span>Applied AI</span>
+      <div className="contact-lead">
+        <p>THE NEXT QUESTION / YOURS</p>
+        <h2 id="contact-title">Bring me the difficult question.</h2>
+        <div className="contact-context">
+          <p>Recruiters and hiring teams can send the role, the problem space, and what success needs to look like.</p>
+          <span>Best aligned with clinical analytics, business intelligence, analytics engineering, decision science, and applied AI.</span>
+        </div>
+      </div>
+
+      <div className="contact-form-shell">
+        <div className="contact-form-head">
+          <span>OUTREACH BRIEF / 01</span>
+          <span className="contact-status-dot">Accepting conversations</span>
+        </div>
+
+        {formState.status === 'success' ? (
+          <div className="contact-success" role="status">
+            <span>TRANSMISSION COMPLETE</span>
+            <strong>Thank you.</strong>
+            <p>{formState.message}</p>
+            <button type="button" onClick={() => setFormState({ status: 'idle', message: '' })}>
+              Send another brief <Arrow />
+            </button>
+          </div>
+        ) : (
+          <form action="https://formspree.io/f/mlgqdlnd" method="POST" onSubmit={handleSubmit}>
+            <input type="hidden" name="_subject" defaultValue="Portfolio inquiry for Raveesh Raj Grandhi" />
+            <input className="contact-trap" type="text" name="_gotcha" tabIndex="-1" autoComplete="off" aria-hidden="true" />
+
+            <div className="contact-field-grid">
+              <label>
+                <span><i>01</i> Name</span>
+                <input name="name" type="text" autoComplete="name" placeholder="Your name" required />
+              </label>
+              <label>
+                <span><i>02</i> Work email</span>
+                <input name="email" type="email" autoComplete="email" placeholder="you@company.com" required />
+              </label>
+            </div>
+
+            <div className="contact-field-grid">
+              <label>
+                <span><i>03</i> Organization</span>
+                <input name="organization" type="text" autoComplete="organization" placeholder="Company or team" />
+              </label>
+              <label>
+                <span><i>04</i> Reason</span>
+                <select name="reason" defaultValue="" required>
+                  <option value="" disabled>Select one</option>
+                  <option>Recruiting conversation</option>
+                  <option>Hiring manager introduction</option>
+                  <option>Analytics collaboration</option>
+                  <option>Speaking or research</option>
+                  <option>Other</option>
+                </select>
+              </label>
+            </div>
+
+            <label className="contact-message">
+              <span><i>05</i> The brief</span>
+              <textarea name="message" rows="5" minLength="20" maxLength="2000" placeholder="Role, problem space, and what you need this person to change…" required />
+            </label>
+
+            <div className="contact-submit-row">
+              <p>Sent securely through Formspree. No account required.</p>
+              <button type="submit" disabled={formState.status === 'sending'}>
+                <span>{formState.status === 'sending' ? 'Sending brief…' : 'Send the brief'}</span><Arrow diagonal />
+              </button>
+            </div>
+
+            {formState.message && (
+              <p className={`contact-form-message is-${formState.status}`} role={formState.status === 'error' ? 'alert' : 'status'} aria-live="polite">
+                {formState.message}
+              </p>
+            )}
+          </form>
+        )}
+
+        <div className="contact-form-foot">
+          <a href={links.linkedin} target="_blank" rel="noreferrer">LinkedIn <Arrow diagonal /></a>
+          <a href={links.github} target="_blank" rel="noreferrer">GitHub <Arrow diagonal /></a>
+          <span>Healthcare / Data / Decisions</span>
+        </div>
       </div>
     </section>
   )
@@ -335,13 +444,15 @@ export default function App() {
       <motion.div className="scroll-progress" style={{ scaleX: progress }} />
       <a className="skip-link" href="#exhibits">Skip to selected work</a>
       <Navigation />
-      <Hero />
-      <Thesis />
-      <ExhibitCollection />
-      <Archive />
-      <Practice />
-      <Profile />
-      <Contact />
+      <main id="top">
+        <Hero />
+        <Thesis />
+        <ExhibitCollection />
+        <Archive />
+        <Practice />
+        <Profile />
+        <Contact />
+      </main>
       <footer className="site-footer">
         <span>© 2026 Raveesh Raj Grandhi</span>
         <span>Built around evidence, not effects.</span>
