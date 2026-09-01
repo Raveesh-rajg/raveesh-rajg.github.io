@@ -1,5 +1,5 @@
-// Render the PRODUCTION bundle in jsdom — the "does it crash outside the
-// editor" test. Shims only what jsdom lacks.
+// Render the production bundle in jsdom and assert the portfolio's core
+// content, navigation, archive, and evidence links survive bundling.
 import { JSDOM } from 'jsdom'
 import fs from 'fs'
 import path from 'path'
@@ -18,6 +18,11 @@ window.matchMedia = q => ({ matches: false, media: q, addEventListener(){}, remo
 window.IntersectionObserver = class { constructor(cb){this.cb=cb} observe(el){ this.cb([{isIntersecting:true,target:el}], this) } unobserve(){} disconnect(){} }
 window.ResizeObserver = class { observe(){} unobserve(){} disconnect(){} }
 window.scrollTo = () => {}
+window.HTMLCanvasElement.prototype.getContext = () => ({
+  clearRect(){}, fillRect(){}, setTransform(){}, beginPath(){}, arc(){}, fill(){},
+  stroke(){}, moveTo(){}, lineTo(){},
+  set fillStyle(v){}, set strokeStyle(v){}, set lineWidth(v){},
+})
 
 let crashed = null
 window.addEventListener('error', e => { crashed = e.error || e.message })
@@ -25,18 +30,20 @@ try {
   window.eval(bundle)
 } catch (e) { crashed = e }
 
-await new Promise(r => setTimeout(r, 1500))
+await new Promise(r => setTimeout(r, 1800))
 const root = window.document.getElementById('root')
 const text = root ? root.textContent : ''
+const assertions = {
+  'root rendered': Boolean(root?.children.length),
+  'identity rendered': text.includes('Raveesh Raj Grandhi'),
+  'signature thesis rendered': text.includes('How do you know?'),
+  'six evidence links rendered': root?.querySelectorAll('.exhibit-note > a').length === 6,
+  'twenty archive rows rendered': root?.querySelectorAll('.archive-row').length === 20,
+  'profile image has alt text': root?.querySelector('.profile-portrait img')?.getAttribute('alt') === 'Raveesh Raj Grandhi',
+  'skip link exists': Boolean(root?.querySelector('.skip-link')),
+}
+
 console.log('crashed:', crashed ? String(crashed).slice(0, 300) : 'no')
-console.log('root children:', root ? root.children.length : 'NO ROOT')
-console.log('has name:', text.includes('Raveesh Raj'))
-console.log('has checklist:', text.includes('Every capability'))
-console.log('has 20 projects:', (text.match(/View|Case study/g) || []).length > 0)
-// case route
-window.location.hash = '#/case/ab-testing-framework'
-window.dispatchEvent(new window.Event('hashchange'))
-await new Promise(r => setTimeout(r, 800))
-const caseText = root.textContent
-console.log('case page renders:', caseText.includes('Experimentation Framework') && caseText.includes('Naive daily peeking'))
-process.exit(crashed ? 1 : 0)
+Object.entries(assertions).forEach(([name, passed]) => console.log(`${name}:`, passed ? 'yes' : 'NO'))
+const failed = crashed || Object.values(assertions).some(value => !value)
+process.exit(failed ? 1 : 0)

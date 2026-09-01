@@ -1,493 +1,352 @@
-import { useState, useRef } from 'react'
-import {
-  motion, useScroll, useSpring,
-  useMotionValue, useInView, animate,
-} from 'framer-motion'
-import { featured, checklist, GH, LI, EMAIL } from './data.js'
-import { LiveQuery, CommandPalette, StatusBar } from './Terminal.jsx'
-import { CasePage } from './Case.jsx'
-import { cases } from './cases.jsx'
-import { ParticleField, Cursor, Boot, Magnetic } from './Fx.jsx'
-import { useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
+import { EvidenceField } from './EvidenceField.jsx'
+import { ProjectArtifact } from './Artifacts.jsx'
+import { archive, exhibits, links, method } from './content.js'
 
-/* ---------- shared variants ---------- */
-const rise = {
-  hidden: { opacity: 0, y: 30, scale: 0.985 },
-  show: (i = 0) => ({
-    opacity: 1, y: 0, scale: 1,
-    transition: { type: 'spring', stiffness: 90, damping: 16, delay: i * 0.07 },
-  }),
-}
-const stagger = { show: { transition: { staggerChildren: 0.07 } } }
+const repoUrl = repo => `${links.github}/${repo}`
+const ease = [0.22, 1, 0.36, 1]
 
-function Section({ id, kicker, title, sub, children, style }) {
+function Arrow({ diagonal = false }) {
   return (
-    <section id={id} style={style}>
-      <div className="wrap">
-        <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} variants={stagger}>
-          <motion.div className="kicker" variants={rise}>{kicker}</motion.div>
-          <motion.h2 variants={rise}>{title}</motion.h2>
-          {sub && <motion.p className="section-sub" variants={rise}>{sub}</motion.p>}
+    <svg className="arrow-icon" viewBox="0 0 20 20" aria-hidden="true">
+      <path d={diagonal ? 'M4 16L16 4M7 4h9v9' : 'M3 10h14M12 5l5 5-5 5'} />
+    </svg>
+  )
+}
+
+function IntroGate() {
+  const reduce = useReducedMotion()
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === 'undefined') return false
+    try { return !window.sessionStorage.getItem('evidence-intro') }
+    catch { return true }
+  })
+
+  useEffect(() => {
+    if (!visible) return undefined
+    const duration = reduce ? 120 : 1550
+    const timer = window.setTimeout(() => {
+      setVisible(false)
+      try { window.sessionStorage.setItem('evidence-intro', 'seen') } catch { /* no-op */ }
+    }, duration)
+    return () => window.clearTimeout(timer)
+  }, [reduce, visible])
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          className="intro-gate"
+          initial={{ opacity: 1 }}
+          exit={{ y: '-102%', transition: { duration: reduce ? 0.01 : 0.8, ease } }}
+          aria-hidden="true"
+        >
+          <div className="intro-mark">R / RG</div>
+          <div className="intro-sequence">
+            {['SOURCE RECEIVED', 'LOGIC AUDITED', 'DECISION READY'].map((label, index) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0.2 }}
+                animate={{ opacity: [0.2, 1, 0.35] }}
+                transition={{ duration: reduce ? 0 : 0.5, delay: index * 0.28 }}
+              >
+                <span>0{index + 1}</span>{label}
+              </motion.div>
+            ))}
+          </div>
+          <motion.div className="intro-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: reduce ? 0 : 1.25, ease }} />
         </motion.div>
-        {children}
+      )}
+    </AnimatePresence>
+  )
+}
+
+function Navigation() {
+  return (
+    <header className="site-nav">
+      <a className="site-mark" href="#top" aria-label="Raveesh Raj Grandhi, back to top">
+        <span>R</span><i /> <span>RG</span>
+      </a>
+      <nav aria-label="Portfolio sections">
+        <a href="#exhibits">Exhibits</a>
+        <a href="#archive">Index</a>
+        <a href="#practice">Practice</a>
+        <a href="#profile">Profile</a>
+      </nav>
+      <a className="nav-contact" href={links.linkedin} target="_blank" rel="noreferrer">Open a conversation <Arrow /></a>
+    </header>
+  )
+}
+
+function Hero() {
+  return (
+    <main id="top">
+      <section className="hero" aria-labelledby="hero-title">
+        <div className="hero-rail" aria-hidden="true">
+          <span>RAVEESH RAJ GRANDHI</span>
+          <span>CLINICAL ANALYTICS / DATA SYSTEMS</span>
+          <span>EDITION 2026</span>
+        </div>
+        <div className="hero-copy">
+          <p className="eyebrow"><span>Evidence room</span> Selected systems and the proof behind them</p>
+          <h1 id="hero-title">
+            The work is not
+            <span>the dashboard.</span>
+          </h1>
+          <div className="hero-thesis">
+            <p>The work is making every decision traceable back to a source, a definition, a test, and an honest limitation.</p>
+            <div className="hero-byline">
+              <span>Built by</span>
+              <strong>Raveesh Raj Grandhi</strong>
+              <small>Clinical Business Analyst + Analytics Engineer</small>
+            </div>
+          </div>
+        </div>
+        <div className="hero-field"><EvidenceField /></div>
+        <div className="hero-ledger" aria-label="Portfolio proof points">
+          <div><b>20</b><span>public systems</span></div>
+          <div><b>190+</b><span>tests and checks</span></div>
+          <div><b>01</b><span>rule: prove the claim</span></div>
+          <a href="#exhibits"><span>Enter the evidence</span><Arrow /></a>
+        </div>
+      </section>
+    </main>
+  )
+}
+
+function Thesis() {
+  return (
+    <section className="thesis" aria-labelledby="thesis-title">
+      <div className="thesis-label">OPERATING THESIS / 00</div>
+      <div className="thesis-copy">
+        <h2 id="thesis-title">I build analytical systems that can survive one uncomfortable question:</h2>
+        <blockquote>“How do you know?”</blockquote>
+      </div>
+      <div className="thesis-notes">
+        <p>That question changes the architecture. It asks for reproducible data, precise definitions, visible assumptions, measured baselines, and interfaces that do not overstate certainty.</p>
+        <p>The result is work that moves from SQL and data modeling through AI, statistical reasoning, BI, and stakeholder-ready decisions without losing the evidence in between.</p>
       </div>
     </section>
   )
 }
 
-/* ---------- count-up stat ---------- */
-function Stat({ n, suffix, label }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
-  useEffect(() => {
-    if (!inView) return
-    const controls = animate(0, n, {
-      duration: 1.4, ease: [0.16, 1, 0.3, 1],
-      onUpdate: v => { if (ref.current) ref.current.textContent = Math.round(v) },
-    })
-    return controls.stop
-  }, [inView, n])
+function Exhibit({ exhibit, index }) {
   return (
-    <div className="stat">
-      <div className="n"><span ref={ref}>0</span>{suffix && <em>{suffix}</em>}</div>
-      <div className="l">{label}</div>
-    </div>
-  )
-}
-
-/* ---------- 3D tilt card ---------- */
-const COARSE = typeof window !== 'undefined' && matchMedia('(pointer: coarse)').matches
-function TiltCard({ children, flag }) {
-  const rx = useMotionValue(0), ry = useMotionValue(0)
-  const srx = useSpring(rx, { stiffness: 200, damping: 18 })
-  const sry = useSpring(ry, { stiffness: 200, damping: 18 })
-  const glowX = useMotionValue('50%'), glowY = useMotionValue('0%')
-  return (
-    <motion.div
-      className={`card${flag ? ' flag' : ''}`}
-      variants={rise}
-      style={{ rotateX: srx, rotateY: sry, transformPerspective: 900, '--mx': glowX, '--my': glowY }}
-      whileHover={{ y: -5 }}
-      onMouseMove={e => {
-        if (COARSE) return
-        const r = e.currentTarget.getBoundingClientRect()
-        ry.set(((e.clientX - r.left) / r.width - 0.5) * 6)
-        rx.set(((e.clientY - r.top) / r.height - 0.5) * -6)
-        glowX.set(e.clientX - r.left + 'px'); glowY.set(e.clientY - r.top + 'px')
-      }}
-      onMouseLeave={() => { rx.set(0); ry.set(0) }}
-    >{children}</motion.div>
-  )
-}
-
-/* ---------- checklist tick with drawn path ---------- */
-function Check({ b, i, idx }) {
-  return (
-    <motion.div className="check" variants={rise} custom={idx % 6}>
-      <span className="tick">
-        <svg viewBox="0 0 24 24">
-          <motion.path d="M4 12.5l5 5L20 6.5"
-            initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }}
-            viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.25 + (idx % 6) * 0.06 }} />
-        </svg>
-      </span>
-      <div><b>{b}</b><i>{i}</i></div>
-    </motion.div>
-  )
-}
-
-/* ---------- contact form → Formspree ---------- */
-const FORM_ENDPOINT = 'https://formspree.io/f/mlgqdlnd'
-function ContactForm() {
-  const [status, setStatus] = useState('idle') // idle | sending | sent | error
-  const sending = status === 'sending'
-  const onSubmit = async e => {
-    e.preventDefault()
-    if (sending) return
-    const form = e.currentTarget
-    setStatus('sending')
-    const abort = new AbortController()
-    const timeout = setTimeout(() => abort.abort(), 12000)
-    try {
-      const res = await fetch(FORM_ENDPOINT, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-        signal: abort.signal,
-      })
-      if (res.ok) { setStatus('sent'); form.reset() }
-      else setStatus('error')
-    } catch { setStatus('error') }
-    finally { clearTimeout(timeout) }
-  }
-  return (
-    <form className="cform" onSubmit={onSubmit} aria-describedby="form-status">
-      {/* honeypot — Formspree silently drops submissions where bots fill this */}
-      <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true"
-        style={{ position: 'absolute', left: '-9999px', width: 1, height: 1 }} />
-      <fieldset disabled={sending} className="cform-fields">
-        <div className="cform-row">
-          <label>Name
-            <input name="name" required autoComplete="name" placeholder="Ada Lovelace" />
-          </label>
-          <label>Email
-            <input type="email" name="email" required autoComplete="email" placeholder="ada@company.com" />
-          </label>
-        </div>
-        <label>Message
-          <textarea name="message" required rows="5"
-            placeholder="We have three years of messy claims data and no trusted metrics…" />
-        </label>
-      </fieldset>
-      <div className="cform-foot">
-        <motion.button type="submit" className="btn btn-primary" disabled={sending}
-          whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>
-          {sending && <span className="spin" aria-hidden="true" />}
-          {sending ? 'Sending…' : 'Send message'}
-        </motion.button>
-        <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+    <article className={`exhibit exhibit-${exhibit.id}`} id={index === 0 ? 'exhibits' : undefined}>
+      <div className="exhibit-index" aria-hidden="true">
+        <span>{exhibit.number}</span>
+        <i />
+        <small>06</small>
       </div>
-      <p id="form-status" role="status" aria-live="polite" className={`cform-status${status === 'error' ? ' err' : ''}`}>
-        {status === 'sending' && 'Sending your message…'}
-        {status === 'sent' && "Message sent — thanks! I'll get back to you within a day."}
-        {status === 'error' && <>Something went wrong — please email me directly at <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</>}
-      </p>
-    </form>
+      <div className="exhibit-heading">
+        <div className="exhibit-code"><span>{exhibit.code}</span><span>{exhibit.discipline}</span></div>
+        <motion.h2
+          initial={{ opacity: 0, y: 44 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.45 }}
+          transition={{ duration: 0.8, ease }}
+        >
+          {exhibit.title}
+        </motion.h2>
+        <p>{exhibit.statement}</p>
+      </div>
+
+      <div className="exhibit-artifact">
+        <ProjectArtifact id={exhibit.id} />
+      </div>
+
+      <div className="exhibit-proof">
+        <span className="proof-label">Measured signal</span>
+        <strong>{exhibit.proof}</strong>
+        <p>{exhibit.proofLabel}</p>
+      </div>
+
+      <div className="exhibit-evidence">
+        {exhibit.evidence.map((item, itemIndex) => (
+          <div key={item}><span>0{itemIndex + 1}</span><p>{item}</p></div>
+        ))}
+      </div>
+
+      <div className="system-chain" aria-label="System stages">
+        {exhibit.system.map((item, itemIndex) => (
+          <div key={item}>
+            <span>{String(itemIndex + 1).padStart(2, '0')}</span>
+            <b>{item}</b>
+            {itemIndex < exhibit.system.length - 1 && <Arrow />}
+          </div>
+        ))}
+      </div>
+
+      <div className="exhibit-note">
+        <p>{exhibit.note}</p>
+        <div className="tool-line">{exhibit.tools.map(tool => <span key={tool}>{tool}</span>)}</div>
+        <a href={repoUrl(exhibit.repo)} target="_blank" rel="noreferrer">
+          Inspect the repository <Arrow diagonal />
+        </a>
+      </div>
+    </article>
+  )
+}
+
+function ExhibitCollection() {
+  return (
+    <section className="exhibit-collection" aria-label="Selected project case studies">
+      <div className="collection-intro">
+        <p>SELECTED EVIDENCE / 01 / 06</p>
+        <h2>Six systems. Six decisions. No ornamental case studies.</h2>
+        <span>Each result below is tied to a seeded run, evaluation harness, data contract, or test suite in the linked repository.</span>
+      </div>
+      {exhibits.map((exhibit, index) => <Exhibit exhibit={exhibit} index={index} key={exhibit.id} />)}
+    </section>
+  )
+}
+
+function Archive() {
+  const [filter, setFilter] = useState('All')
+  const filters = ['All', 'Healthcare', 'AI', 'Decision science', 'Data engineering', 'BI', 'Risk', 'Product']
+  const items = useMemo(() => filter === 'All' ? archive : archive.filter(item => item[2] === filter), [filter])
+
+  return (
+    <section className="archive" id="archive" aria-labelledby="archive-title">
+      <div className="archive-head">
+        <div>
+          <p>FULL PUBLIC INDEX / 20 SYSTEMS</p>
+          <h2 id="archive-title">The repository names now say what the work actually does.</h2>
+        </div>
+        <span>Filter by field, then open the proof.</span>
+      </div>
+      <div className="archive-filters" role="group" aria-label="Filter projects by field">
+        {filters.map(item => (
+          <button key={item} className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)} aria-pressed={filter === item}>
+            {item}
+          </button>
+        ))}
+      </div>
+      <div className="archive-table" aria-live="polite">
+        <div className="archive-columns" aria-hidden="true"><span>No.</span><span>System</span><span>Field</span><span>Proof marker</span><span>Open</span></div>
+        {items.map(item => (
+          <a href={repoUrl(item[4])} target="_blank" rel="noreferrer" className="archive-row" key={item[4]}>
+            <span>{item[0]}</span>
+            <strong>{item[1]}</strong>
+            <span>{item[2]}</span>
+            <span>{item[3]}</span>
+            <Arrow diagonal />
+          </a>
+        ))}
+      </div>
+      <a className="archive-all" href={`${links.github}?tab=repositories`} target="_blank" rel="noreferrer">Browse the complete GitHub archive <Arrow /></a>
+    </section>
+  )
+}
+
+function Practice() {
+  return (
+    <section className="practice" id="practice" aria-labelledby="practice-title">
+      <div className="practice-intro">
+        <p>PRACTICE / HOW THE WORK HOLDS UP</p>
+        <h2 id="practice-title">A repeatable way to move from a messy question to a trusted decision.</h2>
+      </div>
+      <div className="practice-steps">
+        {method.map((item, index) => (
+          <motion.div
+            key={item.number}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: index * 0.08, ease }}
+          >
+            <span>{item.number}</span>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </motion.div>
+        ))}
+      </div>
+      <div className="practice-spectrum">
+        <span>Clinical operations</span><i />
+        <span>Analytics engineering</span><i />
+        <span>Decision science</span><i />
+        <span>Applied AI</span><i />
+        <span>Executive communication</span>
+      </div>
+    </section>
+  )
+}
+
+function Profile() {
+  return (
+    <section className="profile" id="profile" aria-labelledby="profile-title">
+      <div className="profile-portrait">
+        <img src="./profile.jpg" alt="Raveesh Raj Grandhi" />
+        <span>IDENTITY RECORD / RRG</span>
+      </div>
+      <div className="profile-copy">
+        <p>PROFILE / THE PERSON BEHIND THE SYSTEMS</p>
+        <h2 id="profile-title">Clinical context. Engineering discipline. Executive clarity.</h2>
+        <div className="profile-body">
+          <p>I am a Clinical Business Analyst II at NYC Health + Hospitals and a health informatics graduate. My background began in clinical care and expanded into the data systems behind operational, financial, and clinical decisions.</p>
+          <p>I work across SQL, Python, Snowflake, Tableau, Power BI, Epic data, automation, and applied AI. The tools change. The obligation to make the result reproducible does not.</p>
+        </div>
+        <div className="profile-records">
+          <div><span>Current field</span><b>Clinical business analytics</b><small>NYC Health + Hospitals</small></div>
+          <div><span>Education</span><b>M.S. Health Informatics</b><small>University of Wisconsin, Milwaukee</small></div>
+          <div><span>Recognition</span><b>NMDSI Student Scholar</b><small>Best NMDSI Poster Award</small></div>
+        </div>
+        <div className="profile-links">
+          <a href={links.resume} download>Read the resume <Arrow /></a>
+          <a href={links.linkedin} target="_blank" rel="noreferrer">LinkedIn <Arrow diagonal /></a>
+          <a href={links.github} target="_blank" rel="noreferrer">GitHub <Arrow diagonal /></a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Contact() {
+  return (
+    <section className="contact" id="contact" aria-labelledby="contact-title">
+      <div className="contact-index">END / BEGIN</div>
+      <p>THE NEXT QUESTION / YOURS</p>
+      <h2 id="contact-title">If the question is hard enough to deserve evidence, send it.</h2>
+      <a className="contact-email" href={links.linkedin} target="_blank" rel="noreferrer">
+        <span>Start a conversation on LinkedIn</span><Arrow diagonal />
+      </a>
+      <div className="contact-foot">
+        <span>Healthcare analytics</span>
+        <span>Business intelligence</span>
+        <span>Analytics engineering</span>
+        <span>Applied AI</span>
+      </div>
+    </section>
   )
 }
 
 export default function App() {
-  const [route, setRoute] = useState(() => window.location.hash)
-  const [scrolled, setScrolled] = useState(false)
-  const [active, setActive] = useState('')
-  const [menu, setMenu] = useState(false)
-  const prevRoute = useRef(route)
-  useEffect(() => {
-    const onHash = () => {
-      const h = window.location.hash
-      // jump to top only when entering/leaving a case page — plain #section
-      // anchors must keep their native scroll
-      if (h.startsWith('#/case/') || prevRoute.current.startsWith('#/case/')) window.scrollTo(0, 0)
-      prevRoute.current = h
-      setRoute(h)
-    }
-    window.addEventListener('hashchange', onHash)
-    return () => window.removeEventListener('hashchange', onHash)
-  }, [])
-  const caseSlug = route.startsWith('#/case/') ? route.slice(7) : null
-
-  // per-page titles: case studies get their own, home restores the default
-  useEffect(() => {
-    const cs = caseSlug && cases[caseSlug]
-    document.title = cs
-      ? `${cs.title} — Raveesh Raj Grandhi`
-      : 'Raveesh Raj Grandhi — Data & Analytics Professional'
-  }, [caseSlug])
-
-  // pill nav: scrolled state + active-section highlight
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-  useEffect(() => {
-    if (caseSlug) return
-    const obs = new IntersectionObserver(es => {
-      es.forEach(en => { if (en.isIntersecting) setActive(en.target.id) })
-    }, { rootMargin: '-45% 0px -50% 0px' })
-    ;['about', 'expertise', 'checklist', 'work', 'experience', 'contact']
-      .forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el) })
-    return () => obs.disconnect()
-  }, [caseSlug])
-  useEffect(() => {
-    document.body.classList.toggle('menu-open', menu)
-    return () => document.body.classList.remove('menu-open')
-  }, [menu])
   const { scrollYProgress } = useScroll()
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 26 })
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 28, restDelta: 0.001 })
 
-  // Route branch AFTER every hook call — early returns before hooks
-  // violate the rules of hooks (React #300; caught by smoke.mjs).
-  if (caseSlug && cases[caseSlug]) {
-    const slugs = Object.keys(cases)
-    const nextSlug = slugs[(slugs.indexOf(caseSlug) + 1) % slugs.length]
-    return (<>
-      <ParticleField />
-      <div className="mesh" /><div className="aurora" /><div className="grid-lines" />
-      <div className="bg-noise" />
-      <Cursor />
-      <StatusBar />
-      <CasePage cs={cases[caseSlug]} next={{ slug: nextSlug, title: cases[nextSlug].title }}
-        onBack={() => { window.location.hash = '' }} />
-    </>)
-  }
+  useEffect(() => {
+    document.title = 'Raveesh Raj Grandhi | Evidence-Driven Analytics Systems'
+  }, [])
 
-  const words = ['I', 'turn', 'complex', 'data']
-  const words2 = ['into', 'decisions']
-
-  const NAV = [
-    ['about', 'About'], ['experience', 'Experience'], ['work', 'Projects'],
-    ['expertise', 'Expertise'], ['checklist', 'Checklist'], ['contact', 'Contact'],
-  ]
   return (
     <>
-      <Boot />
-      <ParticleField />
-      <div className="mesh" /><div className="aurora" /><div className="grid-lines" />
-      <div className="bg-noise" />
-      <Cursor />
-      <motion.div className="progress" style={{ scaleX: progress }} />
-      <StatusBar />
-      <CommandPalette />
-
-      <nav className={scrolled ? 'scrolled' : ''}>
-        <div className="nav-inner">
-          <a className="logo" href="#">Raveesh Raj <span>Grandhi</span></a>
-          <div className="nav-links">
-            {NAV.map(([id, label]) => (
-              <a key={id} href={`#${id}`} className={active === id ? 'on' : ''}>{label}</a>
-            ))}
-            <motion.a className="btn btn-primary" style={{ padding: '9px 20px', fontSize: 13 }}
-              href="./resume.pdf" download whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>Resume</motion.a>
-          </div>
-          <button className="burger" aria-label="Open menu" aria-expanded={menu} onClick={() => setMenu(m => !m)}>
-            <span /><span /><span />
-          </button>
-        </div>
-      </nav>
-      <div className={`m-menu${menu ? ' open' : ''}`}>
-        {NAV.map(([id, label]) => (
-          <a key={id} href={`#${id}`} onClick={() => setMenu(false)}>{label}</a>
-        ))}
-        <a href="./resume.pdf" download onClick={() => setMenu(false)} style={{ color: 'var(--accent)' }}>Resume ↓</a>
-      </div>
-
-      {/* HERO */}
-      <header className="hero">
-        <div className="wrap">
-          <motion.div className="hero-badge" initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-            <span className="dot" />Data Analyst @ NYC Health + Hospitals · Open to BI &amp; Analytics Engineering roles
-          </motion.div>
-          <h1>
-            {words.map((w, i) => (
-              <motion.span key={w} className="hw" initial={{ opacity: 0, y: '0.55em', rotate: 2 }}
-                animate={{ opacity: 1, y: 0, rotate: 0 }}
-                transition={{ type: 'spring', stiffness: 110, damping: 14, delay: 0.1 + i * 0.09 }}>{w}&nbsp;</motion.span>
-            ))}
-            <br />
-            {words2.map((w, i) => (
-              <motion.span key={w} className="hw" initial={{ opacity: 0, y: '0.55em', rotate: 2 }}
-                animate={{ opacity: 1, y: 0, rotate: 0 }}
-                transition={{ type: 'spring', stiffness: 110, damping: 14, delay: 0.4 + i * 0.09 }}>{w}&nbsp;</motion.span>
-            ))}
-            <motion.span className="hw grad" initial={{ opacity: 0, y: '0.55em' }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ type: 'spring', stiffness: 110, damping: 14, delay: 0.62 }}>people can trust.</motion.span>
-          </h1>
-          <motion.p className="lede" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75 }}>
-            I'm <strong>Raveesh Raj Grandhi</strong> — I build reproducible analytics systems, from SQL
-            models and data pipelines to dashboards, experimentation frameworks, and AI observability.
-            Twenty public projects, <strong>190+ automated tests</strong>, and every metric on this page
-            traces to a seeded, verifiable run.
-          </motion.p>
-          <motion.div className="hero-ctas" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}>
-            <Magnetic><motion.a className="btn btn-primary" href="#work" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>Explore my work ↓</motion.a></Magnetic>
-            <motion.a className="btn btn-ghost" href="./resume.pdf" download whileHover={{ y: -3 }}>Download resume ↓</motion.a>
-            <motion.a className="btn btn-ghost" href={GH} target="_blank" rel="noopener" whileHover={{ y: -3 }}>GitHub ↗</motion.a>
-            <motion.a className="btn btn-ghost" href={LI} target="_blank" rel="noopener" whileHover={{ y: -3 }}>LinkedIn ↗</motion.a>
-          </motion.div>
-          <div className="hero-cols">
-            <motion.div className="stats" initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.05 }}>
-              <Stat n={20} label="tested projects" />
-              <Stat n={190} suffix="+" label="automated tests" />
-              <Stat n={8} label="industry domains" />
-              <Stat n={15} suffix="+" label="tools in production" />
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 26 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2 }}>
-              <LiveQuery />
-            </motion.div>
-          </div>
-        </div>
-      </header>
-
-      <div className="strip">
-        <div className="marquee">
-          {[0, 1].map(k => (
-            <div className="mq" key={k}>
-              {['Reproducible analytics','Tested data models','Decision-ready dashboards','Experimentation','Causal inference','AI analytics','Healthcare depth','SQL at depth'].map(s => <span key={s}>{s}</span>)}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ABOUT */}
-      <Section id="about" kicker="About"
-        title={<>Turning messy data into<br />trustworthy decisions.</>}>
-        <motion.div className="bento" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }} variants={stagger}>
-          <motion.div className="glassbox b-bio" variants={rise}>
-            <p>I'm a data and analytics professional who transforms complex, messy source data into trusted
-            dashboards, governed metrics, and decision-ready insights. My work spans the full analytics
-            lifecycle, from SQL, data modeling, and pipeline development to business intelligence,
-            statistical analysis, and stakeholder communication.</p>
-            <p>One principle guides every project: <strong>analytical claims should be reproducible,
-            transparent, and tested</strong>. Instead of simply presenting a number, I document the logic,
-            validate the underlying data, and build quality checks that allow others to inspect and
-            reproduce the result. Explore the repositories to see the methodology, code, and evidence
-            behind the insights.</p>
-          </motion.div>
-          <motion.div className="glassbox b-photo" variants={rise}>
-            <div className="photo-ring">
-              <img src="./profile.jpg" alt="Raveesh Raj Grandhi" width="180" height="222"
-                onError={e => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling.style.display = 'flex' }} />
-              <div className="photo-fallback" aria-hidden="true">R</div>
-            </div>
-            <div className="socials">
-              <a href={GH} target="_blank" rel="noopener" aria-label="GitHub">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
-              </a>
-              <a href={LI} target="_blank" rel="noopener" aria-label="LinkedIn">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4V8h4v1.5A6 6 0 0 1 16 8z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>
-              </a>
-              <a href={`mailto:${EMAIL}`} aria-label="Email">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>
-              </a>
-            </div>
-          </motion.div>
-          <motion.div className="glassbox b-mini" variants={rise}>
-            <h3>Currently</h3>
-            <div className="big">Data Analyst @ NYC Health + Hospitals</div>
-            <p>Woodhull Medical Center, New York City — open to Business Intelligence, Analytics Engineering, and Data Analyst roles.</p>
-          </motion.div>
-          <motion.div className="glassbox b-mini" variants={rise}>
-            <h3>Education &amp; credentials</h3>
-            <div className="big">M.S. Healthcare Informatics</div>
-            <p>University of Wisconsin–Milwaukee · Chancellor's Award · Google Advanced Data Analytics certified.</p>
-          </motion.div>
-        </motion.div>
-      </Section>
-
-      {/* EXPERIENCE */}
-      <Section id="experience" kicker="Background" title="Experience & education."
-        sub="Clinical training → healthcare informatics → analytics in one of the largest public health systems in the U.S." style={{ paddingTop: 40 }}>
-        <motion.div className="xp" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.15 }} variants={stagger}>
-          {[['OCT 2025 — PRESENT · NEW YORK, NY', 'Data Analyst', 'NYC Health + Hospitals · Woodhull Medical Center',
-            '20+ Tableau, Power BI, and Excel dashboards for leadership reporting across Epic, Snowflake, and internal systems. Cut recurring report prep 75% through automation, raised reporting accuracy from 88% to 94%, and supported Epic go-live — training ~50 clinical and administrative staff.'],
-            ['JUL 2024 — MAY 2025 · MILWAUKEE, WI', 'Graduate Research Analyst', 'Northwestern Mutual Data Science Institute',
-            'Built an AI respiratory-disease classification model achieving 93.5% accuracy on 2,500+ clinical audio recordings — end-to-end Python pipeline with cross-validation, ROC analysis, and hypothesis testing. Best Poster Award, 2024.'],
-            ['EDUCATION', 'M.S. Healthcare Informatics', "University of Wisconsin–Milwaukee · Chancellor's Graduate Student Award",
-            'Preceded by a Bachelor of Dental Surgery — the clinical foundation behind the healthcare analytics work. Google Advanced Data Analytics certified.'],
-          ].map(([when, h, org, p]) => (
-            <motion.div className="xp-item" key={h} variants={rise}>
-              <div className="when">{when}</div><h3>{h}</h3><div className="org">{org}</div><p>{p}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </Section>
-
-      {/* FEATURED */}
-      <Section id="work" kicker="Featured work" title="Six projects that carry the portfolio."
-        sub="Each attacks a problem most portfolios avoid — hostile public data, statistical traps, AI systems that need governing — and every claim is pinned by an automated test."
-        style={{ paddingTop: 30 }}>
-        <motion.div className="feat-grid" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.05 }} variants={stagger}>
-          {featured.map(f => (
-            <TiltCard key={f.repo} flag={f.flag}>
-              <span className={`chip ${f.cls}`}>{f.chip}</span>
-              <h3>{f.title}</h3>
-              <p>{f.body}</p>
-              <div className="metric">{f.metric}</div>
-              <div className="tags">{f.tags.map(t => <span key={t}>{t}</span>)}</div>
-              <div className="card-links">
-                <a className="card-link" href={`#/case/${f.repo}`}>Case study →</a>
-                <a className="card-link dim" href={`${GH}/${f.repo}`} target="_blank" rel="noopener">
-                  Code <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M7 17L17 7M7 7h10v10" /></svg>
-                </a>
-              </div>
-            </TiltCard>
-          ))}
-        </motion.div>
-        <motion.div className="more-proj" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }} transition={{ type: 'spring', stiffness: 90, damping: 16 }}>
-          <p>Fourteen more tested projects span insurance risk, real-time streaming, forecasting,
-          BI &amp; visualization, and marketing science.</p>
-          <Magnetic><motion.a className="btn btn-primary" href={GH} target="_blank" rel="noopener"
-            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.96 }}>Explore all 20 repositories on GitHub →</motion.a></Magnetic>
-        </motion.div>
-      </Section>
-
-      {/* EXPERTISE */}
-      <Section id="expertise" kicker="Expertise"
-        title="The stack, in production across 20 repos."
-        sub="No proficiency percentages — every tool below is used in a public, tested project you can open."
-        style={{ paddingTop: 30 }}>
-        <motion.div className="skill-cols" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} variants={stagger}>
-          {[
-            ['BI & visualization', ['Power BI · DAX', 'Tableau', 'LookML', 'Looker Studio', 'Excel · Power Query', 'Evidence.dev', 'Streamlit']],
-            ['SQL, modeling & warehousing', ['SQL', 'dbt Core', 'Snowflake', 'BigQuery', 'DuckDB', 'PostgreSQL', 'Kimball modeling']],
-            ['Python & statistics', ['pandas', 'scipy', 'statsmodels', 'scikit-learn', 'A/B testing', 'causal inference', 'forecasting']],
-            ['Data engineering & cloud', ['PySpark', 'Delta Lake', 'Databricks', 'Pub/Sub', 'Cloud Run', 'GitHub Actions CI']],
-            ['AI & LLM systems', ['Claude API', 'Gemini', 'LangChain', 'RAG', 'eval harnesses', 'OpenTelemetry GenAI']],
-            ['Engineering practice', ['pytest', 'Git · GitHub', 'seeded reproducibility', 'decision records', 'data-quality gates']],
-          ].map(([h, tools]) => (
-            <motion.div className="skill-group" key={h} variants={rise}>
-              <h3>{h}</h3>
-              <div className="tags">{tools.map(t => <span key={t}>{t}</span>)}</div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </Section>
-
-      {/* CHECKLIST */}
-      <Section id="checklist" kicker="Capabilities"
-        title={<>Every capability,<br />with its <span className="grad">proof.</span></>}
-        sub="Twelve things an analytics screen looks for. Each one names the tested, public project that demonstrates it.">
-        <motion.div className="check-grid" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} variants={stagger}>
-          {checklist.map(([b, i], idx) => <Check key={b} b={b} i={i} idx={idx} />)}
-        </motion.div>
-      </Section>
-
-      {/* PHILOSOPHY */}
-      <Section id="approach" kicker="Philosophy"
-        title={<>Every metric should be <span className="grad">reproducible, explainable, and tested.</span></>}
-        sub="Analysis that doesn't change a decision is decoration. The same six-stage discipline runs through all twenty projects — and through my hospital reporting work."
-        style={{ paddingTop: 40 }}>
-        <motion.ol className="stages" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.1 }} variants={stagger}>
-          {[['01', 'Raw data', 'Land it untouched, with audit columns — bronze is the record of what the source actually sent.'],
-            ['02', 'Validation', 'Planted-defect testing, quarantine with reasons, reconciliation that must sum exactly. Nothing silently dropped.'],
-            ['03', 'Modeling', 'Dimensional schemas and tested transformations — definitions live in one place, under version control and CI.'],
-            ['04', 'Analysis', "The right method for the question: experiment when you can, quasi-experiment when you can't, and honest baselines always."],
-            ['05', 'Visualization', 'Dashboards read pre-aggregated, governed marts — so "revenue" means the same thing on every chart.'],
-            ['06', 'Decision', 'Every readout ends at an action, with its assumptions and confidence stated — not a chart dump.'],
-          ].map(([n, h, p], i) => (
-            <motion.li className="stage" key={n} variants={rise}>
-              <span className="n">{n}</span><h3>{h}</h3><p>{p}</p>
-              {i < 5 && <svg className="flow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>}
-            </motion.li>
-          ))}
-        </motion.ol>
-      </Section>
-
-      {/* CONTACT */}
-      <section id="contact" style={{ paddingTop: 30 }}>
-        <div className="wrap">
-          <motion.div className="contact-box" initial={{ opacity: 0, y: 34 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }} transition={{ type: 'spring', stiffness: 80, damping: 16 }}>
-            <div className="kicker" style={{ justifyContent: 'center' }}>Let's talk</div>
-            <h2>Have a complex data problem?<br />Let's make it <span className="grad">decision-ready.</span></h2>
-            <p>Open to Business Intelligence, Analytics Engineering, and Data Analyst roles. Every project on this site is public, tested, and ready to be discussed in depth.</p>
-            <ContactForm />
-            <div className="contact-links" style={{ marginTop: 30 }}>
-              <motion.a className="btn btn-ghost" href="./resume.pdf" download whileHover={{ y: -3 }}>Download resume ↓</motion.a>
-              <motion.a className="btn btn-ghost" href={GH} target="_blank" rel="noopener" whileHover={{ y: -3 }}>GitHub</motion.a>
-              <motion.a className="btn btn-ghost" href={LI} target="_blank" rel="noopener" whileHover={{ y: -3 }}>LinkedIn</motion.a>
-            </div>
-          </motion.div>
-          <footer>
-            <div><b style={{ fontFamily: 'var(--font-display)', color: 'var(--muted)', fontWeight: 600 }}>Raveesh Raj Grandhi</b> — Data &amp; Analytics Professional · © 2026</div>
-            <div><a href={GH} target="_blank" rel="noopener">GitHub</a> · <a href={LI} target="_blank" rel="noopener">LinkedIn</a> · <a href={`mailto:${EMAIL}`}>Email</a> · <a href="#">Back to top ↑</a></div>
-            <div className="foot-sig">designed &amp; engineered with precision</div>
-          </footer>
-        </div>
-      </section>
+      <IntroGate />
+      <motion.div className="scroll-progress" style={{ scaleX: progress }} />
+      <a className="skip-link" href="#exhibits">Skip to selected work</a>
+      <Navigation />
+      <Hero />
+      <Thesis />
+      <ExhibitCollection />
+      <Archive />
+      <Practice />
+      <Profile />
+      <Contact />
+      <footer className="site-footer">
+        <span>© 2026 Raveesh Raj Grandhi</span>
+        <span>Built around evidence, not effects.</span>
+        <a href="#top">Return to top ↑</a>
+      </footer>
     </>
   )
 }
