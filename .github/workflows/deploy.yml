@@ -19,32 +19,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate the single-file portfolio
-        run: |
-          node <<'NODE'
-          const fs = require('node:fs')
-          const html = fs.readFileSync('index.html', 'utf8')
-          const checks = {
-            'six page blocks': (html.match(/<section\b/g) || []).length === 6,
-            'three inline charts': (html.match(/<svg\b[^>]*role="img"/g) || []).length === 3,
-            'twenty project rows': (html.match(/<tr><td>\d{2}<\/td>/g) || []).length === 20,
-            'one Google Fonts request': (html.match(/fonts\.googleapis\.com\/css2/g) || []).length === 1,
-            'skip link': html.includes('href="#content">Skip to content'),
-            'reduced motion': html.includes('prefers-reduced-motion: reduce'),
-            'no em dash': !html.includes('—'),
-          }
-          for (const [name, passed] of Object.entries(checks)) {
-            console.log(`${name}: ${passed ? 'yes' : 'NO'}`)
-          }
-          if (Object.values(checks).some((passed) => !passed)) process.exit(1)
-          NODE
-      - name: Prepare static Pages artifact
-        run: |
-          mkdir -p _site
-          cp index.html _site/index.html
-          cp public/resume.pdf _site/resume.pdf
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build and run portfolio smoke tests
+        run: npm test
       - uses: actions/upload-pages-artifact@v3
-        with: { path: _site }
+        with: { path: dist }
 
   deploy:
     needs: build

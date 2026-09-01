@@ -59,7 +59,7 @@ export function EvidenceField() {
     const context = canvas?.getContext('2d')
     if (!canvas || !shell || !context) return undefined
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches || Boolean(navigator.connection?.saveData)
     let width = 0
     let height = 0
     let dpr = 1
@@ -175,8 +175,10 @@ export function EvidenceField() {
 
     resizeObserver.observe(shell)
     intersectionObserver.observe(shell)
-    shell.addEventListener('pointermove', onPointer)
-    shell.addEventListener('pointerleave', onLeave)
+    if (!reduced) {
+      shell.addEventListener('pointermove', onPointer)
+      shell.addEventListener('pointerleave', onLeave)
+    }
     resize()
     draw()
 
@@ -185,8 +187,10 @@ export function EvidenceField() {
       cancelAnimationFrame(frame)
       resizeObserver.disconnect()
       intersectionObserver.disconnect()
-      shell.removeEventListener('pointermove', onPointer)
-      shell.removeEventListener('pointerleave', onLeave)
+      if (!reduced) {
+        shell.removeEventListener('pointermove', onPointer)
+        shell.removeEventListener('pointerleave', onLeave)
+      }
     }
   }, [])
 

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
 import { EvidenceField } from './EvidenceField.jsx'
 import { ProjectArtifact } from './Artifacts.jsx'
-import { archive, exhibits, links, method } from './content.js'
+import { archive, exhibits, links, method, roleLenses } from './content.js'
 
 const repoUrl = repo => `${links.github}/${repo}`
 const ease = [0.22, 1, 0.36, 1]
@@ -69,6 +69,7 @@ function Navigation() {
         <span>R</span><i /> <span>RG</span>
       </a>
       <nav aria-label="Portfolio sections">
+        <a href="#roles">Roles</a>
         <a href="#exhibits">Exhibits</a>
         <a href="#archive">Index</a>
         <a href="#practice">Practice</a>
@@ -98,7 +99,7 @@ function Hero() {
             <div className="hero-byline">
               <span>Built by</span>
               <strong>Raveesh Raj Grandhi</strong>
-              <small>Clinical Business Analyst + Analytics Engineer</small>
+              <small>Clinical analytics / BI / data systems</small>
             </div>
           </div>
         </div>
@@ -110,6 +111,66 @@ function Hero() {
           <a href="#exhibits"><span>Enter the evidence</span><Arrow /></a>
         </div>
       </section>
+  )
+}
+
+function RoleLens() {
+  const [activeId, setActiveId] = useState('data-analyst')
+  const active = roleLenses.find(role => role.id === activeId) || roleLenses[0]
+
+  return (
+    <section className="role-lens" id="roles" aria-labelledby="role-lens-title">
+      <div className="role-lens-head">
+        <p>RECRUITER LENS / FIVE PATHS</p>
+        <h2 id="role-lens-title">Hiring for a specific role?</h2>
+        <span>Select a lens. The rest of the portfolio stays visible.</span>
+      </div>
+
+      <div className="role-lens-tabs" role="group" aria-label="Highlight portfolio relevance by role">
+        {roleLenses.map((role, index) => (
+          <button
+            type="button"
+            key={role.id}
+            className={active.id === role.id ? 'is-active' : ''}
+            aria-pressed={active.id === role.id}
+            onClick={() => setActiveId(role.id)}
+          >
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            {role.label}
+          </button>
+        ))}
+      </div>
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          className="role-lens-panel"
+          key={active.id}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.32, ease }}
+          aria-live="polite"
+        >
+          <div className="role-lens-statement">
+            <span>POSITIONING / {active.label}</span>
+            <h3>{active.statement}</h3>
+          </div>
+          <div className="role-lens-signals" aria-label={`${active.label} capability signals`}>
+            {active.signals.map((signal, index) => (
+              <div key={signal}><span>0{index + 1}</span><strong>{signal}</strong></div>
+            ))}
+          </div>
+          <div className="role-lens-projects">
+            <span>START WITH THESE SYSTEMS</span>
+            {active.projects.map(([name, repo]) => (
+              <a href={repoUrl(repo)} target="_blank" rel="noreferrer" key={repo}>
+                <strong>{name}</strong><Arrow diagonal />
+              </a>
+            ))}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </section>
   )
 }
 
@@ -275,7 +336,7 @@ function Profile() {
   return (
     <section className="profile" id="profile" aria-labelledby="profile-title">
       <div className="profile-portrait">
-        <img src="./profile.jpg" alt="Raveesh Raj Grandhi" />
+        <img src="./profile.jpg" alt="Raveesh Raj Grandhi" loading="lazy" decoding="async" />
         <span>IDENTITY RECORD / RRG</span>
       </div>
       <div className="profile-copy">
@@ -287,8 +348,14 @@ function Profile() {
         </div>
         <div className="profile-records">
           <div><span>Current field</span><b>Clinical business analytics</b><small>NYC Health + Hospitals</small></div>
-          <div><span>Education</span><b>M.S. Health Informatics</b><small>University of Wisconsin, Milwaukee</small></div>
+          <div><span>Education</span><b>M.S. Health Informatics</b><small>University of Wisconsin–Milwaukee</small></div>
           <div><span>Recognition</span><b>NMDSI Student Scholar</b><small>Best NMDSI Poster Award</small></div>
+        </div>
+        <div className="profile-impact" aria-label="Selected professional impact">
+          <div><strong>88% → 94%</strong><span>reporting accuracy</span></div>
+          <div><strong>4h → 1h</strong><span>recurring report preparation</span></div>
+          <div><strong>60%</strong><span>faster dashboard refresh</span></div>
+          <div><strong>20+</strong><span>dashboards across three departments</span></div>
         </div>
         <div className="profile-links">
           <a href={links.resume} download>Read the resume <Arrow /></a>
@@ -434,6 +501,7 @@ function Contact() {
         )}
 
         <div className="contact-form-foot">
+          <a href={links.email}>Email <Arrow diagonal /></a>
           <a href={links.linkedin} target="_blank" rel="noreferrer">LinkedIn <Arrow diagonal /></a>
           <a href={links.github} target="_blank" rel="noreferrer">GitHub <Arrow diagonal /></a>
           <span>Healthcare / Data / Decisions</span>
@@ -459,6 +527,7 @@ export default function App() {
       <Navigation />
       <main id="top">
         <Hero />
+        <RoleLens />
         <Thesis />
         <ExhibitCollection />
         <Archive />

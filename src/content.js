@@ -2,7 +2,66 @@ export const links = {
   github: 'https://github.com/Raveesh-rajg',
   linkedin: 'https://www.linkedin.com/in/raveeshrajg/',
   resume: './resume.pdf',
+  email: 'mailto:raveeshraj26@gmail.com',
 }
+
+export const roleLenses = [
+  {
+    id: 'bi-engineer',
+    label: 'BI Engineer',
+    statement: 'Build governed metric layers, dimensional models, and reporting systems that stay consistent from warehouse to executive review.',
+    signals: ['Snowflake + dbt', 'Power BI + Tableau', 'Semantic governance'],
+    projects: [
+      ['Commerce Analytics Warehouse', 'dbt-snowflake-ecommerce'],
+      ['Governed LookML Semantic Layer', 'looker-lookml-ecommerce'],
+      ['Executive Revenue Intelligence', 'powerbi-dax-showcase'],
+    ],
+  },
+  {
+    id: 'data-analyst',
+    label: 'Data Analyst',
+    statement: 'Turn ambiguous questions into reproducible analysis, validated metrics, and concise decisions without overstating certainty.',
+    signals: ['Advanced SQL', 'Python analysis', 'Statistical validation'],
+    projects: [
+      ['Experiment Decision System', 'ab-testing-framework'],
+      ['Growth Accounting & Retention', 'product-growth-analytics'],
+      ['Demand Forecasting & Serving', 'vertex-forecasting'],
+    ],
+  },
+  {
+    id: 'business-analyst',
+    label: 'Business Analyst',
+    statement: 'Translate stakeholder questions into KPI definitions, reporting specifications, workflow improvements, and decision-ready evidence.',
+    signals: ['Requirements framing', 'KPI definition', 'Variance analysis'],
+    projects: [
+      ['Executive Revenue Intelligence', 'powerbi-dax-showcase'],
+      ['Finance Data Automation', 'excel-powerquery-casestudy'],
+      ['Global Health Convergence Story', 'tableau-storytelling'],
+    ],
+  },
+  {
+    id: 'healthcare-analyst',
+    label: 'Healthcare Analyst',
+    statement: 'Apply clinical context to claims, utilization, hospital rates, operational workflows, and the quality controls behind healthcare reporting.',
+    signals: ['Epic-connected reporting', 'Claims + utilization', 'Price transparency'],
+    projects: [
+      ['Hospital Rate Intelligence', 'hospital-price-intelligence'],
+      ['Claims Quality & Utilization Lakehouse', 'healthcare-claims-pipeline'],
+      ['Insurance Fraud Triage', 'insurance-loss-analytics'],
+    ],
+  },
+  {
+    id: 'clinical-data-scientist',
+    label: 'Clinical Data Scientist',
+    statement: 'Connect clinical framing with reproducible modeling, causal reasoning, evaluation design, and explicit limits on what the evidence can support.',
+    signals: ['Clinical research context', 'Causal inference', 'Model evaluation'],
+    projects: [
+      ['Causal Impact Measurement', 'causal-inference-casebook'],
+      ['Experiment Decision System', 'ab-testing-framework'],
+      ['Review Intelligence Pipeline', 'review-nlp-pipeline'],
+    ],
+  },
+]
 
 export const exhibits = [
   {

@@ -1,33 +1,46 @@
-# Raveesh Raj Grandhi | Analytics that survives audit
+# Raveesh Raj Grandhi | Evidence Room
 
-The source for [raveesh-rajg.github.io](https://raveesh-rajg.github.io/), a single-file portfolio built around one rule: every analytical claim needs a visible path to evidence.
+The source for [raveesh-rajg.github.io](https://raveesh-rajg.github.io/), an editorial portfolio about the evidence path behind analytical decisions.
 
-## Design direction
+## Creative direction
 
-The site uses a quiet, dark instrumentation system with one electric-blue proof line. It includes:
+The portfolio combines editorial composition, clinical precision, data-system diagrams, and restrained cinematic motion. Its central metaphor is a four-stage proof path:
 
-- six verified results linked to their repositories
-- three hand-authored inline SVG charts
-- a recruiter-readable index of 20 public systems
-- native scrolling, visible keyboard focus, and reduced-motion support
-- a mail link with copy-to-clipboard enhancement
+`SOURCE → MODEL → VERIFY → DECIDE`
 
-The page uses no framework or runtime package. Space Grotesk and IBM Plex Mono load through one Google Fonts request.
+The experience includes:
 
-## Preview locally
+- a recruiter lens for BI Engineer, Data Analyst, Business Analyst, Healthcare Analyst, and Clinical Data Scientist roles
+- six evidence-led flagship case studies with custom data artifacts
+- a filterable public index preserving all 20 projects
+- a professional record with verified work impact
+- a Formspree recruiter brief and direct email fallback
+- reduced-motion and Save-Data behavior
+- a custom social card, metadata, structured data, and redirecting 404
+
+## Stack
+
+- React 18
+- Vite 5
+- Framer Motion
+- custom CSS and canvas instrumentation
+- no UI component framework
+
+## Local development
 
 ```bash
-python3 -m http.server 4173
+npm ci
+npm run dev
 ```
 
-Open `http://localhost:4173`.
+## Validation
+
+```bash
+npm test
+```
+
+The test command builds the production bundle and checks the six flagship repositories, the 20-project archive, the five recruiter lenses, professional impact, contact fallback, Formspree configuration, semantic structure, and profile accessibility.
 
 ## Deployment
 
-Pushing to `main` runs the GitHub Pages workflow:
-
-1. validate the six-block structure, inline charts, project index, accessibility hooks, and copy rules
-2. copy `index.html` and the resume into the Pages artifact
-3. deploy the static artifact
-
-Every highlighted portfolio metric comes from the linked repository's seeded run, evaluation harness, source contract, or test suite.
+Pushes to `main` run the GitHub Pages workflow, build the locked Vite project, execute the smoke test, and deploy `dist/`.
