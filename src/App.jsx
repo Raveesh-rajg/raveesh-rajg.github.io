@@ -300,18 +300,22 @@ function Profile() {
   )
 }
 
+const CONTACT_SUBJECT = 'Portfolio inquiry for Raveesh Raj Grandhi'
+
 function Contact() {
   const [formState, setFormState] = useState({ status: 'idle', message: '' })
 
   const handleSubmit = async event => {
     event.preventDefault()
     const form = event.currentTarget
+    const formData = new FormData(form)
+    formData.set('_subject', CONTACT_SUBJECT)
     setFormState({ status: 'sending', message: 'Sending your brief securely…' })
 
     try {
       const response = await fetch(form.action, {
         method: 'POST',
-        body: new FormData(form),
+        body: formData,
         headers: { Accept: 'application/json' },
       })
 
@@ -368,7 +372,16 @@ function Contact() {
           </div>
         ) : (
           <form action="https://formspree.io/f/mlgqdlnd" method="POST" onSubmit={handleSubmit}>
-            <input type="hidden" name="_subject" value="Portfolio inquiry for Raveesh Raj Grandhi" readOnly />
+            <input
+              type="hidden"
+              name="_subject"
+              defaultValue={CONTACT_SUBJECT}
+              ref={node => {
+                if (!node) return
+                node.value = CONTACT_SUBJECT
+                node.setAttribute('value', CONTACT_SUBJECT)
+              }}
+            />
             <input className="contact-trap" type="text" name="_gotcha" tabIndex="-1" autoComplete="off" aria-hidden="true" />
 
             <div className="contact-field-grid">
