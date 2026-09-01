@@ -368,7 +368,7 @@ function Contact() {
           </div>
         ) : (
           <form action="https://formspree.io/f/mlgqdlnd" method="POST" onSubmit={handleSubmit}>
-            <input type="hidden" name="_subject" defaultValue="Portfolio inquiry for Raveesh Raj Grandhi" />
+            <input type="hidden" name="_subject" value="Portfolio inquiry for Raveesh Raj Grandhi" readOnly />
             <input className="contact-trap" type="text" name="_gotcha" tabIndex="-1" autoComplete="off" aria-hidden="true" />
 
             <div className="contact-field-grid">

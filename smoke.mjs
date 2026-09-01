@@ -46,6 +46,7 @@ const assertions = {
   'Formspree endpoint is configured': root?.querySelector('.contact-form-shell form')?.getAttribute('action') === 'https://formspree.io/f/mlgqdlnd',
   'contact form posts securely': root?.querySelector('.contact-form-shell form')?.getAttribute('method')?.toLowerCase() === 'post',
   'contact fields have visible labels': root?.querySelectorAll('.contact-form-shell label').length === 5,
+  'contact subject identifies the source': root?.querySelector('input[name="_subject"]')?.value === 'Portfolio inquiry for Raveesh Raj Grandhi',
 }
 
 console.log('crashed:', crashed ? String(crashed).slice(0, 300) : 'no')
