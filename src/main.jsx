@@ -1,13 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { MotionConfig } from 'framer-motion'
-import App from './App.jsx'
-import './styles.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { MotionConfig } from "framer-motion";
+import App from "./App.jsx";
+import "./fonts.css";
+import "./styles.css";
+import "./refinement.css";
 
 // reducedMotion="user": every framer spring/entrance collapses to a simple
 // fade when the OS asks for reduced motion, matching the CSS media queries.
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <MotionConfig reducedMotion="user">
     <App />
   </MotionConfig>,
-)
+);

@@ -169,7 +169,7 @@ export const exhibits = [
 ]
 
 export const archive = [
-  ['01', 'Hospital Rate Intelligence', 'Healthcare', '93.75% mapped', 'hospital-price-intelligence'],
+  ['01', 'Hospital Rate Intelligence', 'Healthcare', '93.75% accuracy', 'hospital-price-intelligence'],
   ['02', 'Claims Quality & Utilization Lakehouse', 'Healthcare', '98/98 defects isolated', 'healthcare-claims-pipeline'],
   ['03', 'Experiment Decision System', 'Decision science', '38 tests', 'ab-testing-framework'],
   ['04', 'Causal Impact Measurement', 'Decision science', '3 methods verified', 'causal-inference-casebook'],

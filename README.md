@@ -3,7 +3,9 @@
 
 Source for [raveesh-rajg.github.io](https://raveesh-rajg.github.io/).
 
-An original charcoal and copper editorial design with an AI-generated metallic signal sculpture, subtle pointer parallax, scroll reveals, six featured project studies, five professional focus selectors, a searchable 20-project archive, profile, résumé, and contact form.
+A charcoal and copper editorial portfolio built around a clear narrative: data systems people can trust. The original typography, portrait, artwork, twenty projects, résumé, and contact integration are preserved.
+
+Recruiter mode offers professional impact, a concise Hospital Rate Intelligence flagship, and two supporting systems. Deep Dive expands the six-stage flagship story, all five supporting systems, the analytical method, and the searchable project archive. An independent Evidence switch exposes source annotations. Three capability pillars — Build, Understand, Communicate — connect the work to practical hiring needs.
 
 ## Development
 
@@ -15,20 +17,23 @@ npm run dev
 npm test
 ```
 
-`npm test` builds the production bundle and runs 46 content and interaction checks in jsdom, with normal and reduced motion. It covers project filtering and search, mobile menu behavior, role selection, accessible links and labels, and contact success/error recovery. All automated form requests are mocked and never send email.
+`npm test` builds the production bundle and runs 74 content and interaction checks in jsdom, with normal and reduced motion. It covers reading modes, source annotations, interactive project evidence, method and capability selection, filtering, search, mobile menu and focus behavior, internal links, native validation attributes, and contact success/error recovery. Automated form requests are mocked and never send email.
 
 Pushes to `main` run the GitHub Pages workflow, test the production build, and deploy `dist/`.
 
 ## Content and assets
 
-- Project definitions, metrics, repository links, and professional focus data: `src/content.js`.
-- Page composition and contact behavior: `src/App.jsx`.
-- Theme and responsive layouts: `src/styles.css`.
+- Original project definitions and links: `src/content.js`.
+- Professional impact, capabilities, and provenance: `src/refinement-data.js`.
+- Page composition: `src/App.jsx`; reading modes and evidence: `src/ViewContext.jsx`.
+- Flagship narrative: `src/Flagship.jsx`; project-specific visuals: `src/ProjectVisuals.jsx`.
+- Contact behavior: `src/Contact.jsx`; archive search: `src/Archive.jsx`.
+- Preserved theme: `src/styles.css`; responsive refinement: `src/refinement.css`.
 - Optimized original generated hero artwork: `public/signal.webp` (approximately 248 KiB).
 - Existing portrait, résumé, and social card are preserved.
-- Typography: DM Sans and Instrument Serif, served by Google Fonts with system fallbacks.
+- Typography: DM Sans and Instrument Serif, locally served with system fallbacks. OFL licenses are included in `public/fonts/`.
 
-Featured metrics describe seeded project data or offline evaluations, not production business outcomes. No invented clients, projects, testimonials, or awards were added.
+Professional impact is transcribed from the existing résumé. Featured project metrics describe seeded data or offline evaluations, with links to source code and methods. No invented clients, time series, testimonials, or awards were added. The cohort comparison shows only the documented week-four observations; the experiment marks are grouped by outcome, not chronology.
 
 ## Contact
 
