@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "framer-motion";
+import { HeroAtmosphere, RotatingStatement } from "./HeroMotion.jsx";
 import { links, method } from "./content.js";
 import { impact, capabilities, repoUrl } from "./refinement-data.js";
 import { Arrow, SectionHeading } from "./ui.jsx";
@@ -27,7 +29,7 @@ export function Navigation() {
         >
           rrg<span>↗</span>
         </a>
-        <span className="nav-caption">HEALTHCARE · BI · DATA SYSTEMS</span>
+        <span className="nav-caption">BUSINESS INTELLIGENCE · ANALYTICS</span>
         <button
           ref={menuRef}
           className="menu-toggle"
@@ -66,11 +68,36 @@ export function Navigation() {
   );
 }
 export function Hero() {
+  const reduced = useReducedMotion();
+  const [paused, setPaused] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [inView, setInView] = useState(true);
+  const heroRef = useRef(null);
+  useEffect(() => {
+    const onVisibility = () => setVisible(!document.hidden);
+    onVisibility();
+    document.addEventListener("visibilitychange", onVisibility);
+    const observer = new IntersectionObserver(([entry]) =>
+      setInView(entry.isIntersecting),
+    );
+    if (heroRef.current) observer.observe(heroRef.current);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
+  const running = !reduced && !paused && visible && inView;
   return (
-    <section className="hero refined-hero" aria-labelledby="hero-title">
+    <section
+      ref={heroRef}
+      className="hero refined-hero"
+      aria-labelledby="hero-title"
+      data-motion={running ? "running" : "paused"}
+    >
+      <HeroAtmosphere />
       <div className="hero-topline">
         <span>
-          <i className="status-dot" /> NEW YORK · HEALTHCARE & DATA
+          <i className="status-dot" /> NEW YORK · BUSINESS & DATA
         </span>
         <span>RAVEESH RAJ GRANDHI / 2026</span>
       </div>
@@ -83,13 +110,19 @@ export function Hero() {
           </h1>
           <div className="hero-description">
             <p>
-              Healthcare intelligence. Analytics engineering.
+              Business intelligence. Business analysis.
               <br />
-              Decision systems.
+              Analytics engineering.
             </p>
+            <RotatingStatement
+              running={running}
+              paused={paused}
+              onToggle={() => setPaused(!paused)}
+              reduced={reduced}
+            />
             <p className="hero-support">
-              Clinical context and engineering discipline, from the source table
-              to the reporting people rely on.
+              Connecting business questions, reliable data, and reporting that
+              moves teams forward.
             </p>
             <a className="pill primary" href="#exhibits">
               View selected work <Arrow diagonal />
@@ -117,8 +150,8 @@ export function Hero() {
           />
           <div className="signal-step raw">
             <span>01 / RAW</span>
-            <code>clinical records</code>
-            <code>payer_rate</code>
+            <code>business events</code>
+            <code>revenue</code>
             <code>source_format</code>
           </div>
           <div className="signal-step validate">
@@ -148,7 +181,7 @@ export function Hero() {
         </div>
         <div className="hero-art-label">
           <span className="crosshair">+</span>
-          <span>CLINICAL CONTEXT → DATA SYSTEM → EVIDENCE → DECISION</span>
+          <span>BUSINESS QUESTION → DATA SYSTEM → EVIDENCE → DECISION</span>
         </div>
         <a className="scroll-cue" href="#impact">
           <span>THE IMPACT</span>

@@ -1,0 +1,243 @@
+.refined-hero {
+  position: relative;
+  isolation: isolate;
+}
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ambient-halo {
+  position: absolute;
+  width: 75%;
+  height: 110%;
+  right: -20%;
+  top: -5%;
+  background: radial-gradient(ellipse, #bd896c0c, transparent 65%);
+  animation: halo-breathe 16s ease-in-out infinite alternate;
+}
+.orbital-field {
+  position: absolute;
+  width: min(65vw, 1060px);
+  aspect-ratio: 1;
+  right: -13%;
+  top: 1%;
+  perspective: 1000px;
+  transform: rotate(-22deg);
+  opacity: 0.65;
+}
+.orbit {
+  position: absolute;
+  inset: 10%;
+  border: 1px solid #d7a17b2d;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  animation: orbit-travel 55s linear infinite;
+  --tilt: 62deg;
+}
+.orbit-two {
+  inset: 20%;
+  --tilt: 35deg;
+  animation-duration: 75s;
+  animation-direction: reverse;
+  border-color: #d6c6ac22;
+}
+.orbit-three {
+  inset: 3%;
+  --tilt: 74deg;
+  animation-duration: 95s;
+  animation-delay: -28s;
+  border-color: #d7a17b1e;
+}
+.orbit i {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  top: -3px;
+  left: calc(50% - 2px);
+  border-radius: 50%;
+  background: #dbac8b;
+  box-shadow: 0 0 12px #d7a17b65;
+}
+.ambient-spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #d7a17b70;
+  animation: spark-drift 18s ease-in-out infinite alternate;
+}
+.spark-one {
+  left: 61%;
+  top: 19%;
+}
+.spark-two {
+  left: 92%;
+  top: 67%;
+  animation-delay: -8s;
+}
+.spark-three {
+  left: 54%;
+  top: 74%;
+  animation-delay: -13s;
+}
+.refined-hero .signal-system > img {
+  animation: sculpture-drift 14s ease-in-out infinite alternate;
+}
+.rotating-statement {
+  margin: 23px 0 16px;
+  max-width: 480px;
+}
+.statement-lines {
+  display: grid;
+  align-items: start;
+}
+.statement-lines p {
+  grid-area: 1 / 1;
+  margin: 0;
+  font-size: clamp(19px, 1.6vw, 24px);
+  line-height: 1.45;
+  letter-spacing: -0.025em;
+  color: #d7a17b;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s ease;
+  pointer-events: none;
+}
+.statement-lines p.is-current {
+  opacity: 1;
+  transform: translateY(0);
+}
+.statement-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 5px;
+  min-height: 32px;
+}
+.statement-dots {
+  display: flex;
+  gap: 2px;
+}
+.statement-dots button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 32px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 3px;
+}
+.statement-dots button span {
+  height: 2px;
+  width: 17px;
+  background: #8e8f8755;
+  transition: background 0.4s;
+}
+.statement-dots button[aria-pressed="true"] span {
+  background: var(--accent);
+}
+.hero-motion-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 3px 8px;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  color: #a6a69e;
+  font-size: 11px;
+}
+.hero-motion-toggle:hover {
+  color: #eee9e1;
+}
+.refined-hero[data-motion="paused"] .hero-atmosphere *,
+.refined-hero[data-motion="paused"] .signal-system > img {
+  animation-play-state: paused;
+}
+@keyframes orbit-travel {
+  from {
+    transform: rotateX(var(--tilt)) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(var(--tilt)) rotateZ(360deg);
+  }
+}
+@keyframes sculpture-drift {
+  from {
+    transform: translate3d(0, -5px, 0) rotate(-1deg);
+  }
+  to {
+    transform: translate3d(5px, 7px, 0) rotate(1deg);
+  }
+}
+@keyframes halo-breathe {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes spark-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.3;
+  }
+  to {
+    transform: translate3d(-16px, -32px, 0);
+    opacity: 0.75;
+  }
+}
+@media (max-width: 760px) {
+  .orbital-field {
+    width: 90vw;
+    top: 32%;
+    right: -35%;
+    opacity: 0.4;
+  }
+  .rotating-statement {
+    max-width: 450px;
+  }
+}
+@media (max-width: 500px) {
+  .orbital-field {
+    width: 150vw;
+    right: -74%;
+    top: 34%;
+    opacity: 0.4;
+  }
+  .rotating-statement {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  .statement-lines p {
+    font-size: 19px;
+  }
+  .refined-hero .hero-support {
+    margin-bottom: 22px;
+  }
+  .ambient-spark {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-atmosphere *,
+  .refined-hero .signal-system > img {
+    animation: none !important;
+  }
+  .orbit {
+    transform: rotateX(var(--tilt)) rotateZ(-25deg);
+  }
+  .statement-lines p {
+    transition: none;
+    transform: none;
+  }
+}

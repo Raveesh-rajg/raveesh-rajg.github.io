@@ -45,6 +45,15 @@ for (const reduced of [false, true]) {
     disconnect() {}
   };
   w.scrollTo = () => {};
+  const rotations = new Map();
+  const nativeInterval = w.setInterval.bind(w);
+  const nativeClear = w.clearInterval.bind(w);
+  w.setInterval = (callback, delay, ...args) => {
+    const id = nativeInterval(callback, delay, ...args);
+    if (delay === 6000) rotations.set(id, callback);
+    return id;
+  };
+  w.clearInterval = (id) => { rotations.delete(id); nativeClear(id); };
   const errors = [];
   w.addEventListener("error", (e) => errors.push(e.error || e.message));
   w.eval(bundle);
@@ -71,6 +80,26 @@ for (const reduced of [false, true]) {
     all(".impact-grid > div").length === 4 &&
       $("#impact").nextElementSibling.id === "exhibits",
   );
+  check("opening positions BI and business analysis across industries", text('.hero-description').includes('Business intelligence. Business analysis.') && !text('.hero-description').includes('Healthcare') && text('.nav-caption').includes('BUSINESS INTELLIGENCE'));
+  check("rotating statements reserve four accessible choices", all('.statement-lines p').length === 4 && all('.statement-dots button').length === 4 && all('.statement-lines p[aria-hidden=false]').length === 1);
+  await click('.statement-dots button:nth-child(3)');
+  check("readers can select a statement", text('.statement-lines .is-current') === 'Turn business problems into measurable progress.');
+  if (reduced) {
+    check("reduced motion disables automatic rotation and ambient motion", rotations.size === 0 && $('.refined-hero').dataset.motion === 'paused' && !$('.hero-motion-toggle'));
+  } else {
+    check("statement automatically advances", rotations.size === 1);
+    [...rotations.values()][0](); await settle();
+    check("rotation updates the selected statement", text('.statement-lines .is-current') === 'Build the insight. Make the next move clear.');
+    await click('.hero-motion-toggle');
+    check("pause stops the timer and background motion", rotations.size === 0 && $('.refined-hero').dataset.motion === 'paused');
+    await click('.hero-motion-toggle');
+    check("resume restarts motion", rotations.size === 1 && $('.refined-hero').dataset.motion === 'running');
+    Object.defineProperty(d, 'hidden', {configurable:true, value:true});
+    d.dispatchEvent(new w.Event('visibilitychange')); await settle();
+    check("hidden tabs suspend motion", rotations.size === 0 && $('.refined-hero').dataset.motion === 'paused');
+    Object.defineProperty(d, 'hidden', {configurable:true, value:false});
+    d.dispatchEvent(new w.Event('visibilitychange')); await settle();
+  }
   check(
     "Recruiter default is compact",
     all(".project-card").length === 2 &&

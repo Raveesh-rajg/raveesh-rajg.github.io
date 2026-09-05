@@ -70,8 +70,8 @@ export default function Contact() {
             and what success needs to look like.
           </p>
           <span>
-            Best aligned with clinical analytics, business intelligence,
-            analytics engineering, decision science, and applied AI.
+            Open to business intelligence engineering, business analysis,
+            and analytics roles across industries.
           </span>
         </div>
       </div>

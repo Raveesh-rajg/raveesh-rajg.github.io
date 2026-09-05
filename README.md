@@ -17,7 +17,7 @@ npm run dev
 npm test
 ```
 
-`npm test` builds the production bundle and runs 74 content and interaction checks in jsdom, with normal and reduced motion. It covers reading modes, source annotations, interactive project evidence, method and capability selection, filtering, search, mobile menu and focus behavior, internal links, native validation attributes, and contact success/error recovery. Automated form requests are mocked and never send email.
+`npm test` builds the production bundle and runs 86 content and interaction checks in jsdom, with normal and reduced motion. It covers reading modes, source annotations, interactive project evidence, method and capability selection, filtering, search, mobile menu and focus behavior, internal links, native validation attributes, and contact success/error recovery. Hero checks cover automatic statement rotation, manual selection, pause/resume, hidden-tab suspension, and reduced-motion behavior. Automated form requests are mocked and never send email.
 
 Pushes to `main` run the GitHub Pages workflow, test the production build, and deploy `dist/`.
 
@@ -27,6 +27,7 @@ Pushes to `main` run the GitHub Pages workflow, test the production build, and d
 - Professional impact, capabilities, and provenance: `src/refinement-data.js`.
 - Page composition: `src/App.jsx`; reading modes and evidence: `src/ViewContext.jsx`.
 - Flagship narrative: `src/Flagship.jsx`; project-specific visuals: `src/ProjectVisuals.jsx`.
+- Industry-neutral opening, four rotating statements, and lightweight CSS orbit motion: `src/HeroMotion.jsx` and `src/HeroMotion.css`. Statements rotate every six seconds; motion pauses when the hero is offscreen, the tab is hidden, or the reader selects Pause. Reduced-motion preferences disable automatic rotation and animation.
 - Contact behavior: `src/Contact.jsx`; archive search: `src/Archive.jsx`.
 - Preserved theme: `src/styles.css`; responsive refinement: `src/refinement.css`.
 - Optimized original generated hero artwork: `public/signal.webp` (approximately 248 KiB).
