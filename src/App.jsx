@@ -1,370 +1,46 @@
-import { useEffect, useMemo, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
-import { EvidenceField } from './EvidenceField.jsx'
-import { ProjectArtifact } from './Artifacts.jsx'
+
+import { useEffect, useRef, useState } from 'react'
+import { motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
 import { archive, exhibits, links, method, roleLenses } from './content.js'
-
-const repoUrl = repo => `${links.github}/${repo}`
 const ease = [0.22, 1, 0.36, 1]
-
-function Arrow({ diagonal = false }) {
-  return (
-    <svg className="arrow-icon" viewBox="0 0 20 20" aria-hidden="true">
-      <path d={diagonal ? 'M4 16L16 4M7 4h9v9' : 'M3 10h14M12 5l5 5-5 5'} />
-    </svg>
-  )
-}
-
-function IntroGate() {
-  const reduce = useReducedMotion()
-  const [visible, setVisible] = useState(() => {
-    if (typeof window === 'undefined') return false
-    try { return !window.sessionStorage.getItem('evidence-intro') }
-    catch { return true }
-  })
-
-  useEffect(() => {
-    if (!visible) return undefined
-    const duration = reduce ? 120 : 1550
-    const timer = window.setTimeout(() => {
-      setVisible(false)
-      try { window.sessionStorage.setItem('evidence-intro', 'seen') } catch { /* no-op */ }
-    }, duration)
-    return () => window.clearTimeout(timer)
-  }, [reduce, visible])
-
-  return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          className="intro-gate"
-          initial={{ opacity: 1 }}
-          exit={{ y: '-102%', transition: { duration: reduce ? 0.01 : 0.8, ease } }}
-          aria-hidden="true"
-        >
-          <div className="intro-mark">R / RG</div>
-          <div className="intro-sequence">
-            {['SOURCE RECEIVED', 'LOGIC AUDITED', 'DECISION READY'].map((label, index) => (
-              <motion.div
-                key={label}
-                initial={{ opacity: 0.2 }}
-                animate={{ opacity: [0.2, 1, 0.35] }}
-                transition={{ duration: reduce ? 0 : 0.5, delay: index * 0.28 }}
-              >
-                <span>0{index + 1}</span>{label}
-              </motion.div>
-            ))}
-          </div>
-          <motion.div className="intro-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: reduce ? 0 : 1.25, ease }} />
-        </motion.div>
-      )}
-    </AnimatePresence>
-  )
-}
-
+const repoUrl = name => `${links.github}/${name}`
+function Arrow({ diagonal = false }) { return <svg className="arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d={diagonal ? 'M5 19 19 5M5 5h14v14' : 'M4 12h16m-7-7 7 7-7 7'} stroke="currentColor" strokeWidth="1.5" /></svg> }
+function Reveal({ children, className = '' }) { const reduce = useReducedMotion(); return <motion.div className={className} initial={{ opacity: 0, y: reduce ? 0 : 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .12 }} transition={{ duration: .7, ease }}>{children}</motion.div> }
 function Navigation() {
-  return (
-    <header className="site-nav">
-      <a className="site-mark" href="#top" aria-label="Raveesh Raj Grandhi, back to top">
-        <span>R</span><i /> <span>RG</span>
-      </a>
-      <nav aria-label="Portfolio sections">
-        <a href="#roles">Roles</a>
-        <a href="#exhibits">Exhibits</a>
-        <a href="#archive">Index</a>
-        <a href="#practice">Practice</a>
-        <a href="#profile">Profile</a>
-      </nav>
-      <a className="nav-contact" href="#contact">Discuss a role <Arrow /></a>
-    </header>
-  )
+  const [open, setOpen] = useState(false)
+  useEffect(() => { const close = e => { if(e.key === 'Escape') setOpen(false) }; window.addEventListener('keydown', close); return () => window.removeEventListener('keydown', close) }, [])
+  return <header className="site-nav"><a className="brand" href="#top" aria-label="Raveesh Raj Grandhi, home">rrg<span>↗</span></a><span className="nav-caption">ANALYTICS & INTELLIGENCE</span><button className="menu-toggle" aria-expanded={open} aria-controls="navigation" onClick={() => setOpen(!open)}>{open ? 'Close −' : 'Menu +'}</button><nav id="navigation" className={open ? 'is-open' : ''} aria-label="Portfolio sections">{[['Work','exhibits'],['Expertise','roles'],['About','profile']].map(([label,id])=><a key={id} href={`#${id}`} onClick={()=>setOpen(false)}>{label}</a>)}<a href="#contact" className="nav-contact" onClick={()=>setOpen(false)}>Let’s talk <Arrow diagonal /></a></nav></header>
 }
-
 function Hero() {
-  return (
-      <section className="hero" aria-labelledby="hero-title">
-        <div className="hero-rail" aria-hidden="true">
-          <span>RAVEESH RAJ GRANDHI</span>
-          <span>CLINICAL ANALYTICS / DATA SYSTEMS</span>
-          <span>EDITION 2026</span>
-        </div>
-        <div className="hero-copy">
-          <p className="eyebrow"><span>Evidence room</span> Selected systems and the proof behind them</p>
-          <h1 id="hero-title">
-            The work is not
-            <span>the dashboard.</span>
-          </h1>
-          <div className="hero-thesis">
-            <p>The work is making every decision traceable back to a source, a definition, a test, and an honest limitation.</p>
-            <div className="hero-byline">
-              <span>Built by</span>
-              <strong>Raveesh Raj Grandhi</strong>
-              <small>Clinical analytics / BI / data systems</small>
-            </div>
-          </div>
-        </div>
-        <div className="hero-field"><EvidenceField /></div>
-        <div className="hero-ledger" aria-label="Portfolio proof points">
-          <div><b>20</b><span>public systems</span></div>
-          <div><b>190+</b><span>tests and checks</span></div>
-          <div><b>01</b><span>rule: prove the claim</span></div>
-          <a href="#exhibits"><span>Enter the evidence</span><Arrow /></a>
-        </div>
-      </section>
-  )
+  const ref = useRef(null); const reduce = useReducedMotion()
+  function move(e) { if(reduce || e.pointerType === 'touch') return; const r=e.currentTarget.getBoundingClientRect(); ref.current?.style.setProperty('--mx', `${(e.clientX-r.left-r.width/2)*.018}px`); ref.current?.style.setProperty('--my', `${(e.clientY-r.top-r.height/2)*.018}px`) }
+  return <section className="hero" aria-labelledby="hero-title" onPointerMove={move} onPointerLeave={()=>{ref.current?.style.setProperty('--mx','0px');ref.current?.style.setProperty('--my','0px')}}>
+    <div className="hero-topline"><span><i className="status-dot" /> NEW YORK · HEALTHCARE & DATA</span><span>PORTFOLIO / 2026</span></div>
+    <div className="hero-art" ref={ref} aria-hidden="true"><img src="./signal.webp" alt="" fetchPriority="high" width="1536" height="1024" /></div>
+    <div className="hero-copy"><motion.p className="eyebrow" initial={{opacity:0}} animate={{opacity:1}} transition={{duration:.8}}>RAVEESH RAJ GRANDHI</motion.p><motion.h1 id="hero-title" initial={{opacity:0,y:24}} animate={{opacity:1,y:0}} transition={{duration:1,ease}}>Making data<br/>mean <em>more.</em></motion.h1><motion.div className="hero-description" initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:.8,delay:.15,ease}}><p>I turn complex data into clear decisions.<br/>Clinical context. Engineering rigor. Human impact.</p><a className="pill primary" href="#exhibits">Explore selected work <Arrow diagonal /></a><a className="text-link" href={links.resume} target="_blank" rel="noreferrer">View résumé <Arrow diagonal /></a></motion.div></div>
+    <div className="hero-bottom"><div><span className="small-label">CURRENTLY</span><p>Clinical Business Analyst II<br/><strong>NYC Health + Hospitals</strong></p></div><div className="hero-art-label"><span className="crosshair">+</span><span>COMPLEXITY → CLARITY<br/>THE THREAD THROUGH MY WORK</span></div><a className="scroll-cue" href="#exhibits"><span>SCROLL TO EXPLORE</span><span>↓</span></a></div>
+  </section>
 }
-
-function RoleLens() {
-  const [activeId, setActiveId] = useState('data-analyst')
-  const active = roleLenses.find(role => role.id === activeId) || roleLenses[0]
-
-  return (
-    <section className="role-lens" id="roles" aria-labelledby="role-lens-title">
-      <div className="role-lens-head">
-        <p>RECRUITER LENS / FIVE PATHS</p>
-        <h2 id="role-lens-title">Hiring for a specific role?</h2>
-        <span>Select a lens. The rest of the portfolio stays visible.</span>
-      </div>
-
-      <div className="role-lens-tabs" role="group" aria-label="Highlight portfolio relevance by role">
-        {roleLenses.map((role, index) => (
-          <button
-            type="button"
-            key={role.id}
-            className={active.id === role.id ? 'is-active' : ''}
-            aria-pressed={active.id === role.id}
-            onClick={() => setActiveId(role.id)}
-          >
-            <span>{String(index + 1).padStart(2, '0')}</span>
-            {role.label}
-          </button>
-        ))}
-      </div>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          className="role-lens-panel"
-          key={active.id}
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.32, ease }}
-          aria-live="polite"
-        >
-          <div className="role-lens-statement">
-            <span>POSITIONING / {active.label}</span>
-            <h3>{active.statement}</h3>
-          </div>
-          <div className="role-lens-signals" aria-label={`${active.label} capability signals`}>
-            {active.signals.map((signal, index) => (
-              <div key={signal}><span>0{index + 1}</span><strong>{signal}</strong></div>
-            ))}
-          </div>
-          <div className="role-lens-projects">
-            <span>START WITH THESE SYSTEMS</span>
-            {active.projects.map(([name, repo]) => (
-              <a href={repoUrl(repo)} target="_blank" rel="noreferrer" key={repo}>
-                <strong>{name}</strong><Arrow diagonal />
-              </a>
-            ))}
-          </div>
-        </motion.div>
-      </AnimatePresence>
-    </section>
-  )
+function SectionHeading({number, label, title, italic, children}) { return <div className="section-heading"><div><p className="eyebrow"><span>{number} /</span> {label}</p><h2>{title} <em>{italic}</em></h2></div>{children && <p className="section-aside">{children}</p>}</div> }
+function ProjectVisual({item}) {
+  return <div className={`project-visual visual-${item.id}`} aria-label={`${item.title}: ${item.proof}, ${item.proofLabel}`}>
+    <div className="visual-top"><span>{item.code}</span><span className="visual-dot">●</span></div>
+    {item.id==='rates' ? <><div className="visual-metric"><span>CHARGE MAPPING COVERAGE</span><strong>93.75<span>%</span></strong><small>Against a gold crosswalk</small></div><div className="coverage-track"><i/></div><div className="visual-bottom"><span>7 / 7 defects quarantined</span><span>2.64× Medicare median</span></div></>
+    : item.id==='experiment' ? <><div className="comparison-title">Confidence needs<br/><em>a control.</em></div><div className="comparison-row"><span>Naive peeking</span><i style={{'--bar':'96%'}}/><b>24.0%</b></div><div className="comparison-row valid"><span>Always-valid</span><i style={{'--bar':'4.8%'}}/><b>1.2%</b></div><div className="visual-bottom"><span>FALSE-POSITIVE RATE</span><span>500 A/A simulations</span></div></>
+    : item.id==='claims' ? <><div className="reconcile"><span>2,889<small>SOURCE CLAIMS</small></span><b>→</b><div><span>2,791<small>VALIDATED</small></span><span className="quarantine">98<small>QUARANTINED</small></span></div></div><div className="visual-bottom"><span>Every row accounted for</span><span>12 tests</span></div></>
+    : item.id==='assistant' ? <><div className="routing"><span className="query-node">One question.</span><span className="routing-arrow">↓</span><div><span><small>DEFINITIONS</small>Cited retrieval</span><span><small>QUANTITATIVE</small>Guarded SQL</span></div></div><div className="visual-bottom"><span>14 / 14 routed correctly</span><span>Read-only by design</span></div></>
+    : item.id==='ops' ? <><div className="visual-metric"><span>ANALYTICS AGENT TELEMETRY</span><strong>27,683</strong><small>Traced calls</small></div><div className="ops-summary"><span><b>+6.5pp</b> Quality gain</span><span><b>1.35×</b> Cost increase</span></div><div className="visual-bottom"><span>Prompt rollout comparison</span><span>9 tests</span></div></>
+    : <><div className="comparison-title">Activation makes<br/><em>the difference.</em></div><div className="comparison-row valid"><span>Activated</span><i style={{'--bar':'90.6%'}}/><b>45.3%</b></div><div className="comparison-row"><span>Not activated</span><i style={{'--bar':'36.4%'}}/><b>18.2%</b></div><div className="visual-bottom"><span>WEEK-FOUR RETENTION</span><span>Correlation ≠ causation</span></div></>}
+  </div>
 }
-
-function Thesis() {
-  return (
-    <section className="thesis" aria-labelledby="thesis-title">
-      <div className="thesis-label">OPERATING THESIS / 00</div>
-      <div className="thesis-copy">
-        <h2 id="thesis-title">I build analytical systems that can survive one uncomfortable question:</h2>
-        <blockquote>“How do you know?”</blockquote>
-      </div>
-      <div className="thesis-notes">
-        <p>That question changes the architecture. It asks for reproducible data, precise definitions, visible assumptions, measured baselines, and interfaces that do not overstate certainty.</p>
-        <p>The result is work that moves from SQL and data modeling through AI, statistical reasoning, BI, and stakeholder-ready decisions without losing the evidence in between.</p>
-      </div>
-    </section>
-  )
-}
-
-function Exhibit({ exhibit, index }) {
-  return (
-    <article className={`exhibit exhibit-${exhibit.id}`} id={index === 0 ? 'exhibits' : undefined}>
-      <div className="exhibit-index" aria-hidden="true">
-        <span>{exhibit.number}</span>
-        <i />
-        <small>06</small>
-      </div>
-      <div className="exhibit-heading">
-        <div className="exhibit-code"><span>{exhibit.code}</span><span>{exhibit.discipline}</span></div>
-        <motion.h2
-          initial={{ opacity: 0, y: 44 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.45 }}
-          transition={{ duration: 0.8, ease }}
-        >
-          {exhibit.title}
-        </motion.h2>
-        <p>{exhibit.statement}</p>
-      </div>
-
-      <div className="exhibit-artifact">
-        <ProjectArtifact id={exhibit.id} />
-      </div>
-
-      <div className="exhibit-proof">
-        <span className="proof-label">Measured signal</span>
-        <strong>{exhibit.proof}</strong>
-        <p>{exhibit.proofLabel}</p>
-      </div>
-
-      <div className="exhibit-evidence">
-        {exhibit.evidence.map((item, itemIndex) => (
-          <div key={item}><span>0{itemIndex + 1}</span><p>{item}</p></div>
-        ))}
-      </div>
-
-      <div className="system-chain" aria-label="System stages">
-        {exhibit.system.map((item, itemIndex) => (
-          <div key={item}>
-            <span>{String(itemIndex + 1).padStart(2, '0')}</span>
-            <b>{item}</b>
-            {itemIndex < exhibit.system.length - 1 && <Arrow />}
-          </div>
-        ))}
-      </div>
-
-      <div className="exhibit-note">
-        <p>{exhibit.note}</p>
-        <div className="tool-line">{exhibit.tools.map(tool => <span key={tool}>{tool}</span>)}</div>
-        <a href={repoUrl(exhibit.repo)} target="_blank" rel="noreferrer">
-          Inspect the repository <Arrow diagonal />
-        </a>
-      </div>
-    </article>
-  )
-}
-
-function ExhibitCollection() {
-  return (
-    <section className="exhibit-collection" aria-label="Selected project case studies">
-      <div className="collection-intro">
-        <p>SELECTED EVIDENCE / 01 / 06</p>
-        <h2>Six systems. Six decisions. No ornamental case studies.</h2>
-        <span>Each result below is tied to a seeded run, evaluation harness, data contract, or test suite in the linked repository.</span>
-      </div>
-      {exhibits.map((exhibit, index) => <Exhibit exhibit={exhibit} index={index} key={exhibit.id} />)}
-    </section>
-  )
-}
-
-function Archive() {
-  const [filter, setFilter] = useState('All')
-  const filters = ['All', 'Healthcare', 'AI', 'Decision science', 'Data engineering', 'BI', 'Risk', 'Product']
-  const items = useMemo(() => filter === 'All' ? archive : archive.filter(item => item[2] === filter), [filter])
-
-  return (
-    <section className="archive" id="archive" aria-labelledby="archive-title">
-      <div className="archive-head">
-        <div>
-          <p>FULL PUBLIC INDEX / 20 SYSTEMS</p>
-          <h2 id="archive-title">The repository names now say what the work actually does.</h2>
-        </div>
-        <span>Filter by field, then open the proof.</span>
-      </div>
-      <div className="archive-filters" role="group" aria-label="Filter projects by field">
-        {filters.map(item => (
-          <button key={item} className={filter === item ? 'is-active' : ''} onClick={() => setFilter(item)} aria-pressed={filter === item}>
-            {item}
-          </button>
-        ))}
-      </div>
-      <div className="archive-table" aria-live="polite">
-        <div className="archive-columns" aria-hidden="true"><span>No.</span><span>System</span><span>Field</span><span>Proof marker</span><span>Open</span></div>
-        {items.map(item => (
-          <a href={repoUrl(item[4])} target="_blank" rel="noreferrer" className="archive-row" key={item[4]}>
-            <span>{item[0]}</span>
-            <strong>{item[1]}</strong>
-            <span>{item[2]}</span>
-            <span>{item[3]}</span>
-            <Arrow diagonal />
-          </a>
-        ))}
-      </div>
-      <a className="archive-all" href={`${links.github}?tab=repositories`} target="_blank" rel="noreferrer">Browse the complete GitHub archive <Arrow /></a>
-    </section>
-  )
-}
-
-function Practice() {
-  return (
-    <section className="practice" id="practice" aria-labelledby="practice-title">
-      <div className="practice-intro">
-        <p>PRACTICE / HOW THE WORK HOLDS UP</p>
-        <h2 id="practice-title">A repeatable way to move from a messy question to a trusted decision.</h2>
-      </div>
-      <div className="practice-steps">
-        {method.map((item, index) => (
-          <motion.div
-            key={item.number}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: index * 0.08, ease }}
-          >
-            <span>{item.number}</span>
-            <h3>{item.title}</h3>
-            <p>{item.body}</p>
-          </motion.div>
-        ))}
-      </div>
-      <div className="practice-spectrum">
-        <span>Clinical operations</span><i />
-        <span>Analytics engineering</span><i />
-        <span>Decision science</span><i />
-        <span>Applied AI</span><i />
-        <span>Executive communication</span>
-      </div>
-    </section>
-  )
-}
-
-function Profile() {
-  return (
-    <section className="profile" id="profile" aria-labelledby="profile-title">
-      <div className="profile-portrait">
-        <img src="./profile.jpg" alt="Raveesh Raj Grandhi" loading="lazy" decoding="async" />
-        <span>IDENTITY RECORD / RRG</span>
-      </div>
-      <div className="profile-copy">
-        <p>PROFILE / THE PERSON BEHIND THE SYSTEMS</p>
-        <h2 id="profile-title">Clinical context. Engineering discipline. Executive clarity.</h2>
-        <div className="profile-body">
-          <p>I am a Clinical Business Analyst II at NYC Health + Hospitals and a health informatics graduate. My background began in clinical care and expanded into the data systems behind operational, financial, and clinical decisions.</p>
-          <p>I work across SQL, Python, Snowflake, Tableau, Power BI, Epic data, automation, and applied AI. The tools change. The obligation to make the result reproducible does not.</p>
-        </div>
-        <div className="profile-records">
-          <div><span>Current field</span><b>Clinical business analytics</b><small>NYC Health + Hospitals</small></div>
-          <div><span>Education</span><b>M.S. Health Informatics</b><small>University of Wisconsin–Milwaukee</small></div>
-          <div><span>Recognition</span><b>NMDSI Student Scholar</b><small>Best NMDSI Poster Award</small></div>
-        </div>
-        <div className="profile-impact" aria-label="Selected professional impact">
-          <div><strong>88% → 94%</strong><span>reporting accuracy</span></div>
-          <div><strong>4h → 1h</strong><span>recurring report preparation</span></div>
-          <div><strong>60%</strong><span>faster dashboard refresh</span></div>
-          <div><strong>20+</strong><span>dashboards across three departments</span></div>
-        </div>
-        <div className="profile-links">
-          <a href={links.resume} download>Read the resume <Arrow /></a>
-          <a href={links.linkedin} target="_blank" rel="noreferrer">LinkedIn <Arrow diagonal /></a>
-          <a href={links.github} target="_blank" rel="noreferrer">GitHub <Arrow diagonal /></a>
-        </div>
-      </div>
-    </section>
-  )
+function SelectedWork() { return <section className="selected-work section" id="exhibits"><SectionHeading number="01" label="SELECTED WORK" title="Complex questions." italic="Clear outcomes.">Six projects at the intersection of healthcare, engineering, and decision science.</SectionHeading><div className="projects-grid">{exhibits.map((item,i)=><Reveal key={item.id} className={`project-card card-${item.id}`}><a className="project-visual-link" href={repoUrl(item.repo)} target="_blank" rel="noreferrer" aria-label={`Open ${item.title} repository`}><ProjectVisual item={item}/><span className="project-open"><Arrow diagonal/></span></a><div className="project-meta"><span>{item.discipline}</span><span>0{i+1}</span></div><h3><a href={repoUrl(item.repo)} target="_blank" rel="noreferrer">{item.title}</a></h3><p className="project-description">{item.statement}</p><div className="tool-line">{item.tools.map(tool=><span key={tool}>{tool}</span>)}</div><details className="case-details"><summary>Behind the result <span>+</span></summary><div className="case-body"><p>{item.note}</p><ul>{item.evidence.map(e=><li key={e}>{e}</li>)}</ul><div className="system-chain">{item.system.map((s,i)=><span key={s}><small>0{i+1}</small>{s}</span>)}</div><p className="evidence-context">Results from the public project’s seeded data or offline evaluation; not production business outcomes.</p><a className="evidence-link" href={repoUrl(item.repo)} target="_blank" rel="noreferrer">Explore the code & evidence <Arrow diagonal/></a></div></details></Reveal>)}</div><div className="work-footer"><span>There’s more behind the work.</span><a href="#archive">Explore all 20 projects <Arrow/></a></div></section> }
+function RoleLens(){const [activeId,setActiveId]=useState(roleLenses[0].id);const active=roleLenses.find(r=>r.id===activeId);return <section id="roles" className="expertise section"><SectionHeading number="02" label="EXPERTISE" title="Different lenses." italic="One standard.">The right evidence for the decision at hand.</SectionHeading><div className="expertise-layout"><div className="role-lens-tabs" role="group" aria-label="Choose a professional focus">{roleLenses.map((role,i)=><button key={role.id} aria-pressed={activeId===role.id} onClick={()=>setActiveId(role.id)}><span>0{i+1}</span>{role.label}<Arrow diagonal/></button>)}</div><div className="role-panel" aria-live="polite"><p className="eyebrow">{active.label.toUpperCase()}</p><h3>{active.statement}</h3><div className="role-signals">{active.signals.map(s=><span key={s}>{s}</span>)}</div><p className="small-label">A FEW PLACES TO START</p><div className="role-lens-projects">{active.projects.map(([name,repo])=><a key={repo} href={repoUrl(repo)} target="_blank" rel="noreferrer">{name}<Arrow diagonal/></a>)}</div></div></div></section>}
+function Archive(){const[filter,setFilter]=useState('All');const[query,setQuery]=useState('');const filters=['All',...new Set(archive.map(item=>item[2]))];const items=archive.filter(item=>(filter==='All'||item[2]===filter)&&`${item[1]} ${item[2]} ${item[4]}`.toLowerCase().includes(query.toLowerCase()));return <section className="archive section" id="archive"><SectionHeading number="03" label="THE COMPLETE COLLECTION" title="Built to be" italic="explored."><span>20 public projects.<br/>Source code, methods, and reproducible results.</span></SectionHeading><div className="archive-controls"><div className="archive-filters" role="group" aria-label="Filter projects by field">{filters.map(f=><button key={f} aria-pressed={filter===f} onClick={()=>setFilter(f)}>{f}</button>)}</div><label className="search-label"><span className="sr-only">Search projects</span><input type="search" placeholder="Search projects…" value={query} onChange={e=>setQuery(e.target.value)}/><span aria-hidden="true">⌕</span></label></div><div className="archive-table" aria-live="polite"><div className="archive-columns"><span>NO.</span><span>PROJECT</span><span>DISCIPLINE</span><span>EVIDENCE</span><span/></div>{items.map(item=><a className="archive-row" key={item[4]} href={repoUrl(item[4])} target="_blank" rel="noreferrer"><span>{item[0]}</span><strong>{item[1]}</strong><span>{item[2]}</span><span>{item[3]}</span><Arrow diagonal/></a>)}{items.length===0&&<div className="archive-empty"><p>No projects match this search.</p><button className="pill" onClick={()=>{setQuery('');setFilter('All')}}>Clear filters <Arrow/></button></div>}</div><div className="archive-end"><span>{items.length} / 20 projects</span><a href={`${links.github}?tab=repositories`} target="_blank" rel="noreferrer">All repositories <Arrow diagonal/></a></div></section>}
+function Practice(){return <section className="practice section" id="practice"><Reveal><p className="eyebrow">04 / THE WAY I WORK</p><h2>Good analysis answers a question.<br/><span>Great analysis can answer</span><br/><em>“How do you know?”</em></h2></Reveal><div className="practice-steps">{method.map(item=><Reveal key={item.number}><span>{item.number}</span><h3>{item.title}</h3><p>{item.body}</p></Reveal>)}</div></section>}
+function Profile(){return <section className="profile section" id="profile"><div className="profile-portrait"><img src="./profile.jpg" alt="Raveesh Raj Grandhi" width="800" height="1000" loading="lazy" decoding="async"/><span>RAVEESH RAJ GRANDHI / NEW YORK</span></div><div className="profile-copy"><p className="eyebrow">05 / A LITTLE ABOUT ME</p><h2>Clinical by context.<br/>Analytical <em>by nature.</em></h2><p>I’m Raveesh, a Clinical Business Analyst II at NYC Health + Hospitals and a health informatics graduate. I started in clinical care. Today, I build the data systems behind better operational, financial, and clinical decisions.</p><p>That background shapes how I work: understand the people behind the data, ask the uncomfortable question, and make the answer reproducible.</p><div className="profile-records"><div><span>EDUCATION</span><strong>M.S. Health Informatics</strong><small>University of Wisconsin–Milwaukee</small></div><div><span>RECOGNITION</span><strong>NMDSI Student Scholar</strong><small>Best NMDSI Poster Award</small></div></div><div className="profile-impact" aria-label="Selected professional impact"><div><strong>88 → 94%</strong><span>Reporting accuracy</span></div><div><strong>4h → 1h</strong><span>Report preparation</span></div><div><strong>60%</strong><span>Faster dashboard refresh</span></div><div><strong>20+</strong><span>Dashboards in 3 departments</span></div></div><a className="pill" href={links.resume} target="_blank" rel="noreferrer">The full story, on paper <Arrow diagonal/></a></div></section>}
+export default function App() {
+  const { scrollYProgress } = useScroll(); const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
+  return <><motion.div className="scroll-progress" style={{scaleX:progress}}/><a className="skip-link" href="#exhibits">Skip to selected work</a><Navigation/><main id="top"><Hero/><div className="discipline-strip"><span>HEALTHCARE ANALYTICS</span><i>✳</i><span>BUSINESS INTELLIGENCE</span><i>✳</i><span>DATA ENGINEERING</span><i>✳</i><span>APPLIED AI</span></div><SelectedWork/><RoleLens/><Archive/><Practice/><Profile/><Contact/></main><footer className="site-footer"><a className="brand" href="#top">rrg<span>↗</span></a><span>© {new Date().getFullYear()} Raveesh Raj Grandhi</span><span>Thoughtful systems. Meaningful decisions.</span><a href="#top">Back to top ↑</a></footer></>
 }
 
 const CONTACT_SUBJECT = 'Portfolio inquiry for Raveesh Raj Grandhi'
@@ -412,10 +88,10 @@ function Contact() {
 
   return (
     <section className="contact" id="contact" aria-labelledby="contact-title">
-      <div className="contact-index">END / BEGIN</div>
+      <div className="contact-index">06 / GET IN TOUCH</div>
       <div className="contact-lead">
-        <p>THE NEXT QUESTION / YOURS</p>
-        <h2 id="contact-title">Bring me the difficult question.</h2>
+        <p>A GOOD CONVERSATION CHANGES THINGS.</p>
+        <h2 id="contact-title">Let’s make it meaningful.</h2>
         <div className="contact-context">
           <p>Recruiters and hiring teams can send the role, the problem space, and what success needs to look like.</p>
           <span>Best aligned with clinical analytics, business intelligence, analytics engineering, decision science, and applied AI.</span>
@@ -424,13 +100,13 @@ function Contact() {
 
       <div className="contact-form-shell">
         <div className="contact-form-head">
-          <span>OUTREACH BRIEF / 01</span>
+          <span>START A CONVERSATION</span>
           <span className="contact-status-dot">Accepting conversations</span>
         </div>
 
         {formState.status === 'success' ? (
           <div className="contact-success" role="status">
-            <span>TRANSMISSION COMPLETE</span>
+            <span>MESSAGE RECEIVED</span>
             <strong>Thank you.</strong>
             <p>{formState.message}</p>
             <button type="button" onClick={() => setFormState({ status: 'idle', message: '' })}>
@@ -486,7 +162,7 @@ function Contact() {
             </label>
 
             <div className="contact-submit-row">
-              <p>Sent securely through Formspree. No account required.</p>
+              <p>Your message goes directly to my inbox.</p>
               <button type="submit" disabled={formState.status === 'sending'}>
                 <span>{formState.status === 'sending' ? 'Sending brief…' : 'Send the brief'}</span><Arrow diagonal />
               </button>
@@ -511,35 +187,4 @@ function Contact() {
   )
 }
 
-export default function App() {
-  const { scrollYProgress } = useScroll()
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 28, restDelta: 0.001 })
 
-  useEffect(() => {
-    document.title = 'Raveesh Raj Grandhi | Evidence-Driven Analytics Systems'
-  }, [])
-
-  return (
-    <>
-      <IntroGate />
-      <motion.div className="scroll-progress" style={{ scaleX: progress }} />
-      <a className="skip-link" href="#exhibits">Skip to selected work</a>
-      <Navigation />
-      <main id="top">
-        <Hero />
-        <RoleLens />
-        <Thesis />
-        <ExhibitCollection />
-        <Archive />
-        <Practice />
-        <Profile />
-        <Contact />
-      </main>
-      <footer className="site-footer">
-        <span>© 2026 Raveesh Raj Grandhi</span>
-        <span>Built around evidence, not effects.</span>
-        <a href="#top">Return to top ↑</a>
-      </footer>
-    </>
-  )
-}
