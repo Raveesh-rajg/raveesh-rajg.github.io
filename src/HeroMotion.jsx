@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export const statements = [
   "From complex data to clear decisions.",
@@ -7,15 +7,21 @@ export const statements = [
   "Build the insight. Make the next move clear.",
 ];
 
-export function RotatingStatement({ running, paused, onToggle, reduced }) {
-  const [active, setActive] = useState(0);
+export function RotatingStatement({
+  running,
+  paused,
+  onToggle,
+  reduced,
+  active,
+  onChange,
+}) {
   useEffect(() => {
     if (!running) return;
     const timer = window.setInterval(() => {
-      setActive((index) => (index + 1) % statements.length);
+      onChange((index) => (index + 1) % statements.length);
     }, 6000);
     return () => window.clearInterval(timer);
-  }, [running]);
+  }, [running, active, onChange]);
 
   return (
     <div className="rotating-statement" role="group" aria-label="My approach">
@@ -42,7 +48,7 @@ export function RotatingStatement({ running, paused, onToggle, reduced }) {
               type="button"
               aria-label={`Show statement ${index + 1}: ${statement}`}
               aria-pressed={active === index}
-              onClick={() => setActive(index)}
+              onClick={() => onChange(index)}
             >
               <span />
             </button>

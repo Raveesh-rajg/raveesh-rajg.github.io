@@ -45,6 +45,10 @@ for (const reduced of [false, true]) {
     disconnect() {}
   };
   w.scrollTo = () => {};
+  let chapterScroll = null;
+  w.HTMLElement.prototype.scrollIntoView = function (options) {
+    chapterScroll = { chapter: this.dataset.scene, options };
+  };
   const rotations = new Map();
   const nativeInterval = w.setInterval.bind(w);
   const nativeClear = w.clearInterval.bind(w);
@@ -53,7 +57,10 @@ for (const reduced of [false, true]) {
     if (delay === 6000) rotations.set(id, callback);
     return id;
   };
-  w.clearInterval = (id) => { rotations.delete(id); nativeClear(id); };
+  w.clearInterval = (id) => {
+    rotations.delete(id);
+    nativeClear(id);
+  };
   const errors = [];
   w.addEventListener("error", (e) => errors.push(e.error || e.message));
   w.eval(bundle);
@@ -80,25 +87,73 @@ for (const reduced of [false, true]) {
     all(".impact-grid > div").length === 4 &&
       $("#impact").nextElementSibling.id === "exhibits",
   );
-  check("opening positions BI and business analysis across industries", text('.hero-description').includes('Business intelligence. Business analysis.') && !text('.hero-description').includes('Healthcare') && text('.nav-caption').includes('BUSINESS INTELLIGENCE'));
-  check("rotating statements reserve four accessible choices", all('.statement-lines p').length === 4 && all('.statement-dots button').length === 4 && all('.statement-lines p[aria-hidden=false]').length === 1);
-  await click('.statement-dots button:nth-child(3)');
-  check("readers can select a statement", text('.statement-lines .is-current') === 'Turn business problems into measurable progress.');
+  check(
+    "opening positions BI and business analysis across industries",
+    text(".hero-description").includes(
+      "Business intelligence. Business analysis.",
+    ) &&
+      !text(".hero-description").includes("Healthcare") &&
+      text(".nav-caption").includes("BUSINESS INTELLIGENCE"),
+  );
+  check(
+    "rotating statements reserve four accessible choices",
+    all(".statement-lines p").length === 4 &&
+      all(".statement-dots button").length === 4 &&
+      all(".statement-lines p[aria-hidden=false]").length === 1,
+  );
+  await click(".statement-dots button:nth-child(3)");
+  check(
+    "readers can select a statement",
+    text(".statement-lines .is-current") ===
+      "Turn business problems into measurable progress.",
+  );
+  check(
+    "hero artwork and copy share the same stage",
+    $(".signal-composition").dataset.stage === "2" &&
+      text(".sculpture-word") === "Signal" &&
+      $(".signal-progress-arc").getAttribute("stroke-dasharray") === "75 100",
+  );
+  check(
+    "sculpture caption is accessible without decorative duplication",
+    all(".signal-caption-stack > div[aria-hidden=false]").length === 1 &&
+      $(".sculpture-calibration").getAttribute("aria-hidden") === "true",
+  );
   if (reduced) {
-    check("reduced motion disables automatic rotation and ambient motion", rotations.size === 0 && $('.refined-hero').dataset.motion === 'paused' && !$('.hero-motion-toggle'));
+    check(
+      "reduced motion disables automatic rotation and ambient motion",
+      rotations.size === 0 &&
+        $(".refined-hero").dataset.motion === "paused" &&
+        !$(".hero-motion-toggle"),
+    );
   } else {
     check("statement automatically advances", rotations.size === 1);
-    [...rotations.values()][0](); await settle();
-    check("rotation updates the selected statement", text('.statement-lines .is-current') === 'Build the insight. Make the next move clear.');
-    await click('.hero-motion-toggle');
-    check("pause stops the timer and background motion", rotations.size === 0 && $('.refined-hero').dataset.motion === 'paused');
-    await click('.hero-motion-toggle');
-    check("resume restarts motion", rotations.size === 1 && $('.refined-hero').dataset.motion === 'running');
-    Object.defineProperty(d, 'hidden', {configurable:true, value:true});
-    d.dispatchEvent(new w.Event('visibilitychange')); await settle();
-    check("hidden tabs suspend motion", rotations.size === 0 && $('.refined-hero').dataset.motion === 'paused');
-    Object.defineProperty(d, 'hidden', {configurable:true, value:false});
-    d.dispatchEvent(new w.Event('visibilitychange')); await settle();
+    [...rotations.values()][0]();
+    await settle();
+    check(
+      "rotation updates the selected statement",
+      text(".statement-lines .is-current") ===
+        "Build the insight. Make the next move clear.",
+    );
+    await click(".hero-motion-toggle");
+    check(
+      "pause stops the timer and background motion",
+      rotations.size === 0 && $(".refined-hero").dataset.motion === "paused",
+    );
+    await click(".hero-motion-toggle");
+    check(
+      "resume restarts motion",
+      rotations.size === 1 && $(".refined-hero").dataset.motion === "running",
+    );
+    Object.defineProperty(d, "hidden", { configurable: true, value: true });
+    d.dispatchEvent(new w.Event("visibilitychange"));
+    await settle();
+    check(
+      "hidden tabs suspend motion",
+      rotations.size === 0 && $(".refined-hero").dataset.motion === "paused",
+    );
+    Object.defineProperty(d, "hidden", { configurable: true, value: false });
+    d.dispatchEvent(new w.Event("visibilitychange"));
+    await settle();
   }
   check(
     "Recruiter default is compact",
@@ -209,6 +264,18 @@ for (const reduced of [false, true]) {
     $(".flagship-story").open &&
       all(".depth-section details[open]").length === 2 &&
       all(".story-scene").length === 6,
+  );
+  await click(".scene-select");
+  await click(".story-chapter-controls button:nth-child(6)");
+  check(
+    "chapter navigation reaches the final decision",
+    chapterScroll?.chapter === "5" &&
+      text(".story-stage-label").includes("06 / 06") &&
+      all(".story-chapter-controls button[aria-pressed=true]").length === 1,
+  );
+  check(
+    "chapter navigation respects reduced-motion preference",
+    chapterScroll.options.behavior === (reduced ? "auto" : "smooth"),
   );
   await click(".scene-select");
   check(

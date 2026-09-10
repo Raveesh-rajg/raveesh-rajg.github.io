@@ -3,7 +3,7 @@
 
 Source for [raveesh-rajg.github.io](https://raveesh-rajg.github.io/).
 
-A charcoal and copper editorial portfolio built around a clear narrative: data systems people can trust. The original typography, portrait, artwork, twenty projects, résumé, and contact integration are preserved.
+A charcoal and copper editorial portfolio built around a clear narrative: data systems people can trust. The original typography, portrait, artwork, twenty projects, résumé, and contact integration are preserved. A framed sculpture, coordinated narrative states, chapter navigation, and responsive material treatments follow the production contract in [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md).
 
 Recruiter mode offers professional impact, a concise Hospital Rate Intelligence flagship, and two supporting systems. Deep Dive expands the six-stage flagship story, all five supporting systems, the analytical method, and the searchable project archive. An independent Evidence switch exposes source annotations. Three capability pillars — Build, Understand, Communicate — connect the work to practical hiring needs.
 
@@ -17,7 +17,7 @@ npm run dev
 npm test
 ```
 
-`npm test` builds the production bundle and runs 86 content and interaction checks in jsdom, with normal and reduced motion. It covers reading modes, source annotations, interactive project evidence, method and capability selection, filtering, search, mobile menu and focus behavior, internal links, native validation attributes, and contact success/error recovery. Hero checks cover automatic statement rotation, manual selection, pause/resume, hidden-tab suspension, and reduced-motion behavior. Automated form requests are mocked and never send email.
+`npm test` builds the production bundle and runs 94 content and interaction checks in jsdom, with normal and reduced motion. It covers reading modes, source annotations, interactive project evidence, method and capability selection, filtering, search, mobile menu and focus behavior, internal links, native validation attributes, and contact success/error recovery. Hero checks cover automatic statement rotation, manual selection, pause/resume, hidden-tab suspension, and reduced-motion behavior. Automated form requests are mocked and never send email.
 
 Pushes to `main` run the GitHub Pages workflow, test the production build, and deploy `dist/`.
 
@@ -43,3 +43,4 @@ The form posts to `https://formspree.io/f/mlgqdlnd`. It includes native validati
 ## Design references
 
 Research references, without copying their source or assets: [Dennis Snellenberg](https://dennissnellenberg.com/), [Bruno Simon](https://bruno-simon.com/), [Brittany Chiang](https://brittanychiang.com/), [Bruno's public repository](https://github.com/brunosimon/folio-2025), and [Framer's portfolio gallery](https://www.framer.com/marketplace/templates/categories/portfolio/).
+

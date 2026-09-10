@@ -215,16 +215,47 @@ export default function Flagship() {
   useEffect(() => setExpanded(mode === "deep"), [mode]);
   useEffect(() => {
     if (!expanded) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (visible.length) setActive(Number(visible[0].target.dataset.scene));
-      },
-      { rootMargin: "-25% 0px -45% 0px", threshold: 0 },
-    );
-    sceneRefs.current.forEach((el) => el && observer.observe(el));
-    return () => observer.disconnect();
+    let observer;
+    const observeScenes = () => {
+      observer?.disconnect();
+      // Percentage root margins use viewport width; use height-based pixels
+      // so the reading band stays valid on wide and short screens.
+      observer = new IntersectionObserver(
+        () => {
+          const center = window.innerHeight / 2;
+          const visible = sceneRefs.current
+            .filter(Boolean)
+            .map((el) => ({ el, rect: el.getBoundingClientRect() }))
+            .filter(({ rect }) => rect.bottom > 0 && rect.top < window.innerHeight)
+            .sort((a, b) =>
+              Math.abs((a.rect.top + a.rect.bottom) / 2 - center) -
+              Math.abs((b.rect.top + b.rect.bottom) / 2 - center),
+            );
+          if (visible.length) setActive(Number(visible[0].el.dataset.scene));
+        },
+        {
+          rootMargin: `-${window.innerHeight * 0.25}px 0px -${window.innerHeight * 0.45}px 0px`,
+          threshold: 0,
+        },
+      );
+      sceneRefs.current.forEach((el) => el && observer.observe(el));
+    };
+    observeScenes();
+    window.addEventListener("resize", observeScenes);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", observeScenes);
+    };
   }, [expanded]);
+  const chooseStage = (i) => {
+    setActive(i);
+    sceneRefs.current[i]?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "center",
+    });
+  };
   return (
     <section id="exhibits" className="flagship section">
       <div className="flagship-heading">
@@ -278,11 +309,29 @@ export default function Flagship() {
           <b>{expanded ? "−" : "+"}</b>
         </summary>
         {expanded && (
-          <div className="story-layout">
+          <div className="story-layout" data-chapter={active}>
             <div className="story-visual">
               <div className="story-stage-label">
                 <span>0{active + 1} / 06</span>
                 <span>{scenes[active].label}</span>
+              </div>
+              <div
+                className="story-chapter-controls"
+                role="group"
+                aria-label="Case study chapters"
+              >
+                {scenes.map((scene, i) => (
+                  <button
+                    key={scene.label}
+                    type="button"
+                    onClick={() => chooseStage(i)}
+                    aria-pressed={active === i}
+                    aria-label={`Go to chapter ${i + 1}: ${scene.label}`}
+                  >
+                    <span>0{i + 1}</span>
+                    <i />
+                  </button>
+                ))}
               </div>
               <div className="scene-art" key={active}>
                 <RateScene step={active} />

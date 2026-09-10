@@ -6,6 +6,7 @@ import "./fonts.css";
 import "./styles.css";
 import "./refinement.css";
 import "./HeroMotion.css";
+import "./playbook.css";
 
 // reducedMotion="user": every framer spring/entrance collapses to a simple
 // fade when the OS asks for reduced motion, matching the CSS media queries.

@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 export const ease = [0.22, 1, 0.36, 1];
 export function Arrow({ diagonal = false }) {
   return (
@@ -13,8 +14,26 @@ export function Arrow({ diagonal = false }) {
 }
 export function Reveal({ children, className = "" }) {
   const reduce = useReducedMotion();
+  const ref = useRef(null);
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    if (reduce) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setEntered(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.08 },
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [reduce]);
   return (
     <motion.div
+      ref={ref}
+      data-entered={entered ? "true" : "false"}
       className={className}
       initial={false}
       whileInView={{ opacity: 1 }}

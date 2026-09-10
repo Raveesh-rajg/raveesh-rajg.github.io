@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import SignalSculpture from "./SignalSculpture.jsx";
 import { useReducedMotion } from "framer-motion";
 import { HeroAtmosphere, RotatingStatement } from "./HeroMotion.jsx";
 import { links, method } from "./content.js";
@@ -70,6 +71,7 @@ export function Navigation() {
 export function Hero() {
   const reduced = useReducedMotion();
   const [paused, setPaused] = useState(false);
+  const [stage, setStage] = useState(0);
   const [visible, setVisible] = useState(true);
   const [inView, setInView] = useState(true);
   const heroRef = useRef(null);
@@ -105,8 +107,10 @@ export function Hero() {
         <div className="hero-copy">
           <p className="eyebrow">RAVEESH RAJ GRANDHI</p>
           <h1 id="hero-title">
-            I build data systems <br />
-            people can <em>trust.</em>
+            <span className="hero-title-line">I build data systems</span>{" "}
+            <span className="hero-title-line">
+              people can <em>trust.</em>
+            </span>
           </h1>
           <div className="hero-description">
             <p>
@@ -119,6 +123,8 @@ export function Hero() {
               paused={paused}
               onToggle={() => setPaused(!paused)}
               reduced={reduced}
+              onChange={setStage}
+              active={stage}
             />
             <p className="hero-support">
               Connecting business questions, reliable data, and reporting that
@@ -137,38 +143,7 @@ export function Hero() {
             </a>
           </div>
         </div>
-        <div
-          className="signal-system"
-          aria-label="Raw data becomes validated models and decision evidence"
-        >
-          <img
-            src="./signal.webp"
-            alt=""
-            width="1536"
-            height="1024"
-            fetchpriority="high"
-          />
-          <div className="signal-step raw">
-            <span>01 / RAW</span>
-            <code>business events</code>
-            <code>revenue</code>
-            <code>source_format</code>
-          </div>
-          <div className="signal-step validate">
-            <span>02 / VALIDATE</span>
-            <b>Grain. Lineage. Quality.</b>
-          </div>
-          <div className="signal-step model">
-            <span>03 / MODEL</span>
-            <b>One metric definition.</b>
-            <code>clean + quarantine = source</code>
-          </div>
-          <div className="signal-step decide">
-            <span>04 / DECIDE</span>
-            <b>Numbers that hold up.</b>
-          </div>
-          <p className="signal-caption">A working philosophy, illustrated.</p>
-        </div>
+        <SignalSculpture stage={stage} running={running} reduced={reduced} />
       </div>
       <div className="hero-bottom">
         <div>
