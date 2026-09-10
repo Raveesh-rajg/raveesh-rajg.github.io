@@ -30,8 +30,8 @@ export const impact = [
 export const capabilities = [
   {
     id: "build",
-    label: "Build",
-    subtitle: "Make it repeatable.",
+    label: "BI engineering",
+    subtitle: "SQL, data models & automation",
     statement:
       "Build reliable models, pipelines, and automation so the same question produces a consistent answer.",
     signals: [
@@ -48,13 +48,13 @@ export const capabilities = [
   },
   {
     id: "understand",
-    label: "Understand",
-    subtitle: "Ask the right question.",
+    label: "Business analysis",
+    subtitle: "Requirements, KPIs & decisions",
     statement:
-      "Bring clinical context, financial reasoning, and experiment design to questions where a misleading answer has a cost.",
+      "Translate business questions into measurable requirements, investigate what changed, and explain the options to stakeholders.",
     signals: [
-      "Healthcare operations",
-      "Payer-rate benchmarking",
+      "Business requirements",
+      "KPI definitions",
       "Financial analysis",
       "Experiment validity",
     ],
@@ -66,10 +66,10 @@ export const capabilities = [
   },
   {
     id: "communicate",
-    label: "Communicate",
-    subtitle: "Make the decision clear.",
+    label: "Dashboards & reporting",
+    subtitle: "Power BI, Tableau & clear communication",
     statement:
-      "Turn definitions and analysis into reporting that clinical teams, operators, and executives can use with confidence.",
+      "Build dashboards and reports that help operations, finance, and leadership teams understand performance and decide what to do next.",
     signals: [
       "Tableau & Power BI",
       "Governed KPIs",
@@ -85,37 +85,37 @@ export const capabilities = [
 ];
 export const provenance = {
   rates: {
-    label: "Seeded evaluation",
+    label: "Portfolio project · test data",
     text: "Fuzzy-matching baseline: 45 of 48 gold labels correct (93.75%). Three dialects, 360 parsed rows; eight project tests. Not a live hospital deployment.",
     repo: "hospital-price-intelligence",
     path: "tests/test_pricescope.py",
   },
   claims: {
-    label: "Seeded pipeline",
+    label: "Portfolio project · test data",
     text: "800 synthetic members; 50 duplicates + 23 negative payments + 25 orphan members = 98 quarantined. Twelve tests assert reconciliation and gold-layer calculations.",
     repo: "healthcare-claims-pipeline",
     path: "README.md",
   },
   experiment: {
-    label: "Seeded experiment",
+    label: "Portfolio project · simulation",
     text: "500 A/A experiments, 14 interim looks. Naive false positives: 120/500 (24.0%); always-valid mSPRT: 6/500 (1.2%). Thirty-eight tests cover the framework.",
     repo: "ab-testing-framework",
     path: "examples/01_checkout_case_study.py",
   },
   assistant: {
-    label: "Offline evaluation",
+    label: "Portfolio project · offline test",
     text: "14/14 heuristic routes and 8/8 retrieval hit@4 in a hermetic evaluation. Mock SQL evaluates execution plumbing, not live model-generation quality.",
     repo: "analytics-rag-agent",
     path: "eval/run_eval.py",
   },
   growth: {
-    label: "Synthetic event log",
+    label: "Portfolio project · simulated users",
     text: "8,000 users, approximately 421k events. Week-four eligible cohorts exclude recent signups; activation is an association, not a causal estimate.",
     repo: "product-growth-analytics",
     path: "sql/activation_analysis.sql",
   },
   ops: {
-    label: "Seeded telemetry",
+    label: "Portfolio project · test data",
     text: "30-day scaled corpus: 27,683 spans. Prompt-v2 evaluation score rose 6.5 percentage points while cost per successful answer rose 1.35×. Nine tests pin planted patterns.",
     repo: "llm-ops-analytics",
     path: "src/tokenledger/findings.py",

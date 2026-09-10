@@ -3,9 +3,9 @@
 
 Source for [raveesh-rajg.github.io](https://raveesh-rajg.github.io/).
 
-A charcoal and copper editorial portfolio built around a clear narrative: data systems people can trust. The original typography, portrait, artwork, twenty projects, résumé, and contact integration are preserved. A framed sculpture, coordinated narrative states, chapter navigation, and responsive material treatments follow the production contract in [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md).
+A recruiter-focused portfolio for business intelligence engineering and business analysis. The opening explains the role, tools, and deliverables. An animated data-to-dashboard workflow illustrates the reporting automation result documented in the résumé. The existing twenty projects, portrait, résumé, and contact integration are preserved.
 
-Recruiter mode offers professional impact, a concise Hospital Rate Intelligence flagship, and two supporting systems. Deep Dive expands the six-stage flagship story, all five supporting systems, the analytical method, and the searchable project archive. An independent Evidence switch exposes source annotations. Three capability pillars — Build, Understand, Communicate — connect the work to practical hiring needs.
+The default overview shows professional results, three direct BI/reporting project links, and two cross-industry project summaries. Optional reading controls sit with the projects. Technical detail expands the six-stage hospital-price case study, supporting projects, method, and archive. Sources exposes evidence annotations. Skills are grouped as BI engineering, business analysis, and dashboards/reporting.
 
 ## Development
 
@@ -17,7 +17,7 @@ npm run dev
 npm test
 ```
 
-`npm test` builds the production bundle and runs 94 content and interaction checks in jsdom, with normal and reduced motion. It covers reading modes, source annotations, interactive project evidence, method and capability selection, filtering, search, mobile menu and focus behavior, internal links, native validation attributes, and contact success/error recovery. Hero checks cover automatic statement rotation, manual selection, pause/resume, hidden-tab suspension, and reduced-motion behavior. Automated form requests are mocked and never send email.
+`npm test` builds the production bundle and runs 100 content and interaction checks in jsdom, with normal and reduced motion. It covers reading modes, source annotations, interactive project evidence, method and capability selection, filtering, search, mobile menu and focus behavior, internal links, native validation attributes, and contact success/error recovery. Hero checks cover automatic statement rotation, manual selection, pause/resume, hidden-tab suspension, and reduced-motion behavior. Automated form requests are mocked and never send email.
 
 Pushes to `main` run the GitHub Pages workflow, test the production build, and deploy `dist/`.
 
@@ -27,10 +27,11 @@ Pushes to `main` run the GitHub Pages workflow, test the production build, and d
 - Professional impact, capabilities, and provenance: `src/refinement-data.js`.
 - Page composition: `src/App.jsx`; reading modes and evidence: `src/ViewContext.jsx`.
 - Flagship narrative: `src/Flagship.jsx`; project-specific visuals: `src/ProjectVisuals.jsx`.
-- Industry-neutral opening, four rotating statements, and lightweight CSS orbit motion: `src/HeroMotion.jsx` and `src/HeroMotion.css`. Statements rotate every six seconds; motion pauses when the hero is offscreen, the tab is hidden, or the reader selects Pause. Reduced-motion preferences disable automatic rotation and animation.
+- Hero workflow: `src/DecisionFlow.jsx`; rotating text: `src/HeroMotion.jsx`; recruiter hierarchy and animation: `src/recruiter.css`. Four shared six-second stages coordinate source cards, animated data transfer, validation, dashboard bars, and the work result. Pause, hidden/offscreen suspension, and reduced-motion support are retained.
 - Contact behavior: `src/Contact.jsx`; archive search: `src/Archive.jsx`.
+- Recruiter review: `RECRUITER-REVIEW.md`; current design contract: `DESIGN-SYSTEM.md`.
 - Preserved theme: `src/styles.css`; responsive refinement: `src/refinement.css`.
-- Optimized original generated hero artwork: `public/signal.webp` (approximately 248 KiB).
+- Retained original generated artwork (not used in the current hero): `public/signal.webp` (approximately 248 KiB).
 - Existing portrait, résumé, and social card are preserved.
 - Typography: DM Sans and Instrument Serif, locally served with system fallbacks. OFL licenses are included in `public/fonts/`.
 

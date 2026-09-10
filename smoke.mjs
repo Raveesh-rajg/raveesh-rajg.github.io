@@ -80,18 +80,16 @@ for (const reduced of [false, true]) {
   );
   check(
     "hero has correct narrative and word spacing",
-    text("h1") === "I build data systems people can trust.",
+    text("h1") === "I build dashboards. I solve business problems.",
   );
   check(
-    "four professional metrics precede flagship",
+    "four professional metrics precede selected projects",
     all(".impact-grid > div").length === 4 &&
       $("#impact").nextElementSibling.id === "exhibits",
   );
   check(
     "opening positions BI and business analysis across industries",
-    text(".hero-description").includes(
-      "Business intelligence. Business analysis.",
-    ) &&
+    text(".hero-role").includes("Business intelligence & business analysis") &&
       !text(".hero-description").includes("Healthcare") &&
       text(".nav-caption").includes("BUSINESS INTELLIGENCE"),
   );
@@ -105,18 +103,33 @@ for (const reduced of [false, true]) {
   check(
     "readers can select a statement",
     text(".statement-lines .is-current") ===
-      "Turn business problems into measurable progress.",
+      "Build dashboards people can actually use.",
   );
   check(
-    "hero artwork and copy share the same stage",
-    $(".signal-composition").dataset.stage === "2" &&
-      text(".sculpture-word") === "Signal" &&
-      $(".signal-progress-arc").getAttribute("stroke-dasharray") === "75 100",
+    "workflow and statements share a stage",
+    $(".decision-flow").dataset.stage === "2" &&
+      text(".flow-steps .active").includes("Visualize"),
   );
   check(
-    "sculpture caption is accessible without decorative duplication",
-    all(".signal-caption-stack > div[aria-hidden=false]").length === 1 &&
-      $(".sculpture-calibration").getAttribute("aria-hidden") === "true",
+    "one workflow caption is accessible",
+    all(".flow-captions > div[aria-hidden=false]").length === 1,
+  );
+  check(
+    "hero states target skills and factual work result",
+    all(".hero-skills span").length === 5 &&
+      text(".flow-result").includes("75%") &&
+      $(".time-chart")
+        .getAttribute("aria-label")
+        .includes("four hours to one hour"),
+  );
+  check(
+    "reading controls do not interrupt the opening",
+    !$(".site-header .view-controls") && $(".reading-options .view-controls"),
+  );
+  check(
+    "selected projects explain business questions and contributions",
+    all(".project-contribution").length === 2 &&
+      $(".project-card").classList.contains("card-growth"),
   );
   if (reduced) {
     check(
@@ -132,7 +145,7 @@ for (const reduced of [false, true]) {
     check(
       "rotation updates the selected statement",
       text(".statement-lines .is-current") ===
-        "Build the insight. Make the next move clear.",
+        "Automate the repeat work. Give teams time back.",
     );
     await click(".hero-motion-toggle");
     check(
@@ -217,13 +230,6 @@ for (const reduced of [false, true]) {
     $(".evidence-toggle").getAttribute("aria-checked") === "true" &&
       all(".evidence-note:not([hidden])").length >= 7,
   );
-  await click(".quarantine");
-  check(
-    "quarantine reasons reconcile to 98",
-    !$("#claim-reasons").hidden &&
-      all("#claim-reasons b").reduce((n, e) => n + Number(e.textContent), 0) ===
-        98,
-  );
   await click(".experiment-selector button:nth-child(2)");
   check(
     "always-valid shows 6 of 500",
@@ -240,6 +246,13 @@ for (const reduced of [false, true]) {
   check(
     "Recruiter can expand supporting work",
     all(".project-card").length === 5,
+  );
+  await click(".quarantine");
+  check(
+    "quarantine reasons reconcile to 98",
+    !$("#claim-reasons").hidden &&
+      all("#claim-reasons b").reduce((n, e) => n + Number(e.textContent), 0) ===
+        98,
   );
   await click(".question-choices button:nth-child(2)");
   check(
@@ -285,7 +298,7 @@ for (const reduced of [false, true]) {
   await click(".method-choices button:nth-child(3)");
   check(
     "method shows a concrete quality gate",
-    text(".method-state").includes("clean + quarantine"),
+    text(".method-state").includes("every record be accounted for"),
   );
   await click(".capability-tabs button:nth-child(3)");
   check(

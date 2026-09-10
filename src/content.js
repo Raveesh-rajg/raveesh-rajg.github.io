@@ -199,17 +199,17 @@ export const method = [
   },
   {
     number: 'II',
-    title: 'Engineer the evidence',
-    body: 'Make lineage, grain, exclusions, and quality rules explicit before the visual layer earns attention.',
+    title: 'Define the data',
+    body: 'Document the source, the meaning of each row, and the rules for including records before building a dashboard.',
   },
   {
     number: 'III',
-    title: 'Attack the answer',
-    body: 'Plant defects, test assumptions, compare baselines, and keep failure cases as regression tests.',
+    title: 'Check the numbers',
+    body: 'Test for missing or duplicated records, compare totals, and save checks that catch the same problem next time.',
   },
   {
     number: 'IV',
-    title: 'Make it legible',
-    body: 'Translate the system into an interface a clinical, operational, or executive audience can use confidently.',
+    title: 'Explain the result',
+    body: 'Present the result in language the team understands, with the next action and the limits of the analysis.',
   },
 ]

@@ -7,37 +7,37 @@ const scenes = [
   {
     label: "The problem",
     title: "Public data. Almost impossible to use.",
-    body: "Three hospital pricing dialects describe the same idea in incompatible shapes. Before comparing prices, the files have to agree on what a row means.",
+    body: "Hospital price files use different formats for the same information. I first identified what each record represents so the prices could be compared consistently.",
     source: "src/pricescope/parse.py",
   },
   {
-    label: "Normalization",
-    title: "Different shapes. One grain.",
-    body: "Parse nested payers, skip metadata headers, and unpivot payer columns. Preserve the source format as rows converge into one canonical rate table.",
+    label: "Standardize files",
+    title: "Different files. One consistent table.",
+    body: "I converted three file layouts into one table, with a consistent hospital, procedure, insurer, plan, and price for each record. The original source stays attached.",
     source: "src/pricescope/parse.py",
   },
   {
-    label: "The hard join",
+    label: "Match descriptions",
     title: "The difficult part is the description.",
-    body: "“TKA - KNEE JOINT REPLC” cannot rely on an exact text join. A fuzzy baseline is scored against a gold crosswalk before a more complex mapper earns its place.",
+    body: "Different hospitals abbreviate the same procedure differently. I tested approximate text matching against 48 manually labeled examples and correctly matched 45.",
     source: "fixtures/gold_description_map.csv",
   },
   {
     label: "Data quality",
-    title: "Reject the row. Keep the reason.",
-    body: "Missing codes, non-positive rates, and rates above 100× Medicare are flagged and quarantined. They do not quietly enter the benchmark.",
+    title: "Catch bad data before it reaches a report.",
+    body: "I separated missing procedure codes, zero or negative prices, and prices above 100 times the Medicare reference. Each rejected record keeps an explanation.",
     source: "tests/test_pricescope.py",
   },
   {
-    label: "Market signal",
+    label: "Compare prices",
     title: "A rate means more with a reference.",
-    body: "Compare negotiated prices against a Medicare anchor. The median across the seeded book is 2.64× Medicare; it is a project result, not a claim about the national market.",
+    body: "I compared negotiated prices with a Medicare reference price. The middle value in this test dataset was 2.64 times that reference; it is not a national-market estimate.",
     source: "src/pricescope/marts.py",
   },
   {
     label: "The decision",
     title: "Where are we priced above market, by payer and procedure?",
-    body: "The output is a defensible negotiation question, with its source, exclusions, matching performance, and benchmark attached.",
+    body: "The finished comparison helps an analyst identify prices to investigate, with the original sources and data limitations available for review.",
     source: "README.md",
   },
 ];
@@ -226,10 +226,13 @@ export default function Flagship() {
           const visible = sceneRefs.current
             .filter(Boolean)
             .map((el) => ({ el, rect: el.getBoundingClientRect() }))
-            .filter(({ rect }) => rect.bottom > 0 && rect.top < window.innerHeight)
-            .sort((a, b) =>
-              Math.abs((a.rect.top + a.rect.bottom) / 2 - center) -
-              Math.abs((b.rect.top + b.rect.bottom) / 2 - center),
+            .filter(
+              ({ rect }) => rect.bottom > 0 && rect.top < window.innerHeight,
+            )
+            .sort(
+              (a, b) =>
+                Math.abs((a.rect.top + a.rect.bottom) / 2 - center) -
+                Math.abs((b.rect.top + b.rect.bottom) / 2 - center),
             );
           if (visible.length) setActive(Number(visible[0].el.dataset.scene));
         },
@@ -257,21 +260,22 @@ export default function Flagship() {
     });
   };
   return (
-    <section id="exhibits" className="flagship section">
+    <section id="rate-study" className="flagship section">
       <div className="flagship-heading">
-        <p className="eyebrow">01 / FLAGSHIP CASE STUDY</p>
-        <span className="proof-badge">Seeded evaluation · 8 tests</span>
+        <p className="eyebrow">02 / END-TO-END CASE STUDY</p>
+        <span className="proof-badge">Portfolio project · test data</span>
       </div>
       <div className="flagship-overview">
         <div>
           <h2>
-            Hospital Rate
+            Compare hospital prices.
             <br />
-            <em>Intelligence.</em>
+            <em>Find negotiation opportunities.</em>
           </h2>
           <p>
-            From incompatible price files to a payer-rate comparison that holds
-            up.
+            I built a Python and SQL pipeline that makes differently formatted
+            hospital price files comparable, so an analyst can investigate which
+            prices are above a benchmark.
           </p>
           <a
             className="text-link"
@@ -284,10 +288,11 @@ export default function Flagship() {
         </div>
         <div className="flagship-result">
           <strong>93.75%</strong>
-          <span>Matching accuracy · 48-label gold crosswalk</span>
+          <span>45 of 48 test descriptions matched correctly</span>
           <p>
-            360 rows parsed across three dialects.
-            <br />7 / 7 planted defects quarantined.
+            360 records processed across three file formats.
+            <br />
+            All 7 deliberately invalid test records caught.
           </p>
           <Evidence href={sourceUrl(repo, "tests/test_pricescope.py")}>
             A fuzzy baseline evaluated on seeded fixtures; 45 of 48 labels
@@ -303,8 +308,10 @@ export default function Flagship() {
       >
         <summary>
           <span>
-            {expanded ? "The evidence, step by step" : "Follow the evidence"}
-            <small>Raw data → quality → model → market signal → decision</small>
+            {expanded ? "The evidence, step by step" : "See how I built it"}
+            <small>
+              Source files → data checks → price comparison → decision
+            </small>
           </span>
           <b>{expanded ? "−" : "+"}</b>
         </summary>
@@ -379,8 +386,8 @@ export default function Flagship() {
         )}
       </details>
       <p className="flagship-footnote">
-        Public project evidence · High-fidelity fixtures reproduce CMS file
-        formats. The repository documents the path to live MRFs.
+        Portfolio project using sample files modeled on public hospital formats.
+        These results are test results, not savings achieved by a hospital.
       </p>
     </section>
   );

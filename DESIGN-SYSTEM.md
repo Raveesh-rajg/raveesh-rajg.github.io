@@ -1,3 +1,13 @@
+# Current recruiter-focused direction
+
+The current opening uses live HTML and an animated reporting workflow (`DecisionFlow.jsx`) instead of the abstract sculpture. It states the target disciplines, core tools, and tangible work before presenting optional technical detail. The hero has four synchronized six-second states: Connect, Check, Visualize, Improve. The 4h-to-1h bars and 75% reduction reproduce the existing résumé claim; the workflow layout is explanatory, not a screenshot of an employer system.
+
+Motion uses visible data packets, a validation sweep, a perspective transition into the dashboard, bar growth, and a result reveal. Text never crossfades over another sentence. Pause and reduced-motion preferences stop automatic motion; controls remain available. The original palette and type families remain. No new runtime dependencies were added.
+
+See RECRUITER-REVIEW.md for the section-by-section audit and scoring rubric. The following records the prior art direction for context; its sculpture and top-level reading controls have been superseded.
+
+---
+
 # Portfolio art direction and motion contract
 
 ## Purpose

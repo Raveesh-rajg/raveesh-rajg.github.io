@@ -5,7 +5,7 @@ export function ClaimsVisual() {
     <div className="project-visual visual-claims">
       <div className="visual-top">
         <span>CLAIMS / RECONCILIATION</span>
-        <span>SEEDED RUN</span>
+        <span>TEST DATA</span>
       </div>
       <div className="reconcile">
         <span>
@@ -22,7 +22,7 @@ export function ClaimsVisual() {
             aria-controls="claim-reasons"
             onClick={() => setOpen(!open)}
           >
-            98 <small>QUARANTINED {open ? "−" : "+"}</small>
+            98 <small>INVALID RECORDS {open ? "−" : "+"}</small>
           </button>
         </div>
       </div>
@@ -38,7 +38,7 @@ export function ClaimsVisual() {
         </span>
       </div>
       <div className="visual-bottom">
-        <span>Clean + quarantine = source.</span>
+        <span>Valid + invalid = all source records.</span>
         <span>12 tests</span>
       </div>
     </div>
@@ -51,7 +51,7 @@ export function ExperimentVisual() {
     <div className="project-visual visual-experiment">
       <div className="visual-top">
         <span>EXPERIMENT / FALSE POSITIVES</span>
-        <span>500 A/A RUNS</span>
+        <span>500 SIMULATED TESTS</span>
       </div>
       <div
         className="experiment-selector"
@@ -59,10 +59,10 @@ export function ExperimentVisual() {
         aria-label="Compare experiment methods"
       >
         <button aria-pressed={!valid} onClick={() => setValid(false)}>
-          Naive peeking
+          Repeated checking
         </button>
         <button aria-pressed={valid} onClick={() => setValid(true)}>
-          Always-valid
+          Safer testing
         </button>
       </div>
       <div className="sampling-viz">
@@ -90,11 +90,11 @@ export function ExperimentVisual() {
       </div>
       <div className="visual-bottom">
         <span>
-          Each mark = one experiment.
+          False positive = a test incorrectly flags a change.
           <br />
           Grouped by outcome, not run order.
         </span>
-        <span>14 interim looks</span>
+        <span>14 checks during each test</span>
       </div>
     </div>
   );
@@ -149,13 +149,13 @@ export function GrowthVisual() {
   return (
     <div className="project-visual visual-growth">
       <div className="visual-top">
-        <span>COHORT / WEEK-FOUR RETENTION</span>
-        <span>SYNTHETIC LOG</span>
+        <span>USERS RETURNING AFTER FOUR WEEKS</span>
+        <span>SIMULATED USERS</span>
       </div>
       <div className="cohort-viz">
         {[
-          ["Activated", 45.3],
-          ["Not activated", 18.2],
+          ["Completed activation", 45.3],
+          ["Did not activate", 18.2],
         ].map(([name, value]) => (
           <div key={name}>
             <div>
@@ -188,14 +188,14 @@ export function GrowthVisual() {
           </div>
         ))}
         <p>
-          Eligible week-four cohorts only.
+          Activation = creating a project within 3 days of signup.
           <br />
           Recent signups are excluded.
         </p>
       </div>
       <div className="visual-bottom">
         <span>421k events</span>
-        <span>Correlation ≠ causation</span>
+        <span>Association, not proof of cause</span>
       </div>
     </div>
   );

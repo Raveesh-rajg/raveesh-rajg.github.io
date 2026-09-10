@@ -14,7 +14,7 @@ export function Evidence({ children, href, label = "Source & method" }) {
   const { evidence } = useView();
   return (
     <aside className="evidence-note" hidden={!evidence}>
-      <span className="evidence-note-label">PROVENANCE</span>
+      <span className="evidence-note-label">ABOUT THIS RESULT</span>
       <p>{children}</p>
       <a href={href} target="_blank" rel="noreferrer">
         {label} ↗
@@ -31,10 +31,10 @@ export function ViewControls() {
           aria-pressed={mode === "recruiter"}
           onClick={() => setMode("recruiter")}
         >
-          Recruiter <span>Overview</span>
+          Overview <span>Key results</span>
         </button>
         <button aria-pressed={mode === "deep"} onClick={() => setMode("deep")}>
-          Deep Dive <span>Methods & code</span>
+          Technical detail <span>Methods & code</span>
         </button>
       </div>
       <button
@@ -46,7 +46,7 @@ export function ViewControls() {
         <span className="toggle-track" aria-hidden="true">
           <i />
         </span>
-        Evidence <b>{evidence ? "On" : "Off"}</b>
+        Sources <b>{evidence ? "On" : "Off"}</b>
       </button>
     </div>
   );

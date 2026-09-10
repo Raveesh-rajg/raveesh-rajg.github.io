@@ -62,16 +62,16 @@ export default function Contact() {
     <section className="contact" id="contact" aria-labelledby="contact-title">
       <div className="contact-index">07 / GET IN TOUCH</div>
       <div className="contact-lead">
-        <p>HAVE A DIFFICULT DATA PROBLEM?</p>
-        <h2 id="contact-title">Better decisions start with better evidence.</h2>
+        <p>HIRING FOR BI OR BUSINESS ANALYSIS?</p>
+        <h2 id="contact-title">Let’s talk about your team.</h2>
         <div className="contact-context">
           <p>
-            Recruiters and hiring teams can send the role, the problem space,
-            and what success needs to look like.
+            Send me the role, your team’s priorities, and the best way to reach
+            you. You can also contact me directly by email or LinkedIn.
           </p>
           <span>
-            Open to business intelligence engineering, business analysis,
-            and analytics roles across industries.
+            Open to business intelligence engineering, business analysis, and
+            analytics roles across industries.
           </span>
         </div>
       </div>
@@ -178,14 +178,14 @@ export default function Contact() {
 
             <label className="contact-message">
               <span>
-                <i>05</i> The brief
+                <i>05</i> Message
               </span>
               <textarea
                 name="message"
                 rows="5"
                 minLength="20"
                 maxLength="2000"
-                placeholder="Role, problem space, and what you need this person to change…"
+                placeholder="Tell me about the role, your team, and what you need help with…"
                 required
               />
             </label>
@@ -196,7 +196,7 @@ export default function Contact() {
                 <span>
                   {formState.status === "sending"
                     ? "Sending brief…"
-                    : "Send the brief"}
+                    : "Send message"}
                 </span>
                 <Arrow diagonal />
               </button>

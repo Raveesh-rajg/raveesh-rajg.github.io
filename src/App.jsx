@@ -26,21 +26,21 @@ function Portfolio() {
       <main id="top">
         <Hero />
         <Impact />
-        <Flagship />
         <SelectedWork />
+        <Flagship />
         <Capabilities />
         <Disclosure
           id="practice"
           title="How I work"
-          description="Four principles. One question: how do you know?"
+          description="From business requirements to a checked, usable report"
         >
           <Practice />
         </Disclosure>
         <Profile />
         <Disclosure
           id="archive"
-          title="The complete project archive"
-          description="20 public projects · Search, filter, and inspect the evidence"
+          title="All 20 projects"
+          description="Browse by skill or business area. Every project links to its code."
         >
           <Archive />
         </Disclosure>

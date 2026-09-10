@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import SignalSculpture from "./SignalSculpture.jsx";
+import DecisionFlow from "./DecisionFlow.jsx";
 import { useReducedMotion } from "framer-motion";
 import { HeroAtmosphere, RotatingStatement } from "./HeroMotion.jsx";
 import { links, method } from "./content.js";
@@ -46,10 +46,10 @@ export function Navigation() {
           aria-label="Portfolio sections"
         >
           {[
-            ["Work", "exhibits"],
-            ["Capabilities", "roles"],
+            ["Projects", "exhibits"],
+            ["Skills", "roles"],
             ["About", "profile"],
-            ["Archive", "archive"],
+            ["All projects", "archive"],
           ].map(([label, id]) => (
             <a key={id} href={`#${id}`} onClick={() => setOpen(false)}>
               {label}
@@ -64,7 +64,6 @@ export function Navigation() {
           </a>
         </nav>
       </header>
-      <ViewControls />
     </div>
   );
 }
@@ -99,25 +98,34 @@ export function Hero() {
       <HeroAtmosphere />
       <div className="hero-topline">
         <span>
-          <i className="status-dot" /> NEW YORK · BUSINESS & DATA
+          <i className="status-dot" /> NEW YORK · OPEN TO BI & ANALYST ROLES
         </span>
         <span>RAVEESH RAJ GRANDHI / 2026</span>
       </div>
       <div className="hero-main">
         <div className="hero-copy">
           <p className="eyebrow">RAVEESH RAJ GRANDHI</p>
+          <p className="hero-role">
+            Business intelligence &amp; business analysis
+          </p>
           <h1 id="hero-title">
-            <span className="hero-title-line">I build data systems</span>{" "}
+            <span className="hero-title-line">I build dashboards.</span>{" "}
             <span className="hero-title-line">
-              people can <em>trust.</em>
+              I solve <em>business problems.</em>
             </span>
           </h1>
           <div className="hero-description">
             <p>
-              Business intelligence. Business analysis.
-              <br />
-              Analytics engineering.
+              I turn business questions into SQL analysis, clear dashboards, and
+              reporting that saves teams time.
             </p>
+            <div className="hero-skills" aria-label="Core skills">
+              {["SQL", "Python", "Power BI", "Tableau", "Snowflake"].map(
+                (skill) => (
+                  <span key={skill}>{skill}</span>
+                ),
+              )}
+            </div>
             <RotatingStatement
               running={running}
               paused={paused}
@@ -126,32 +134,34 @@ export function Hero() {
               onChange={setStage}
               active={stage}
             />
+            <div className="hero-actions">
+              <a className="pill primary" href="#exhibits">
+                Explore my projects <Arrow diagonal />
+              </a>
+              <a
+                className="text-link"
+                href={links.resume}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View résumé <Arrow diagonal />
+              </a>
+            </div>
             <p className="hero-support">
-              Connecting business questions, reliable data, and reporting that
-              moves teams forward.
+              Currently Clinical Business Analyst II at NYC Health + Hospitals.
+              My skills apply to operations, finance, and product teams.
             </p>
-            <a className="pill primary" href="#exhibits">
-              View selected work <Arrow diagonal />
-            </a>
-            <a
-              className="text-link"
-              href={links.resume}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View résumé <Arrow diagonal />
-            </a>
           </div>
         </div>
-        <SignalSculpture stage={stage} running={running} reduced={reduced} />
+        <DecisionFlow stage={stage} running={running} />
       </div>
       <div className="hero-bottom">
         <div>
-          <span className="small-label">CURRENTLY</span>
+          <span className="small-label">WHAT I BRING</span>
           <p>
-            Clinical Business Analyst II
+            Business requirements → SQL analysis → dashboards
             <br />
-            <strong>NYC Health + Hospitals</strong>
+            <strong>From the business question to the finished report.</strong>
           </p>
         </div>
         <div className="hero-art-label">
@@ -199,8 +209,8 @@ export function Capabilities() {
       <SectionHeading
         number="03"
         label="CAPABILITIES"
-        title="One philosophy."
-        italic="Three ways to apply it."
+        title="Skills that turn into"
+        italic="useful work."
       />
       <div className="expertise-layout">
         <div
@@ -275,24 +285,24 @@ export function Practice() {
   const [step, setStep] = useState(0);
   const states = [
     [
-      "DECISION OWNER",
-      "Where are we priced above market?",
-      "Specify the payer, procedure, geography, and decision owner.",
+      "1. UNDERSTAND THE QUESTION",
+      "What decision does this report support?",
+      "Agree on the business goal, audience, and measures of success.",
     ],
     [
-      "CANONICAL GRAIN",
-      "Hospital × procedure × payer × plan",
-      "Keep the source format attached to every normalized rate.",
+      "2. DEFINE THE DATA",
+      "What does one row represent?",
+      "Define the measures, join the right sources, and document the assumptions.",
     ],
     [
-      "QUALITY GATE",
-      "Does clean + quarantine equal source?",
-      "Reject with a reason. Test definitions and reconcile totals.",
+      "3. CHECK THE NUMBERS",
+      "Can every record be accounted for?",
+      "Verify totals, find duplicates, and explain missing or rejected records.",
     ],
     [
-      "DECISION OUTPUT",
-      "A benchmark with its assumptions.",
-      "Show the comparison, the evidence, and what the analysis cannot establish.",
+      "4. DELIVER THE ANSWER",
+      "A report people can act on.",
+      "Explain what changed, why it matters, and what the team can do next.",
     ],
   ];
   return (
@@ -347,27 +357,30 @@ export function Profile() {
       <div className="profile-copy">
         <p className="eyebrow">05 / THE PERSON BEHIND THE WORK</p>
         <h2>
-          Clinical by context.
+          An analyst who connects
           <br />
-          Analytical <em>by nature.</em>
+          people, data, <em>and decisions.</em>
         </h2>
         <ol className="career-thread">
           <li>
-            <b>Clinician</b>
+            <b>Understand the people</b>
             <span>Understands the context</span>
           </li>
           <li>
-            <b>Analyst</b>
+            <b>Analyze the problem</b>
             <span>Finds the signal</span>
           </li>
           <li>
-            <b>Engineer</b>
+            <b>Automate the work</b>
             <span>Makes it repeatable</span>
           </li>
         </ol>
         <p>
-          I started in clinical care. Today I build the systems behind clinical,
-          operational, and financial decisions.
+          My clinical background taught me to ask clear questions and understand
+          the people using a system. In my current analyst role, I translate
+          business needs into dashboards, reporting requirements, and data
+          checks. I want to bring that combination to BI engineering and
+          business analysis teams across industries.
         </p>
         <div className="current-role">
           <span className="small-label">CURRENT ROLE</span>

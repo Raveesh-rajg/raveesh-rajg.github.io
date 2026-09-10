@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
 export const statements = [
-  "From complex data to clear decisions.",
-  "Better questions. More useful answers.",
-  "Turn business problems into measurable progress.",
-  "Build the insight. Make the next move clear.",
+  "Connect the data. Answer the right question.",
+  "Check the numbers before they reach a report.",
+  "Build dashboards people can actually use.",
+  "Automate the repeat work. Give teams time back.",
 ];
 
 export function RotatingStatement({
