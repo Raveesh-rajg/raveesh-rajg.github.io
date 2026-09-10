@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --ssr src/prerender.jsx --outDir .prerender && node prerender.mjs",
     "preview": "vite preview",
     "test": "npm run build && node smoke.mjs"
   },

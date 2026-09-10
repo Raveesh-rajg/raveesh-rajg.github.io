@@ -1,83 +1,30 @@
-# Current recruiter-focused direction
+# Static healthcare portfolio contract
 
-The current opening uses live HTML and an animated reporting workflow (`DecisionFlow.jsx`) instead of the abstract sculpture. It states the target disciplines, core tools, and tangible work before presenting optional technical detail. The hero has four synchronized six-second states: Connect, Check, Visualize, Improve. The 4h-to-1h bars and 75% reduction reproduce the existing résumé claim; the workflow layout is explanatory, not a screenshot of an employer system.
+Preserve charcoal, copper, sand evidence panels, DM Sans, Instrument Serif, the portrait, résumé, and contact form.
 
-Motion uses visible data packets, a validation sweep, a perspective transition into the dashboard, bar growth, and a result reveal. Text never crossfades over another sentence. Pause and reduced-motion preferences stop automatic motion; controls remain available. The original palette and type families remain. No new runtime dependencies were added.
+## Content
 
-See RECRUITER-REVIEW.md for the section-by-section audit and scoring rubric. The following records the prior art direction for context; its sculpture and top-level reading controls have been superseded.
+1. Static healthcare-data headline and quality-focused description.
+2. Professional impact, followed immediately by the résumé/repository provenance line.
+3. Claims quality, hospital prices, retention, experimentation; one link to the twenty-project directory.
+4. Three capabilities with the biography folded into one three-line paragraph.
+5. Existing contact form, unchanged except the section index.
 
----
+Use Data Analyst consistently in the hero, biography, and structured metadata, matching the published résumé. Do not invent a different job title or claim LinkedIn was updated without an authenticated edit.
 
-# Portfolio art direction and motion contract
+## Rendering
 
-## Purpose
+Prerender full HTML at build time. Hydrate only the contact form. Do not add a hero rotator, timers, scroll progress, scroll listeners, per-frame geometry reads, Framer Motion, or chart animation. One IntersectionObserver may add the is-visible class; content starts visible. The class does not animate. Only transform and opacity are permitted transition/keyframe properties. There are zero backdrop filters.
 
-An editorial instrument for turning complex business data into confident decisions. The audience is recruiters and hiring managers for business intelligence engineering, business analysis, and analytics roles across industries.
+All sections below the hero use content-visibility: auto and contain-intrinsic-size: 800px. Printing restores normal content visibility. Never put essential chart values behind JavaScript, an animation, a disclosure, or a reading-mode switch.
 
-This September 2026 refinement applies the process from the user-supplied *The $5K-$10K Animated Website Playbook*, especially composition and focal separation (pp. 4, 9), synchronized motion states (p. 13), the smallest suitable animation stack (p. 14), semantic controls over authored visual layers (p. 15), responsive composition (p. 16), and browser QA (pp. 17, 20, 22). The PDF is reference material and is not redistributed in this repository.
+The original form styles are extracted into contact-preserved.css in their original cascade order. The only removed declarations were motion/filter properties disallowed by the performance brief. Contact.jsx is otherwise unchanged apart from its section number.
 
-## Reference decomposition
+## Evidence
 
-| Reference | Principle | Original application here |
-|---|---|---|
-| [Brittany Chiang](https://brittanychiang.com/) | Clear professional identity, accessible navigation, evidence before ornament | BI/BA positioning remains visible; recruiters can skip directly to work, résumé, and contact |
-| [Bruno Simon](https://bruno-simon.com/) | A recognizable authored focal subject and deliberate interaction states | Preserve this portfolio's original copper sculpture and make it an instrument for the analytical narrative |
-| [GSAP showcase](https://gsap.com/showcase/) | Motion choreography and progression between states | Coordinate statement, caption, arc, and chapter feedback; preserve native scrolling and semantic controls |
+Claims: 2,791 clean + 98 quarantined = 2,889 ingested; 98 of 98 planted defects isolated.
+Prices: 93.75% charge-description mapping accuracy, 45 of 48 against a gold crosswalk.
+Retention: 45.3% versus 18.2%, with activation defined by creating a project within three days, and the association caveat visible.
+Experiments: 120 versus 6 false positives in 500 simulated tests; 24.0% versus 1.2%.
 
-These are references for principles, not copied layouts, media, identities, or source implementations. A game interface, forced loading sequence, scroll hijacking, and a second animation library do not serve this portfolio's recruiting purpose.
-
-## Locked foundation
-
-- Charcoal `#101112`, copper `#d7a17b`, off-white type, sand proof panel `#d4c8b6`, muted green evidence surfaces.
-- DM Sans for interface and body; Instrument Serif for editorial emphasis. Fonts remain local with their OFL licenses.
-- Original headline, rotating statements, real employment history, portrait, résumé, twenty project repositories, seeded evaluation caveats, search/filter behavior, reading modes, and Formspree endpoint.
-- React 18, Vite 5, and Framer Motion. No new runtime dependencies.
-- One main heading, native links/buttons/details, visible focus, and no essential labels baked into images.
-
-## Hero composition
-
-Desktop above 760px has two independent territories: copy on the left and a framed sculpture on the right. The artwork is decorative; the live caption explains the analytical stage below it. Important text and buttons do not sit on the sculpture.
-
-At 760px and below the composition becomes a single column: identity, headline, positioning, statement, actions, then a shallower sculpture. At 500px and below the type and controls tighten, and the contact fields form one column. Both sides of 500px, 760px, 1050px, and 1600px are QA boundaries. Wide desktop clamps the asset to 680px. Short desktops at 700px height and below use an unpinned chapter visual to avoid trapping content in a small scroll panel.
-
-## Shared hero state
-
-`Hero` owns one integer stage, passed directly to both `RotatingStatement` and `SignalSculpture`. No separate visual timer can drift out of sync.
-
-| Stage | Progress arc | Visual state | Meaning |
-|---|---|---|---|
-| 0 | 25% | Source | Start with the business question |
-| 1 | 50% | Structure | Make definitions reliable |
-| 2 | 75% | Signal | Find decision-relevant patterns |
-| 3 | 100% | Decision | Make the next move clear |
-
-- Statements advance every 6000ms. A manual selection starts a fresh reading interval.
-- Arc interpolation: 1100ms. Caption transition: 500–700ms. Headline settles over 850ms; sculpture arrives over 1200ms.
-- Sculpture drift: 18 seconds, ±4px vertically and ±1 degree. Fine mouse pointers can lean the framed asset by at most 4 degrees horizontally and 3 degrees vertically; leave resets it.
-- Pause suspends automatic changes, ambient motion, and pointer response. Offscreen heroes and hidden tabs suspend work. Reduced motion disables automatic rotation, animation, and pointer transforms; manual statement selection remains available.
-- Decorative SVG calibration ticks do not represent data or fabricated results.
-
-## Case study and section motion
-
-The six existing Hospital Rate Intelligence scenes keep their source evidence. IntersectionObserver selects the visible chapter. Six semantic buttons can navigate directly to a chapter and scroll it into view. The chapter number, active control, source link, and visual all share the same `active` state. Reduced-motion users get immediate scrolling. Mobile shows the visual inline with each scene.
-
-Case visuals enter over 550ms with a small translate/mask reveal. Project cards receive a one-time 650ms viewport entrance; all content is visible before enhancement. Hover treatments use restrained border/shadow changes and a maximum 4px lift on fine-pointer devices. CTA labels remain live HTML over a simple sheen treatment. Focus remains visible outside the button surface.
-
-## Asset map and preservation
-
-| File | Role | Contract |
-|---|---|---|
-| `public/signal.webp` | Original generated copper hero sculpture | 1536 × 1024, unchanged file; protected by a CSS mask and independent frame |
-| `public/profile.jpg` | User portrait | Original file and identity preserved; responsive 4:5 crop |
-| `public/resume.pdf` | Résumé | Existing document preserved |
-| `public/og-card.png` | Social preview | Existing asset preserved |
-| `public/fonts/*.woff2` | Typography | Local delivery; matching OFL files retained |
-| `src/SignalSculpture.jsx` | Authored calibration geometry and live captions | Vector/HTML implementation; no external media request |
-
-No video is required by this direction. There is no poster mismatch, video seeking dependency, third-party generation account, audio autoplay, or extra asset-hosting service.
-
-## Verification contract
-
-`npm test` builds and exercises the actual production bundle, including normal/reduced motion, synchronized hero state, pause/resume, hidden-tab suspension, chapter navigation, all twenty projects, search/filtering, menu/focus, and mocked contact states. Browser QA checks first view, transitions, breakpoint edges, short height, readable captions, live assets, console output, and production preview. Lighthouse is a local lab measurement rather than field performance evidence.
-
-GitHub Pages runs the same production tests before deployment. The public build and asset hashes are verified after publishing. External credentials and the reference PDF are excluded from the repository.
+Preserve “Test data, not employer production work,” “Association, not proof of cause,” and “not savings achieved by a hospital.” Do not substitute test metrics for employer outcomes.

@@ -60,7 +60,7 @@ export default function Contact() {
 
   return (
     <section className="contact" id="contact" aria-labelledby="contact-title">
-      <div className="contact-index">07 / GET IN TOUCH</div>
+      <div className="contact-index">05 / GET IN TOUCH</div>
       <div className="contact-lead">
         <p>HIRING FOR BI OR BUSINESS ANALYSIS?</p>
         <h2 id="contact-title">Let’s talk about your team.</h2>
