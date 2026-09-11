@@ -3,6 +3,7 @@ import { hydrateRoot } from "react-dom/client";
 import Contact from "./Contact.jsx";
 import "./fonts.css";
 import "./performance.css";
+import "./future.css";
 import "./contact-preserved.css";
 // All page content and charts are HTML. Only the unchanged form is hydrated.
 hydrateRoot(document.getElementById("contact-root"), <Contact />);

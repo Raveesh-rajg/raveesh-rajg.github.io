@@ -1,11 +1,14 @@
 import {JSDOM} from 'jsdom';import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import postcss from 'postcss';
 const html=fs.readFileSync('dist/index.html','utf8');const css=fs.readFileSync(path.join('dist',html.match(/href="\.\/([^\"]+\.css)"/)[1]),'utf8');const bundle=fs.readFileSync(path.join('dist',html.match(/src="\.\/([^\"]+\.js)"/)[1]),'utf8');let count=0;const check=(name,value)=>{assert.ok(value,name);count++;console.log('PASS '+name)};
 const staticDOM=new JSDOM(html);const sd=staticDOM.window.document;
-check('complete headline exists without JavaScript',sd.querySelector('h1').textContent==='Healthcare data,and the proof it holds up.');
+check('complete headline exists without JavaScript',sd.querySelector('h1').textContent==='Reliable data.Clear decisions.');
 check('job title matches the published resume',sd.querySelector('.hero-support').textContent.startsWith('Data Analyst at NYC Health + Hospitals.')&&JSON.parse(sd.querySelector('script[type="application/ld+json"]').textContent).jobTitle==='Data Analyst');
+check('three target roles are explicit', ['BI Engineer','Data Analyst','Business Analyst'].every(role=>sd.querySelector('.hero-roles').textContent.includes(role)));
+check('BI and finance evidence is directly accessible', sd.querySelectorAll('.project-paths a').length===3);
+check('decorative motion has a native pause control',sd.querySelector('#ambient-motion').type==='checkbox'&&sd.querySelector('label[for="ambient-motion"]')&&sd.querySelector('.orbital-field').getAttribute('aria-hidden')==='true');
 check('five home sections only',sd.querySelectorAll('main section').length===5);
 check('four charts are present in static HTML',sd.querySelectorAll('article figure').length===4);
-check('healthcare-first project order',Array.from(sd.querySelectorAll('.project-card')).map(e=>e.id).join(',')==='claims-project,price-project,growth-project,experiment-project');
+check('balanced project order',Array.from(sd.querySelectorAll('.project-card')).map(e=>e.id).join(',')==='growth-project,claims-project,experiment-project,price-project');
 check('claims reconcile exactly',2791+98===2889&&sd.querySelector('#claims-project').textContent.includes('98 of 98')&&sd.querySelector('#claims-project').textContent.includes("A test fails if it ever doesn't."));
 check('price rate and denominator both visible',sd.querySelector('#price-project').textContent.includes('93.75%')&&sd.querySelector('#price-project').textContent.includes('45 of 48 matched against a gold crosswalk'));
 for(const label of ['Test data, not employer production work.','Association, not proof of cause','not savings achieved by a hospital','Every number on this page is either from my résumé or reproducible from a public repository.'])check('honesty label: '+label,sd.body.textContent.includes(label));

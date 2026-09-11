@@ -20,13 +20,87 @@ export default function HealthcareProjects() {
       <div className="section-heading">
         <p className="eyebrow">03 / PROJECTS</p>
         <h2 id="projects-title">
-          Healthcare first.
+          Different questions.
           <br />
-          <em>Evidence throughout.</em>
+          <em>The same standard of proof.</em>
         </h2>
         <p>Test data, not employer production work.</p>
       </div>
+      <div
+        className="project-paths"
+        aria-label="Business intelligence and finance projects"
+      >
+        <a
+          href={repoUrl("dbt-snowflake-ecommerce")}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span>BI engineering / Commerce</span>
+          <strong>Commerce data warehouse ↗</strong>
+          <small>
+            dbt models, source checks, and Snowflake setup. Implementation in
+            progress.
+          </small>
+        </a>
+        <a
+          href={repoUrl("powerbi-dax-showcase")}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span>Business intelligence / Revenue</span>
+          <strong>Revenue reporting ↗</strong>
+          <small>
+            Reproducible retail data, DAX measures, and a Power BI build
+            specification.
+          </small>
+        </a>
+        <a
+          href={repoUrl("excel-powerquery-casestudy")}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span>Business analysis / Finance</span>
+          <strong>Finance data automation ↗</strong>
+          <small>
+            Power Query scripts and a reporting build specification for
+            inconsistent finance exports.
+          </small>
+        </a>
+      </div>
       <div className="project-grid">
+        <article className="project-card reveal" id="growth-project">
+          <p className="eyebrow">PRODUCT ANALYTICS · RETENTION</p>
+          <h3>Which users come back?</h3>
+          <p>
+            SQL analysis compares four-week return rates for users who created a
+            project within three days of signup and those who did not.
+          </p>
+          <figure
+            className="static-bars"
+            aria-label="Four-week retention: activated users 45.3 percent, non-activated users 18.2 percent"
+          >
+            <div>
+              <span>Activated</span>
+              <strong>45.3%</strong>
+              <i className="bar-track">
+                <i className="bar-value" style={{ width: "45.3%" }} />
+              </i>
+            </div>
+            <div>
+              <span>Not activated</span>
+              <strong>18.2%</strong>
+              <i className="bar-track">
+                <i className="bar-value secondary" style={{ width: "18.2%" }} />
+              </i>
+            </div>
+            <figcaption>
+              Simulated users. Recent signups are excluded.
+            </figcaption>
+          </figure>
+          <p className="honesty-label">Association, not proof of cause</p>
+          <p className="tool-line">SQL · DuckDB · Python</p>
+          <Source repo="product-growth-analytics" />
+        </article>
         <article className="project-card reveal" id="claims-project">
           <p className="eyebrow">CLAIMS · DATA QUALITY</p>
           <h3>Claims quality pipeline</h3>
@@ -62,69 +136,6 @@ export default function HealthcareProjects() {
           <p className="tool-line">PySpark · Delta Lake · Python · pytest</p>
           <Source repo="healthcare-claims-pipeline" />
         </article>
-        <article className="project-card reveal" id="price-project">
-          <p className="eyebrow">HOSPITAL PRICES · COMPARISON</p>
-          <h3>Hospital price comparison</h3>
-          <p>
-            A Python and SQL pipeline that standardizes hospital price files and
-            matches procedure descriptions so analysts can compare negotiated
-            prices.
-          </p>
-          <figure
-            className="mapping-chart"
-            aria-label="93.75 percent charge-description mapping accuracy: 45 of 48 matched against a gold crosswalk"
-          >
-            <strong>
-              93.75<span>%</span>
-            </strong>
-            <div className="bar-track">
-              <span className="bar-value" style={{ width: "93.75%" }} />
-            </div>
-            <figcaption>45 of 48 descriptions matched correctly</figcaption>
-          </figure>
-          <p className="result-copy">
-            <strong>93.75%</strong> charge-description mapping accuracy (45 of
-            48 matched against a gold crosswalk)
-          </p>
-          <p className="honesty-label">
-            Test results, not savings achieved by a hospital.
-          </p>
-          <p className="tool-line">Python · SQL · DuckDB · dbt</p>
-          <Source repo="hospital-price-intelligence" />
-        </article>
-        <article className="project-card reveal" id="growth-project">
-          <p className="eyebrow">PRODUCT ANALYTICS · RETENTION</p>
-          <h3>Which users come back?</h3>
-          <p>
-            SQL analysis compares four-week return rates for users who created a
-            project within three days of signup and those who did not.
-          </p>
-          <figure
-            className="static-bars"
-            aria-label="Four-week retention: activated users 45.3 percent, non-activated users 18.2 percent"
-          >
-            <div>
-              <span>Activated</span>
-              <strong>45.3%</strong>
-              <i className="bar-track">
-                <i className="bar-value" style={{ width: "45.3%" }} />
-              </i>
-            </div>
-            <div>
-              <span>Not activated</span>
-              <strong>18.2%</strong>
-              <i className="bar-track">
-                <i className="bar-value secondary" style={{ width: "18.2%" }} />
-              </i>
-            </div>
-            <figcaption>
-              Simulated users. Recent signups are excluded.
-            </figcaption>
-          </figure>
-          <p className="honesty-label">Association, not proof of cause</p>
-          <p className="tool-line">SQL · DuckDB · Python</p>
-          <Source repo="product-growth-analytics" />
-        </article>
         <article className="project-card reveal" id="experiment-project">
           <p className="eyebrow">EXPERIMENTATION · VALIDATION</p>
           <h3>Can we trust an A/B test?</h3>
@@ -159,6 +170,36 @@ export default function HealthcareProjects() {
           </p>
           <p className="tool-line">Python · SciPy · statsmodels</p>
           <Source repo="ab-testing-framework" />
+        </article>
+        <article className="project-card reveal" id="price-project">
+          <p className="eyebrow">HOSPITAL PRICES · COMPARISON</p>
+          <h3>Hospital price comparison</h3>
+          <p>
+            A Python and SQL pipeline that standardizes hospital price files and
+            matches procedure descriptions so analysts can compare negotiated
+            prices.
+          </p>
+          <figure
+            className="mapping-chart"
+            aria-label="93.75 percent charge-description mapping accuracy: 45 of 48 matched against a gold crosswalk"
+          >
+            <strong>
+              93.75<span>%</span>
+            </strong>
+            <div className="bar-track">
+              <span className="bar-value" style={{ width: "93.75%" }} />
+            </div>
+            <figcaption>45 of 48 descriptions matched correctly</figcaption>
+          </figure>
+          <p className="result-copy">
+            <strong>93.75%</strong> charge-description mapping accuracy (45 of
+            48 matched against a gold crosswalk)
+          </p>
+          <p className="honesty-label">
+            Test results, not savings achieved by a hospital.
+          </p>
+          <p className="tool-line">Python · SQL · DuckDB · dbt</p>
+          <Source repo="hospital-price-intelligence" />
         </article>
       </div>
       <div className="work-footer">

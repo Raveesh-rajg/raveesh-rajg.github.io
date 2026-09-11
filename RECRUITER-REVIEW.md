@@ -1,25 +1,13 @@
-# Implementation status for the performance and healthcare brief
+# Review of the broader positioning and motion update
 
-The current version follows the user's A–D checklist. Earlier subjective scores are superseded; Lighthouse measurements are not recruiter scores.
+The opening now answers three recruiter questions: which roles, what deliverables, and where the evidence is. It names BI Engineer, Data Analyst, and Business Analyst; describes data models, dashboards, and analysis; and links directly to selected work and the résumé.
 
-- Removed the hero rotator, Pause button, dots, decorative workflow, scroll progress, and unused animation components.
-- Removed custom scroll listeners and per-component observers. A single observer only adds a CSS class; no scrolling geometry reads or style writes.
-- No automatic/reveal animations. Only transform transitions on hover arrows. Zero backdrop filters.
-- Added content-visibility: auto and contain-intrinsic-size: 800px to every section below the hero.
-- All four charts and the twenty-project directory are static HTML and remain readable without JavaScript.
-- Replaced the healthcare headline and description as requested. Used Data Analyst in the sub-line because that is the title in the actual linked résumé; the conflicting Clinical Business Analyst wording would recreate the mismatch.
-- Added the résumé/public-repository differentiator immediately below the impact metrics.
-- Reordered projects: claims quality, hospital price comparison, product retention, experimentation.
-- Restored the full 98/98 claims reconciliation and 93.75% / 45-of-48 price matching result in their respective projects.
-- Preserved the requested honesty labels.
-- Reduced the home page to five sections; folded the biography into Capabilities and linked the static twenty-project directory once at the end of Projects.
-- Removed repeated Explore / + disclosures.
-- Preserved the contact form's fields, endpoint, validation, sending state, success state, error recovery, and direct-contact links. Only the surrounding section number changed to 05.
+Healthcare-only labels were removed from navigation, headline, capability headings, calls to action, and search/social metadata. Actual employment and healthcare projects remain accurate. Commerce, revenue reporting, and finance are accessible before the detailed project grid. Their repository status is described honestly: implementation in progress or build specifications, rather than a fabricated finished dashboard.
 
-## Remaining external item
+The five-section structure, four static charts, provenance statement, exact quality figures, honesty labels, portrait, résumé, and contact form are preserved. Two CSS satellite points add ambient motion with a native pause checkbox and automatic reduced-motion support. No content rotator, scroll callback, chart animation, filter animation, or JavaScript animation loop was added.
 
-LinkedIn is behind a sign-in wall in the available browser. Its current title could not be inspected or edited. The website and linked résumé now agree on Data Analyst; LinkedIn alignment requires authenticated access. No real employer-dashboard screenshot was supplied, and no substitute was fabricated.
+## Validation
 
-## Verification
+52 static-content and interaction checks pass. Browser checks cover 375, 500, 760, 761, 1000, and 1440px layouts, native motion pause, reduced motion, and charts/project links without JavaScript. The contact endpoint and its validation and recovery paths are unchanged; tests do not send external messages.
 
-The production suite checks static HTML and contact behavior under normal and reduced-motion preferences. Local browser tests cover responsive layout, native form validation, navigation, no-JavaScript charts, and the project directory. A full-scroll Chrome Performance trace is saved with the delivery files; the final recorded desktop run had zero long tasks over 50ms and zero dropped-frame events. This is a measurement on the tested machine, not a guarantee for every device.
+Local Lighthouse reports and a complete Chrome scroll trace accompany the delivery. The motion-enabled scroll run recorded no long tasks over 50ms and no requestAnimationFrame intervals over 34ms, but Chrome did record dropped-frame events. The earlier zero-dropped-frame target is therefore not claimed for this animated version. Scores and timings describe the tested environment, not a guarantee on every device or a subjective recruiter score.

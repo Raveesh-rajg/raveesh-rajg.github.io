@@ -1,25 +1,23 @@
-# Raveesh Raj Grandhi — Healthcare data portfolio
+# Raveesh Raj Grandhi — BI, data, and business analysis
 
 Source for https://raveesh-rajg.github.io/.
 
-Five sections: Hero → Impact → Projects → Capabilities → Contact. Healthcare claims and hospital prices lead the work, followed by product analytics and experimentation. The twenty-project directory is a separate static page linked once at the end of Projects.
+Five sections: Hero → Impact → Projects → Capabilities → Contact. The opening states the three target roles and concrete deliverables. Healthcare remains a source of professional experience alongside public commerce, finance, product, and experimentation work. The current employment title is Data Analyst, matching public/resume.pdf.
 
-## Rendering and performance
+## Design and motion
 
-The build prerenders the full home page and all four charts to HTML. JavaScript hydrates only the existing contact form; the rest of the page does not depend on client rendering. Framer Motion and the old rotator, animated workflow, scroll progress, repeated disclosures, and per-component observers have been removed from the client graph and source components.
+Charcoal, copper, sand, and pale teal; DM Sans and Instrument Serif. The hero's orbital background moves two small decorative points using CSS transform only. A native Ambient motion checkbox pauses them without JavaScript. System reduced-motion preferences disable the animation and hide the redundant control. The headline, project content, and charts remain static.
 
-One IntersectionObserver adds one CSS class without reading layout. Charts are visible before it runs and with JavaScript disabled. There are no custom scroll listeners, no recurring timers, no backdrop filters, and no animated paint/layout properties. Below-fold sections use content-visibility: auto and contain-intrinsic-size: 800px. Only hover arrows transition, using transform.
+The build prerenders the full home page and all four charts to HTML. Only the contact form is hydrated. One IntersectionObserver adds a class without reading layout. No custom scroll listeners, recurring JavaScript timers, backdrop filters, or animated paint/layout properties. Below-fold sections use content-visibility: auto and contain-intrinsic-size: 800px.
 
 ## Development
 
-Run npm ci, then npm run dev for authoring. The complete HTML preview is produced with npm run build followed by npm run preview. npm test builds and checks the prerendered HTML, safe CSS, healthcare-first evidence, no-JavaScript directory, menu, form hydration, and contact recovery behavior. Form tests are mocked and do not send messages.
+Run npm ci, then npm run dev. For a complete HTML preview, run npm run build followed by npm run preview. npm test builds and checks static HTML, motion constraints, project evidence, navigation, and contact recovery. Form tests are mocked and do not send messages.
 
-The build runs Vite for the client and a temporary server-rendering entry, then prerender.mjs writes dist/index.html and dist/projects.html. Only dist is deployed. .prerender is ignored.
+The build runs Vite for the client and a temporary server-rendering entry, then prerender.mjs writes dist/index.html and dist/projects.html. Only dist is deployed. The twenty-project directory contains no JavaScript.
 
-## Facts and contact
+## Evidence and contact
 
-The current job title is Data Analyst, matching public/resume.pdf. The LinkedIn page requires sign-in, so its title could not be verified or changed in this session. The contact component is preserved except for its section number changing from 07 to 05. Its endpoint remains https://formspree.io/f/mlgqdlnd.
+Claims reconciliation, price mapping, retention, and experimentation results keep their denominators and limitations. Newly featured commerce, Power BI, and finance links explicitly describe implementation status or build specifications; no completed dashboard screenshot is implied. No employer work is fabricated.
 
-The 98-defect reconciliation belongs to the claims pipeline. The 93.75% mapping result belongs to the hospital-price project. Test-data and causality labels remain explicit. No employer screenshot was supplied or fabricated.
-
-See DESIGN-SYSTEM.md for the current constraints and RECRUITER-REVIEW.md for implementation status.
+Contact.jsx and contact-preserved.css retain the form's fields, validation, success state, recovery behavior, and Formspree endpoint. See DESIGN-SYSTEM.md and RECRUITER-REVIEW.md for the current contract and review.

@@ -1,0 +1,286 @@
+/* Only two tiny satellite dots animate; the orbital paths remain static. */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 660px;
+  padding-block: 68px 62px;
+  background: radial-gradient(ellipse at 87% 52%, #16333a70, transparent 49%);
+}
+.hero-copy {
+  position: relative;
+  max-width: 760px;
+  z-index: 2;
+}
+.hero h1 {
+  font-size: clamp(52px, 5.9vw, 86px);
+  margin-bottom: 26px;
+}
+.hero h1 em {
+  color: #bbdedb;
+}
+.hero-description {
+  max-width: 640px;
+  font-size: clamp(18px, 1.5vw, 21px);
+}
+.hero-support {
+  max-width: 590px;
+}
+.hero-roles {
+  font-size: 14px;
+  color: #d3dbd8;
+  margin-bottom: 27px;
+}
+.hero-roles span {
+  padding-inline: 9px;
+  color: #7aa8a5;
+}
+.orbital-field {
+  position: absolute;
+  z-index: 0;
+  width: 540px;
+  height: 540px;
+  right: -20px;
+  top: 56px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, #86c5c20a 0 31%, transparent 31.3%),
+    linear-gradient(90deg, transparent 49.9%, #89b6b412 50%, transparent 50.2%),
+    linear-gradient(transparent 49.9%, #89b6b412 50%, transparent 50.2%);
+}
+.orbit {
+  position: absolute;
+  inset: 55px;
+  border: 1px solid #8bbbbd40;
+  border-radius: 50%;
+  --orbit-radius: 215px;
+}
+.orbit::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #aadbd7;
+  border-radius: 50%;
+  top: calc(50% - 4px);
+  left: -4px;
+  transform-origin: calc(var(--orbit-radius) + 4px) 4px;
+  animation: satellite 38s linear infinite;
+}
+.orbit-one {
+  transform: rotate(-32deg) scaleY(0.55);
+}
+.orbit-two {
+  inset: 28px;
+  --orbit-radius: 242px;
+  border-color: #d7a17b45;
+  transform: rotate(42deg) scaleY(0.66);
+}
+.orbit-two::before {
+  background: #d7a17b;
+  animation-duration: 46s;
+  animation-direction: reverse;
+}
+.orbit-core {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.orbit-core span,
+.orbit-coordinate {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: #a0b7b7;
+}
+.orbit-core strong {
+  font: italic 52px var(--serif);
+  color: #bad1cb;
+}
+.orbit-coordinate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.coordinate-top {
+  top: 65px;
+}
+.coordinate-bottom {
+  bottom: 65px;
+}
+.ambient-toggle {
+  position: absolute;
+  bottom: 32px;
+  right: 150px;
+  width: 16px;
+  height: 16px;
+  accent-color: #b9d9d5;
+  z-index: 3;
+  cursor: pointer;
+}
+.ambient-control {
+  position: absolute;
+  right: 48px;
+  bottom: 36px;
+  font-size: 11px;
+  color: #b2c2bf;
+  z-index: 3;
+  cursor: pointer;
+}
+.ambient-toggle:not(:checked) ~ .orbital-field .orbit::before {
+  animation-play-state: paused;
+}
+@keyframes satellite {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.project-card {
+  background: linear-gradient(145deg, #1b2526, #171b1c 58%);
+  border-color: #91b8b42b;
+}
+.project-card .eyebrow {
+  color: #b3ceca;
+}
+.project-card figure {
+  background: #d3dad4;
+}
+.project-card h3 {
+  max-width: 480px;
+}
+.project-paths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 0 0 40px;
+  border: 1px solid #91b8b42b;
+  border-radius: 6px;
+}
+.project-paths a {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.project-paths a + a {
+  border-left: 1px solid #91b8b42b;
+}
+.project-paths span {
+  font-size: 11px;
+  color: #b7cec8;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.project-paths strong {
+  font-weight: 500;
+  font-size: 20px;
+}
+.project-paths small {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.project-paths a:hover strong {
+  color: #b8ded8;
+}
+.capability-grid > div {
+  border-top-color: #97c7c36b;
+}
+@media (min-width: 1600px) {
+  .orbital-field {
+    right: 35px;
+  }
+}
+@media (max-width: 1200px) {
+  .orbital-field {
+    right: -130px;
+    opacity: 0.58;
+  }
+  .orbit-core,
+  .orbit-coordinate {
+    display: none;
+  }
+  .hero-copy {
+    max-width: 700px;
+  }
+}
+@media (max-width: 760px) {
+  .hero {
+    min-height: 0;
+    padding-block: 42px 78px;
+  }
+  .hero h1 {
+    font-size: clamp(49px, 8vw, 68px);
+  }
+  .hero-copy {
+    max-width: 100%;
+  }
+  .hero-description {
+    font-size: 18px;
+  }
+  .hero-roles {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  .hero-roles span {
+    padding-inline: 3px;
+  }
+  .orbital-field {
+    width: 350px;
+    height: 350px;
+    top: auto;
+    bottom: -130px;
+    right: -160px;
+    opacity: 0.32;
+  }
+  .orbit {
+    inset: 25px;
+    --orbit-radius: 150px;
+  }
+  .orbit-two {
+    inset: 5px;
+    --orbit-radius: 170px;
+  }
+  .ambient-toggle {
+    right: auto;
+    left: var(--pad);
+    bottom: 24px;
+    margin-left: 0;
+  }
+  .ambient-control {
+    right: auto;
+    left: calc(var(--pad) + 25px);
+    bottom: 28px;
+  }
+  .project-paths {
+    grid-template-columns: 1fr;
+  }
+  .project-paths a + a {
+    border-left: 0;
+    border-top: 1px solid #91b8b42b;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit::before {
+    animation: none;
+  }
+  .ambient-toggle,
+  .ambient-control {
+    display: none;
+  }
+}
+@media print {
+  .orbital-field,
+  .ambient-toggle,
+  .ambient-control {
+    display: none;
+  }
+}
