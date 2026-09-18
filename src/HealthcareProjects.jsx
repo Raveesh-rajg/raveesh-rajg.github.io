@@ -38,8 +38,8 @@ export default function HealthcareProjects() {
           <span>BI engineering / Commerce</span>
           <strong>Commerce data warehouse ↗</strong>
           <small>
-            dbt models, source checks, and Snowflake setup. Implementation in
-            progress.
+            17 models, 73 dbt tests, and 9 Python checks pass locally.
+            Live Snowflake validation is the next step.
           </small>
         </a>
         <a
@@ -50,20 +50,20 @@ export default function HealthcareProjects() {
           <span>Business intelligence / Revenue</span>
           <strong>Revenue reporting ↗</strong>
           <small>
-            Reproducible retail data, DAX measures, and a Power BI build
-            specification.
+            Editable four-page Power BI project with 17 measures.
+            File checks pass; Desktop validation is pending.
           </small>
         </a>
         <a
-          href={repoUrl("excel-powerquery-casestudy")}
+          href={repoUrl("excel-powerquery-casestudy") + "/blob/main/Finance-Automation.xlsx"}
           target="_blank"
           rel="noreferrer"
         >
           <span>Business analysis / Finance</span>
           <strong>Finance data automation ↗</strong>
           <small>
-            Power Query scripts and a reporting build specification for
-            inconsistent finance exports.
+            Download a working Excel workbook with a region selector,
+            monthly variance chart, and reconciled source tables.
           </small>
         </a>
       </div>
@@ -175,7 +175,7 @@ export default function HealthcareProjects() {
           <p className="eyebrow">HOSPITAL PRICES · COMPARISON</p>
           <h3>Hospital price comparison</h3>
           <p>
-            A Python and SQL pipeline that standardizes hospital price files and
+            A Python pipeline that standardizes hospital price files and
             matches procedure descriptions so analysts can compare negotiated
             prices.
           </p>
@@ -198,7 +198,7 @@ export default function HealthcareProjects() {
           <p className="honesty-label">
             Test results, not savings achieved by a hospital.
           </p>
-          <p className="tool-line">Python · SQL · DuckDB · dbt</p>
+          <p className="tool-line">Python · pandas · CSV/JSON · pytest</p>
           <Source repo="hospital-price-intelligence" />
         </article>
       </div>

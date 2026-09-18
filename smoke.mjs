@@ -16,6 +16,9 @@ check('rotator, diagrams and repeated disclosures removed',!sd.querySelector('.r
 check('all project link is singular',sd.querySelectorAll('a[href="./projects.html"]').length===1);
 const archive=new JSDOM(fs.readFileSync('dist/projects.html','utf8')).window.document;
 check('20 project directory works without scripts',archive.querySelectorAll('.archive-list a').length===20&&!archive.querySelector('script'));
+check('directory separates evidence from integration limits',archive.querySelectorAll('.project-validation').length===20&&archive.body.textContent.includes('Live Snowflake validation pending')&&archive.body.textContent.includes('Native rendering and interactive story pending'));
+check('artifact download links and actual preview are present',archive.querySelectorAll('.artifact-shelf a').length===3&&archive.querySelector('.workbook-proof img')?.getAttribute('src')==='./finance-workbook.png'&&fs.existsSync('dist/finance-workbook.png'));
+check('project directory has its own page title',archive.title==='All 20 Projects | Raveesh Raj Grandhi');
 check('static content has no inline hidden charts',Array.from(sd.querySelectorAll('article figure')).every(f=>!f.hasAttribute('hidden')&&!f.querySelector('[hidden]')));
 check('internal links resolve',Array.from(sd.querySelectorAll('a[href^="#"]')).every(a=>sd.getElementById(a.hash.slice(1))));
 const root=postcss.parse(css);let invalid=[];root.walkAtRules(/keyframes$/,rule=>rule.walkDecls(d=>{if(!['transform','opacity'].includes(d.prop))invalid.push(d.prop)}));root.walkDecls(/^(transition|transition-property)$/,d=>{for(const item of d.value.split(',')){if(!/^(none|transform|opacity)(\s|$)/.test(item.trim()))invalid.push(d.value)}});

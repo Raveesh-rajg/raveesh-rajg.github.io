@@ -21,3 +21,5 @@ The build runs Vite for the client and a temporary server-rendering entry, then 
 Claims reconciliation, price mapping, retention, and experimentation results keep their denominators and limitations. Newly featured commerce, Power BI, and finance links explicitly describe implementation status or build specifications; no completed dashboard screenshot is implied. No employer work is fabricated.
 
 Contact.jsx and contact-preserved.css retain the form's fields, validation, success state, recovery behavior, and Formspree endpoint. See DESIGN-SYSTEM.md and RECRUITER-REVIEW.md for the current contract and review.
+
+The project directory now includes per-project test evidence and remaining integration boundaries from src/project-status.js, plus links to the Excel workbook, Power BI project and Tableau package. Its workbook preview is an actual render of the generated artifact using synthetic source data.
