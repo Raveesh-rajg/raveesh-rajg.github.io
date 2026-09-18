@@ -22,4 +22,4 @@ Claims reconciliation, price mapping, retention, and experimentation results kee
 
 Contact.jsx and contact-preserved.css retain the form's fields, validation, success state, recovery behavior, and Formspree endpoint. See DESIGN-SYSTEM.md and RECRUITER-REVIEW.md for the current contract and review.
 
-The project directory now includes per-project test evidence and remaining integration boundaries from src/project-status.js, plus links to the Excel workbook, Power BI project and Tableau package. Its workbook preview is an actual render of the generated artifact using synthetic source data.
+The project directory keeps a compact, recruiter-facing list of twenty projects. Descriptions reflect the current repositories. Workbook previews, audit panels and deployment checklists are intentionally kept off the portfolio.
